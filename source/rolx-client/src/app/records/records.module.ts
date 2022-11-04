@@ -17,6 +17,7 @@ import { WeekTableComponent } from '@app/records/shared/week-table/week-table.co
 
 import { SetEditLockFormComponent } from './shared/set-edit-lock-form/set-edit-lock-form.component';
 import { ToggleComponent } from './shared/toggle/toggle.component';
+import { StopToggleDialogComponent } from './shared/toggle/stop-toggle-dialog/stop-toggle-dialog.component';
 
 const exportedDeclarations = [
   BalanceIndicatorComponent,
@@ -38,6 +39,7 @@ const exportedDeclarations = [
     WeekTableCellComponent,
     WeekTableComponent,
     ToggleComponent,
+    StopToggleDialogComponent,
   ],
   exports: exportedDeclarations,
 })

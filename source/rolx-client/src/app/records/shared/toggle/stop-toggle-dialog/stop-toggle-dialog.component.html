@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Stop Toggle</h1>
+
+<form
+  #scollable
+  id="stop-toggle"
+  mat-dialog-content
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+  (keydown.escape)="close()"
+  autocomplete="off"></form>
+
+<p>TODO: Projekt/Subprojektauswahl</p>
+<p>TODO: Kommentar eingeben</p>
+
+<mat-dialog-actions>
+  <button mat-stroked-button [mat-dialog-close]="null">Abbruch</button>
+  <button mat-flat-button color="primary" type="submit" form="stop-toggle" [disabled]="!form.valid">
+    Speichern
+  </button>
+</mat-dialog-actions>

@@ -1,4 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { filter } from 'rxjs';
+import {
+  StopToggleDialogComponent,
+  StopToggleDialogData,
+} from './stop-toggle-dialog/stop-toggle-dialog.component';
 
 @Component({
   selector: 'rolx-toggle',
@@ -6,30 +12,56 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./toggle.component.scss'],
 })
 export class ToggleComponent implements OnInit {
-  private startTime?: Date;
+  private readonly START_TIME_KEY = 'startTime';
 
-  constructor() {}
+  //private startTime?: Date;
 
-  ngOnInit(): void {}
+  constructor(private readonly dialog: MatDialog) {}
+
+  ngOnInit(): void {
+    // TODO fma: get start time from local storage
+    //this.startTime = this.getStartTime();
+  }
 
   startToggle(): void {
-    this.storeStartTime(new Date());
+    this.storeStartTimeInLocalStorage(new Date());
   }
 
   startToggleDisabled(): boolean {
     return !!this.getStartTime();
   }
 
-  storeStartTime(startTime: Date | undefined): void {
-    this.startTime = startTime;
+  storeStartTimeInLocalStorage(startTime: Date): void {
+    localStorage.setItem(this.START_TIME_KEY, startTime.toUTCString());
+  }
+
+  clearStartTimeInLocalStorage(): void {
+    localStorage.removeItem(this.START_TIME_KEY);
   }
 
   getStartTime(): Date | undefined {
-    return this.startTime;
+    let startTimeFromLocalStorage = localStorage.getItem(this.START_TIME_KEY);
+    if (startTimeFromLocalStorage !== null) {
+      return new Date(startTimeFromLocalStorage);
+    }
+
+    return undefined;
   }
 
   stopToggle(): void {
-    this.storeStartTime(undefined);
+    const data: StopToggleDialogData = {};
+
+    this.dialog
+      .open(StopToggleDialogComponent, {
+        closeOnNavigation: true,
+        data,
+      })
+      .afterClosed()
+      //.pipe(filter((r) => r != null))
+      .subscribe((r) => {
+        // TODO fma: store it in the db
+        this.clearStartTimeInLocalStorage();
+      });
   }
 
   stopToggleDisabled(): boolean {

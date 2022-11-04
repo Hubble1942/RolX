@@ -13,6 +13,7 @@ import {
   styleUrls: ['./toggle.component.scss'],
 })
 export class ToggleComponent implements OnInit {
+  // TODO fma: dieser Key muss pro activity eineindeutig sein. Activity ID oder so muss mit einbezogen werden.
   private readonly START_TIME_KEY = 'startTime';
 
   //private startTime?: Date;
@@ -50,6 +51,7 @@ export class ToggleComponent implements OnInit {
   }
 
   stopToggle(): void {
+    // TODO fma: pass the list of activities
     const data: StopToggleDialogData = {};
 
     this.dialog
@@ -65,11 +67,31 @@ export class ToggleComponent implements OnInit {
         } else if (r.dialogAction === StopToggleDialogAction.DeleteTimer) {
           this.clearStartTimeInLocalStorage();
         } else if (r.dialogAction === StopToggleDialogAction.Store) {
-          // TODO fma: store it in the db
-          this.clearStartTimeInLocalStorage();
+          //this.openMultiEntriesDialog();
         }
       });
   }
+
+  /*
+  openMultiEntriesDialog(): void {
+    const data: MultiEntriesDialog2Data = {
+      record: this.record,
+      activity: this.activity,
+    };
+
+    this.dialog
+      .open(MultiEntriesDialog2Component, {
+        closeOnNavigation: true,
+        data,
+      })
+      .afterClosed()
+      .pipe(filter((r) => r != null))
+      .subscribe((r) => {
+        // TODO fma: store the data in backend
+        this.clearStartTimeInLocalStorage();
+      });
+  }
+  */
 
   stopToggleDisabled(): boolean {
     return !this.getStartTime();

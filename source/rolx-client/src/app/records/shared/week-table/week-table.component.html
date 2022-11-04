@@ -44,6 +44,7 @@
           [end]="records[records.length-1].date"
           (selected)="addHomegrown($event);table.renderRows()"></rolx-activity-selector>
       </ng-template>
+      <rolx-toggle *ngIf="isActivity(item);"></rolx-toggle>
     </td>
 
     <td mat-footer-cell *matFooterCellDef>

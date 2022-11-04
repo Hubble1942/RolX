@@ -24,11 +24,17 @@ export class ToggleComponent implements OnInit {
   @Input()
   records!: Record[];
 
+  /*
+  @Input()
+  disabled!: boolean;
+  */
+
   @Output()
   changed = new EventEmitter<Record>();
 
   // TODO fma: dieser Key muss pro activity eineindeutig sein. Activity ID oder so muss mit einbezogen werden.
   private readonly START_TIME_KEY = 'startTime';
+  private readonly TOGGLE_ACTIVE = 'toggleActive';
 
   //private startTime?: Date;
 
@@ -44,24 +50,7 @@ export class ToggleComponent implements OnInit {
   }
 
   startToggleDisabled(): boolean {
-    return !!this.getStartTime();
-  }
-
-  storeStartTimeInLocalStorage(startTime: Date): void {
-    localStorage.setItem(this.START_TIME_KEY, startTime.toUTCString());
-  }
-
-  clearStartTimeInLocalStorage(): void {
-    localStorage.removeItem(this.START_TIME_KEY);
-  }
-
-  getStartTime(): Date | undefined {
-    let startTimeFromLocalStorage = localStorage.getItem(this.START_TIME_KEY);
-    if (startTimeFromLocalStorage !== null) {
-      return new Date(startTimeFromLocalStorage);
-    }
-
-    return undefined;
+    return !!this.getStartTime() || !!this.getToggleActive();
   }
 
   stopToggle(): void {
@@ -137,5 +126,33 @@ export class ToggleComponent implements OnInit {
 
   stopToggleDisabled(): boolean {
     return !this.getStartTime();
+  }
+
+  private storeStartTimeInLocalStorage(startTime: Date): void {
+    localStorage.setItem(this.getStartTimeKey(), startTime.toUTCString());
+    localStorage.setItem(this.TOGGLE_ACTIVE, 'true');
+  }
+
+  private clearStartTimeInLocalStorage(): void {
+    localStorage.removeItem(this.getStartTimeKey());
+    localStorage.removeItem(this.TOGGLE_ACTIVE);
+  }
+
+  private getStartTime(): Date | undefined {
+    let startTimeFromLocalStorage = localStorage.getItem(this.getStartTimeKey());
+    if (startTimeFromLocalStorage !== null) {
+      return new Date(startTimeFromLocalStorage);
+    }
+
+    return undefined;
+  }
+
+  private getToggleActive(): boolean {
+    let toggleActive = localStorage.getItem(this.TOGGLE_ACTIVE);
+    return toggleActive !== null;
+  }
+
+  private getStartTimeKey(): string {
+    return this.START_TIME_KEY + this.activity.id;
   }
 }

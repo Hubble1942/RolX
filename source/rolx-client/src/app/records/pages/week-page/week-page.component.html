@@ -1,30 +1,35 @@
 <mat-card *ngIf="routeParams$ | async as params">
   <ng-container *ngIf="recordsActivitiesUser$ | async as recordsActivitiesUser">
     <mat-card-title>
-      <a
-        mat-icon-button
-        [routerLink]="params.previousRouteCommands"
-        [queryParams]="params.queryParams">
-        <mat-icon>chevron_left</mat-icon>
-      </a>
+      <div>
+        <a
+          mat-icon-button
+          [routerLink]="params.previousRouteCommands"
+          [queryParams]="params.queryParams">
+          <mat-icon>chevron_left</mat-icon>
+        </a>
 
-      <a mat-icon-button [routerLink]="params.nextRouteCommands" [queryParams]="params.queryParams">
-        <mat-icon>chevron_right</mat-icon>
-      </a>
+        <a
+          mat-icon-button
+          [routerLink]="params.nextRouteCommands"
+          [queryParams]="params.queryParams">
+          <mat-icon>chevron_right</mat-icon>
+        </a>
 
-      <span *ngIf="!params.isCurrentUser">{{recordsActivitiesUser[2].fullName}}, </span> Woche
-      {{params.monday.toDate() | date: 'mediumDate'}} - {{params.nextSunday.toDate() | date:
-      'mediumDate'}}
+        <span *ngIf="!params.isCurrentUser">{{recordsActivitiesUser[2].fullName}}, </span> Woche
+        {{params.monday.toDate() | date: 'mediumDate'}} - {{params.nextSunday.toDate() | date:
+        'mediumDate'}}
 
-      <small>(KW{{params.monday.isoWeek() | number: '2.0'}})</small>
-    </mat-card-title>
+        <small>(KW{{params.monday.isoWeek() | number: '2.0'}})</small>
+      </div>
 
-    <mat-card-content>
       <section>
         <mat-checkbox [(ngModel)]="asTree">Tree view</mat-checkbox>
         <mat-checkbox [(ngModel)]="showWeekends">Show weekends</mat-checkbox>
       </section>
+    </mat-card-title>
 
+    <mat-card-content>
       <rolx-week-table
         *ngIf="recordsActivitiesUser[2] !== undefined"
         [records]="recordsActivitiesUser[0]"

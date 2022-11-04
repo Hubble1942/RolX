@@ -8,9 +8,10 @@ mat-card {
 section {
   display: flex;
   gap: 16px;
-  position: absolute;
-  right: 16px;
-  top: 20px;
+  font-style: normal;
+  font-size: medium;
+  margin-left: auto;
+  padding-left: 1em;
 }
 
 mat-card-content {
@@ -22,4 +23,11 @@ mat-card-content {
 
 rolx-week-table {
   flex-grow: 1;
+}
+
+mat-card-title {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  align-content: flex-start;
 }

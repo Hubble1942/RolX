@@ -1,11 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Activity } from '@app/projects/core/activity';
 import { filter } from 'rxjs';
 import {
   StopToggleDialogAction,
   StopToggleDialogComponent,
   StopToggleDialogData,
 } from './stop-toggle-dialog/stop-toggle-dialog.component';
+import { Record } from '@app/records/core/record';
+import { RecordEntry } from '@app/records/core/record-entry';
+import { Duration } from '@app/core/util/duration';
+import { WorkRecordService } from '@app/records/core/work-record.service';
 
 @Component({
   selector: 'rolx-toggle',
@@ -13,12 +18,21 @@ import {
   styleUrls: ['./toggle.component.scss'],
 })
 export class ToggleComponent implements OnInit {
+  @Input()
+  activity!: Activity;
+
+  @Input()
+  records!: Record[];
+
+  @Output()
+  changed = new EventEmitter<Record>();
+
   // TODO fma: dieser Key muss pro activity eineindeutig sein. Activity ID oder so muss mit einbezogen werden.
   private readonly START_TIME_KEY = 'startTime';
 
   //private startTime?: Date;
 
-  constructor(private readonly dialog: MatDialog) {}
+  constructor(private readonly dialog: MatDialog, private workRecordService: WorkRecordService) {}
 
   ngOnInit(): void {
     // TODO fma: get start time from local storage
@@ -68,9 +82,37 @@ export class ToggleComponent implements OnInit {
           this.clearStartTimeInLocalStorage();
         } else if (r.dialogAction === StopToggleDialogAction.Store) {
           //this.openMultiEntriesDialog();
+
+          let reocrdOfToday = this.records.find((r) => r.isToday);
+          let startTime = this.getStartTime();
+          if (reocrdOfToday && startTime) {
+            let recordEntry = new RecordEntry();
+            recordEntry.activityId = this.activity.id;
+            /*
+            let durationInHours =
+              (new Date().getTime() - (startTime as Date).getTime()) / (1000 * 60 * 60);
+            */
+            let durationInHours = 2;
+            recordEntry.duration = Duration.fromHours(durationInHours);
+            reocrdOfToday.entries.push(recordEntry);
+            this.changed.emit(reocrdOfToday);
+            this.clearStartTimeInLocalStorage();
+          }
         }
       });
   }
+
+  /*
+  submit(record: Record, index: number) {
+    this.workRecordService.update(this.user.id, record).subscribe({
+      next: (r) => (this.records[index] = r),
+      error: (err) => {
+        console.error(err);
+        this.errorService.notifyGeneralError();
+      },
+    });
+  }
+  */
 
   /*
   openMultiEntriesDialog(): void {

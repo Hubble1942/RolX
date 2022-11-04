@@ -167,6 +167,24 @@ export class WeekTableComponent implements OnInit, OnDestroy {
     this.update();
   }
 
+  submitRecord(record: Record): void {
+    let recordNumber = this.getRecordNumberOfRecordToday();
+    if (recordNumber !== -1) {
+      this.submit(record, recordNumber);
+    }
+  }
+
+  getRecordNumberOfRecordToday(): number {
+    let recordNumber = 0;
+    for (let record of this.records) {
+      if (record.isToday) {
+        return recordNumber;
+      }
+      recordNumber++;
+    }
+    return -1;
+  }
+
   submit(record: Record, index: number) {
     this.workRecordService.update(this.user.id, record).subscribe({
       next: (r) => (this.records[index] = r),

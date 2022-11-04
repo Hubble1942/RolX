@@ -5,6 +5,15 @@ import { MultiEntriesDialogData } from '../../multi-entries-dialog/multi-entries
 
 // TODO fma: what data is required?
 export interface StopToggleDialogData {}
+export interface StopToggleDialogResponseData {
+  dialogAction: StopToggleDialogAction;
+}
+
+export enum StopToggleDialogAction {
+  MoreWork,
+  DeleteTimer,
+  Store,
+}
 
 @Component({
   selector: 'rolx-stop-toggle-dialog',
@@ -30,10 +39,28 @@ export class StopToggleDialogComponent implements OnInit {
     const record = this.data.record.replaceEntriesOfActivity(this.data.activity, entries);
     */
     // TODO fma: what needs to be returned?
-    this.dialogRef.close(null);
+    this.dialogRef.close(this.getStoreResponseData());
   }
 
   close() {
-    this.dialogRef.close(null);
+    this.dialogRef.close(this.getMoreWorkResponseData());
+  }
+
+  getMoreWorkResponseData(): StopToggleDialogResponseData {
+    return {
+      dialogAction: StopToggleDialogAction.MoreWork,
+    };
+  }
+
+  getDeleteTimerResponseData(): StopToggleDialogResponseData {
+    return {
+      dialogAction: StopToggleDialogAction.DeleteTimer,
+    };
+  }
+
+  getStoreResponseData(): StopToggleDialogResponseData {
+    return {
+      dialogAction: StopToggleDialogAction.Store,
+    };
   }
 }

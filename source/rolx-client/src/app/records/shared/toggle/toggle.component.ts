@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { filter } from 'rxjs';
 import {
+  StopToggleDialogAction,
   StopToggleDialogComponent,
   StopToggleDialogData,
 } from './stop-toggle-dialog/stop-toggle-dialog.component';
@@ -57,10 +58,16 @@ export class ToggleComponent implements OnInit {
         data,
       })
       .afterClosed()
-      //.pipe(filter((r) => r != null))
+      .pipe(filter((r) => r != null))
       .subscribe((r) => {
-        // TODO fma: store it in the db
-        this.clearStartTimeInLocalStorage();
+        if (r.dialogAction === StopToggleDialogAction.MoreWork) {
+          // Do nothing
+        } else if (r.dialogAction === StopToggleDialogAction.DeleteTimer) {
+          this.clearStartTimeInLocalStorage();
+        } else if (r.dialogAction === StopToggleDialogAction.Store) {
+          // TODO fma: store it in the db
+          this.clearStartTimeInLocalStorage();
+        }
       });
   }
 

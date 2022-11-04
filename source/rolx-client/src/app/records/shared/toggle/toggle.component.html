@@ -1,1 +1,6 @@
-<p>toggle works!</p>
+<button mat-flat-button color="primary" [disabled]="startToggleDisabled()" (click)="startToggle()">
+  <mat-icon>play_circle_filled</mat-icon>
+</button>
+<button mat-flat-button color="primary" [disabled]="stopToggleDisabled()" (click)="stopToggle()">
+  <mat-icon>stop</mat-icon>
+</button>

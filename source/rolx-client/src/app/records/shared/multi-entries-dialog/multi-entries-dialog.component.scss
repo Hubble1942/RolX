@@ -8,7 +8,8 @@ table {
 }
 
 td {
-  padding-right: 1em;
+  padding-right: 1rem;
+  min-width: 4rem;
 
   &:first-child {
     padding-left: 0;
@@ -17,17 +18,10 @@ td {
 
   &:last-child {
     padding-right: 0;
-
-    mat-form-field {
-      width: 24em;
-    }
   }
 
   &.time {
-    width: 6em;
-
-    &,
-    input {
+    &, input{
       text-align: right;
     }
   }

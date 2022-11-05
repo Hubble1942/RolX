@@ -6,8 +6,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using RolXServer.Common.Util;
-
 namespace RolXServer.Reports.WebApi.Resource;
 
 /// <summary>
@@ -15,5 +13,4 @@ namespace RolXServer.Reports.WebApi.Resource;
 /// </summary>
 public sealed record Report(
     string Subproject,
-    DateRange Range,
     IEnumerable<ReportEntry> Entries);

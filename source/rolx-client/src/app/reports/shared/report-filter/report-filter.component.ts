@@ -1,7 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { SubprojectShallow } from '@app/projects/core/subproject-shallow';
+import { SubprojectService } from '@app/projects/core/subproject.service';
 import { DateRange } from '@app/reports/core/date-range';
 import { ReportFilter } from '@app/reports/core/report-filter';
+import { User } from '@app/users/core/user';
+import { UserService } from '@app/users/core/user.service';
 import * as moment from 'moment';
 
 @Component({
@@ -13,12 +17,12 @@ export class ReportFilterComponent {
   @Output()
   readonly reportFilterChanged = new EventEmitter<ReportFilter>();
 
-  @Input()
-  possibleUsers!: {userName: string; id: string}[];
+  possibleUsers!: User[];
+  possibleSubprojects!: SubprojectShallow[];
 
   readonly filterFormGroup: FormGroup;
 
-  constructor() {
+  constructor(private userService: UserService, private subprojectService: SubprojectService) {
     this.filterFormGroup = new FormGroup({
       dateRange: new FormGroup({
         begin: new FormControl(moment(), Validators.required),
@@ -29,6 +33,9 @@ export class ReportFilterComponent {
       userIds: new FormControl([]),
       commentFilter: new FormControl(''),
     });
+
+    userService.getAll().subscribe((users) => (this.possibleUsers = users));
+    subprojectService.getAll().subscribe((subprojects) => (this.possibleSubprojects = subprojects));
   }
 
   applyFilterClicked(): void {

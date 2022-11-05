@@ -40,7 +40,7 @@ public class ReportController : ControllerBase
     /// <param name="reportFilter">The filter for the report</param>
     /// <returns>A report.</returns>
     [HttpGet]
-    public async Task<ActionResult<Report>> GetReport(ReportFilter reportFilter)
+    public async Task<ActionResult<Report>> GetReport([FromQuery] ReportFilter reportFilter)
     {
         var domainExport = await this.exportService.GetFor(this.User.GetUserId(), reportFilter.ToDomain());
         return domainExport.ToResource();

@@ -6,6 +6,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using RolXServer.Common.Util;
 using RolXServer.Reports.Domain.Model;
 using RolXServer.Reports.WebApi.Resource;
 
@@ -19,10 +20,10 @@ public static class ReportMapper
     /// <summary>
     /// Maps <paramref name="domainExport"/> to <see cref="Report"/>.
     /// </summary>
-    /// <param name="domainExport">The domain export</param>
-    /// <returns>A resource export</returns>
+    /// <param name="domainExport">The domain export.</param>
+    /// <returns>A resource export.</returns>
     public static Report ToResource(this Export domainExport) =>
-        new(domainExport.Subproject, domainExport.Range, domainExport.Entries.ToResources());
+        new(domainExport.Subproject, domainExport.Entries.ToResources());
 
     /// <summary>
     /// Maps <paramref name="reportFilter"/> to <see cref="ExportFilter"/>.
@@ -34,7 +35,7 @@ public static class ReportMapper
             reportFilter.DateRange,
             reportFilter.ProjectNumber,
             reportFilter.SubprojectNumber,
-            reportFilter.UserIds.ToArray(),
+            reportFilter.UserIds?.ToArray() ?? Array.Empty<Guid>(),
             reportFilter.CommentFilter);
 
     private static IEnumerable<ReportEntry> ToResources(
@@ -43,7 +44,7 @@ public static class ReportMapper
 
     private static ReportEntry ToResource(ExportEntry domainEntry) =>
         new(
-            domainEntry.Date,
+            domainEntry.Date.ToIsoDate(),
             domainEntry.ProjectNumber,
             domainEntry.CustomerName,
             domainEntry.ProjectName,
@@ -55,5 +56,4 @@ public static class ReportMapper
             domainEntry.UserName,
             domainEntry.Duration,
             domainEntry.Comment);
-
 }

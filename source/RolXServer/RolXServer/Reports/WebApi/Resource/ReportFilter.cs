@@ -9,5 +9,5 @@ public record ReportFilter(
     DateRange DateRange,
     int? ProjectNumber,
     int? SubprojectNumber,
-    IEnumerable<Guid> UserIds,
-    string CommentFilter);
+    IEnumerable<Guid>? UserIds,
+    string? CommentFilter);

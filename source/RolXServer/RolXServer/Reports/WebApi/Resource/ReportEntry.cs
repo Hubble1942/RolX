@@ -9,7 +9,7 @@
 namespace RolXServer.Reports.WebApi.Resource;
 
 public sealed record ReportEntry(
-    DateOnly Date,
+    string Date,
     int ProjectNumber,
     string CustomerName,
     string ProjectName,

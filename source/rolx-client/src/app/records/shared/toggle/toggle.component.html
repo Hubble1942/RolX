@@ -1,0 +1,16 @@
+<button
+  mat-flat-button
+  color="primary"
+  [disabled]="startToggleDisabled()"
+  *ngIf="!startToggleDisabled()"
+  (click)="startToggle()">
+  <mat-icon>play_arrow</mat-icon>
+</button>
+<button
+  mat-flat-button
+  color="primary"
+  [disabled]="stopToggleDisabled()"
+  *ngIf="!stopToggleDisabled()"
+  (click)="stopToggle()">
+  <mat-icon>stop</mat-icon>
+</button>

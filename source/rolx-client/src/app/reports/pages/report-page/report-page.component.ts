@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DateRange } from '@app/reports/core/date-range';
+import { ExportService } from '@app/reports/core/export.service';
 import { Report } from '@app/reports/core/report';
 import { ReportFilter } from '@app/reports/core/report-filter';
 import { ReportService } from '@app/reports/core/report.service';
@@ -12,7 +13,7 @@ import * as moment from 'moment';
 })
 export class ReportPageComponent implements OnInit {
   report!: Report;
-  constructor(private reportService: ReportService) {}
+  constructor(private reportService: ReportService, private exportSerivce: ExportService) {}
 
   ngOnInit(): void {
     const dateRange = new DateRange();
@@ -28,5 +29,9 @@ export class ReportPageComponent implements OnInit {
   reportFilterChanged(filter: ReportFilter): void {
     this.reportService.get(filter).subscribe((report) => (this.report = report));
     // TODO los
+  }
+
+  exportRange(): void {
+    this.exportSerivce.download(undefined, this.report.range.begin, this.report.range.end);
   }
 }

@@ -34,8 +34,19 @@ export class ReportFilterComponent {
       commentFilter: new FormControl(''),
     });
 
-    userService.getAll().subscribe((users) => (this.possibleUsers = users));
-    subprojectService.getAll().subscribe((subprojects) => (this.possibleSubprojects = subprojects));
+    userService
+      .getAll()
+      .subscribe(
+        (users) => (this.possibleUsers = users.sort((a, b) => (a.fullName < b.fullName ? -1 : 1))),
+      );
+    subprojectService
+      .getAll()
+      .subscribe(
+        (subprojects) =>
+          (this.possibleSubprojects = subprojects.sort((a, b) =>
+            a.fullNumber < b.fullNumber ? -1 : 1,
+          )),
+      );
   }
 
   applyFilterClicked(): void {

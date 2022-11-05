@@ -1,6 +1,6 @@
 <mat-card>
   <mat-card-title>Report Filter</mat-card-title>
-  <ng-form [formGroup]="filterFormGroup">
+  <ng-form [formGroup]="filterFormGroup" style="display: flex; gap: 1em">
     <mat-form-field appearance="standard">
       <mat-label>Zeitbereich</mat-label>
       <mat-date-range-input [rangePicker]="picker" formGroupName="dateRange">

@@ -11,6 +11,7 @@ import { ExportMonthCardComponent } from './shared/export-month-card/export-mont
 import { ExportRangeCardComponent } from './shared/export-range-card/export-range-card.component';
 import { ExportSubprojectCardComponent } from './shared/export-subproject-card/export-subproject-card.component';
 import { ReportFilterComponent } from './shared/report-filter/report-filter.component';
+import { ReportTableComponent } from './shared/report-table/report-table.component';
 
 const exportedComponents = [
   DaysIndicatorComponent,
@@ -20,6 +21,7 @@ const exportedComponents = [
   ExportSubprojectCardComponent,
   ReportFilterComponent,
   ReportPageComponent,
+  ReportTableComponent,
   UserMonthReportPageComponent,
 ];
 

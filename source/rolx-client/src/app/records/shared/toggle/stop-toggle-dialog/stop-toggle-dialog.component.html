@@ -9,7 +9,12 @@
   (keydown.escape)="close()"
   autocomplete="off"></form>
 
-<mat-form-field>
+<mat-form-field style="max-width: 4em; padding-right: 1em">
+  <mat-label>Arbeitszeit</mat-label>
+  <input matInput disabled [ngModel]="getDuration()" style="text-align: right" />
+</mat-form-field>
+
+<mat-form-field style="min-width: 20em">
   <mat-label>Kommentar</mat-label>
   <input matInput [(ngModel)]="comment" />
 </mat-form-field>

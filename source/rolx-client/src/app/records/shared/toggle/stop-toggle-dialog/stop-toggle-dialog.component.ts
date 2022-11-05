@@ -4,7 +4,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MultiEntriesDialogData } from '../../multi-entries-dialog/multi-entries-dialog.component';
 
 // TODO fma: what data is required?
-export interface StopToggleDialogData {}
+export interface StopToggleDialogData {
+  durationMinutes: number;
+}
 export interface StopToggleDialogResponseData {
   dialogAction: StopToggleDialogAction;
   comment: string;
@@ -68,5 +70,11 @@ export class StopToggleDialogComponent implements OnInit {
       dialogAction: StopToggleDialogAction.Store,
       comment: this.comment,
     };
+  }
+
+  getDuration() {
+    let hours = Math.floor(this.data.durationMinutes / 60);
+    let minutes = Math.floor(this.data.durationMinutes - hours * 60);
+    return hours + ':' + minutes;
   }
 }

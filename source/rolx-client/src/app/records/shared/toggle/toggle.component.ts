@@ -55,7 +55,9 @@ export class ToggleComponent implements OnInit {
 
   stopToggle(): void {
     // TODO fma: pass the list of activities
-    const data: StopToggleDialogData = {};
+    let startTime = this.getStartTime();
+    let durationMinutes = (new Date().getTime() - (startTime as Date).getTime()) / (1000 * 60);
+    const data: StopToggleDialogData = { durationMinutes: durationMinutes };
 
     this.dialog
       .open(StopToggleDialogComponent, {

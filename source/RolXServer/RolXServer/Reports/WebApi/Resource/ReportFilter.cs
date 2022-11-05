@@ -8,6 +8,6 @@ namespace RolXServer.Reports.WebApi.Resource;
 public record ReportFilter(
     DateRange DateRange,
     int? ProjectNumber,
-    int? SubProjectNumber,
+    int? SubprojectNumber,
     IEnumerable<Guid> UserIds,
     string CommentFilter);

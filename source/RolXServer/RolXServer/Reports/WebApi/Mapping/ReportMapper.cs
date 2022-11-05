@@ -33,7 +33,7 @@ public static class ReportMapper
         new(
             reportFilter.DateRange,
             reportFilter.ProjectNumber,
-            reportFilter.SubProjectNumber,
+            reportFilter.SubprojectNumber,
             reportFilter.UserIds.ToArray(),
             reportFilter.CommentFilter);
 

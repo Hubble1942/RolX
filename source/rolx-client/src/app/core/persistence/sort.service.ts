@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSortable, Sort } from '@angular/material/sort';
 
-export type Resource = 'Activity' | 'Subproject' | 'User';
+export type Resource = 'Activity' | 'Subproject' | 'User' | 'ReportEntry';
 
 @Injectable({
   providedIn: 'root',

@@ -11,7 +11,7 @@ import * as moment from 'moment';
   styleUrls: ['./report-page.component.scss'],
 })
 export class ReportPageComponent implements OnInit {
-  report?: Report;
+  report!: Report;
   constructor(private reportService: ReportService) {}
 
   ngOnInit(): void {

@@ -1,2 +1,4 @@
 <rolx-report-filter (reportFilterChanged)="reportFilterChanged($event)"></rolx-report-filter>
-<rolx-report-table></rolx-report-table>
+<div *ngIf="report?.entries?.length">
+  <rolx-report-table [reportEntries]="report.entries"></rolx-report-table>
+</div>

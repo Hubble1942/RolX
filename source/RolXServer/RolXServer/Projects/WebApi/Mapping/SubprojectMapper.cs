@@ -23,19 +23,24 @@ internal static class SubprojectMapper
     /// <param name="actualSums">The actual sums.</param>
     /// <returns>The resource.</returns>
     public static Resource.Subproject ToResource(this DataAccess.Subproject domain, IDictionary<int, TimeSpan>? actualSums = null)
-        => new Resource.Subproject(
-            Id: domain.Id,
-            FullNumber: domain.FullNumber(),
-            FullName: domain.FullName(),
-            CustomerName: domain.CustomerName,
-            ProjectNumber: domain.ProjectNumber,
-            ProjectName: domain.ProjectName,
-            Number: domain.Number,
-            Name: domain.Name,
-            ManagerId: domain.ManagerId,
-            ManagerName: domain.Manager?.FullName() ?? "vakant",
-            IsClosed: domain.IsClosed(),
-            Activities: domain.Activities.Select(ph => ph.ToResource(actualSums)).ToImmutableList());
+    {
+        var activities = domain.Activities.Select(ph => ph.ToResource(actualSums)).ToImmutableList();
+        return new Resource.Subproject(
+                Id: domain.Id,
+                FullNumber: domain.FullNumber(),
+                FullName: domain.FullName(),
+                CustomerName: domain.CustomerName,
+                ProjectNumber: domain.ProjectNumber,
+                ProjectName: domain.ProjectName,
+                Number: domain.Number,
+                Name: domain.Name,
+                ManagerId: domain.ManagerId,
+                ManagerName: domain.Manager?.FullName() ?? "vakant",
+                IsClosed: domain.IsClosed(),
+                Activities: activities,
+                Budget: activities.Sum(x => x.Budget),
+                Actual: activities.Sum(x => x.Actual));
+    }
 
     /// <summary>
     /// Converts to shallow resource.

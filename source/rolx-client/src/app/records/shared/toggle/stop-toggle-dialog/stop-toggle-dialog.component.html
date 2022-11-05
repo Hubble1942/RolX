@@ -1,0 +1,30 @@
+<h1 mat-dialog-title>Stop Toggle</h1>
+
+<form
+  #scollable
+  id="stop-toggle"
+  mat-dialog-content
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+  (keydown.escape)="close()"
+  autocomplete="off"></form>
+
+<mat-form-field style="max-width: 4em; padding-right: 1em">
+  <mat-label>Arbeitszeit</mat-label>
+  <input matInput disabled [ngModel]="getDuration()" style="text-align: right" />
+</mat-form-field>
+
+<mat-form-field style="min-width: 20em">
+  <mat-label>Kommentar</mat-label>
+  <input matInput [(ngModel)]="comment" />
+</mat-form-field>
+
+<mat-dialog-actions>
+  <button mat-stroked-button [mat-dialog-close]="getMoreWorkResponseData()">Weiterarbeiten</button>
+  <button mat-stroked-button [mat-dialog-close]="getDeleteTimerResponseData()">
+    Timer löschen
+  </button>
+  <button mat-flat-button color="primary" type="submit" form="stop-toggle" [disabled]="!form.valid">
+    Speichern
+  </button>
+</mat-dialog-actions>

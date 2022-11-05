@@ -171,6 +171,7 @@ export class WeekTableComponent implements OnInit, OnDestroy {
     let recordNumber = this.getRecordNumberOfRecordToday();
     if (recordNumber !== -1) {
       this.submit(record, recordNumber);
+      this.playAudio();
     }
   }
 
@@ -193,6 +194,13 @@ export class WeekTableComponent implements OnInit, OnDestroy {
         this.errorService.notifyGeneralError();
       },
     });
+  }
+
+  playAudio() {
+    let audio = new Audio();
+    audio.src = 'assets/3-1-10030.mp3';
+    audio.load();
+    audio.play();
   }
 
   private set favourites(value: Activity[]) {

@@ -75,6 +75,9 @@ export class StopToggleDialogComponent implements OnInit {
   getDuration() {
     let hours = Math.floor(this.data.durationMinutes / 60);
     let minutes = Math.floor(this.data.durationMinutes - hours * 60);
+    if (minutes < 10) {
+      return hours + ':' + '0' + minutes;
+    }
     return hours + ':' + minutes;
   }
 }

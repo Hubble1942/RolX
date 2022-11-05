@@ -2,7 +2,8 @@
   <ng-container matColumnDef="activity">
     <th mat-header-cell *matHeaderCellDef>Aktivität</th>
 
-    <td style="display: flex" mat-cell *matCellDef="let item" [attr.colspan]="item ? 1 : 8">
+    <td mat-cell *matCellDef="let item" [attr.colspan]="item ? 1 : 8">
+      <!--<div style="display: flex">-->
       <span *ngIf="isActivity(item); else treeNode">
         <ng-container *ngIf="asTreeView; else tableView">
           <rolx-starred-activity-indicator
@@ -49,7 +50,8 @@
         [activity]="item"
         [records]="records"
         (changed)="submitRecord($event)"
-        style="margin-left: auto"></rolx-toggle>
+        style="margin-left: 2em"></rolx-toggle>
+      <!--</div>-->
     </td>
 
     <td mat-footer-cell *matFooterCellDef>

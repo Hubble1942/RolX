@@ -1,0 +1,21 @@
+<mat-card>
+  <ng-form [formGroup]="filterFormGroup">
+    <mat-form-field appearance="standard">
+      <mat-label>Zeitbereich</mat-label>
+      <mat-date-range-input [rangePicker]="picker" formGroupName="dateRange">
+        <input matStartDate placeholder="Startdatum" formControlName="begin" />
+        <input matStartDate placeholder="Enddatum" formControlName="end" />
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+
+    <mat-select multiple formGroupName="userIds">
+      <mat-option *ngFor="let userAndId of possibleUsers" [value]="userAndId.id">
+        {{userAndId.userName}}
+      </mat-option>
+    </mat-select>
+  </ng-form>
+
+  <button mat-button>Apply</button>
+</mat-card>

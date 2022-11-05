@@ -3,6 +3,7 @@ import { RoleGuard } from '@app/auth/core/role.guard';
 import { Role } from '@app/users/core/role';
 
 import { ExportPageComponent } from './pages/export-page/export-page.component';
+import { ReportPageComponent } from './pages/report-page/report-page.component';
 import { UserMonthReportPageComponent } from './pages/user-month-report-page/user-month-report-page.component';
 
 export const ReportsRoutes: Routes = [
@@ -20,5 +21,9 @@ export const ReportsRoutes: Routes = [
     path: 'reports',
     redirectTo: 'reports/',
     pathMatch: 'full',
+  },
+  {
+    path: 'report',
+    component: ReportPageComponent,
   },
 ];

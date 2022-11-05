@@ -6,7 +6,8 @@ namespace RolXServer.Reports.WebApi.Resource;
 /// Defines a filter for the creation of a <see cref="Report"/>.
 /// </summary>
 public record ReportFilter(
-    DateRange DateRange,
+    string Begin,
+    string End,
     int? ProjectNumber,
     int? SubprojectNumber,
     IEnumerable<Guid>? UserIds,

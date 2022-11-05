@@ -17,8 +17,8 @@ export class ReportService {
   get(filter: ReportFilter): Observable<Report> {
     let params = new HttpParams();
 
-    params = params.append('dateRange.begin', filter.dateRange.begin.format('YYYY-MM-DD'))
-                   .append('dateRange.end', filter.dateRange.end.format('YYYY-MM-DD'));
+    params = params.append('begin', filter.dateRange.begin.format('YYYY-MM-DD'))
+                   .append('end', filter.dateRange.end.format('YYYY-MM-DD'));
 
     if (filter.subprojectNumber != null) {
       params = params.append('subprojectNumber', filter.subprojectNumber);

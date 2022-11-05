@@ -32,7 +32,7 @@ public static class ReportMapper
     /// <returns>An export filter.</returns>
     public static ExportFilter ToDomain(this ReportFilter reportFilter) =>
         new(
-            reportFilter.DateRange,
+            new DateRange(DateOnly.Parse(reportFilter.Begin), DateOnly.Parse(reportFilter.End)),
             reportFilter.ProjectNumber,
             reportFilter.SubprojectNumber,
             reportFilter.UserIds?.ToArray() ?? Array.Empty<Guid>(),

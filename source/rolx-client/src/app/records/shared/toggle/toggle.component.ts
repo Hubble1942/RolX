@@ -77,6 +77,7 @@ export class ToggleComponent implements OnInit {
           if (reocrdOfToday && startTime) {
             let recordEntry = new RecordEntry();
             recordEntry.activityId = this.activity.id;
+            recordEntry.comment = r.comment;
             /*
             let durationInHours =
               (new Date().getTime() - (startTime as Date).getTime()) / (1000 * 60 * 60);

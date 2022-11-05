@@ -7,6 +7,7 @@ import { MultiEntriesDialogData } from '../../multi-entries-dialog/multi-entries
 export interface StopToggleDialogData {}
 export interface StopToggleDialogResponseData {
   dialogAction: StopToggleDialogAction;
+  comment: string;
 }
 
 export enum StopToggleDialogAction {
@@ -22,6 +23,8 @@ export enum StopToggleDialogAction {
 })
 export class StopToggleDialogComponent implements OnInit {
   form = this.fb.group({});
+
+  comment!: string;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: StopToggleDialogData,
@@ -49,18 +52,21 @@ export class StopToggleDialogComponent implements OnInit {
   getMoreWorkResponseData(): StopToggleDialogResponseData {
     return {
       dialogAction: StopToggleDialogAction.MoreWork,
+      comment: '',
     };
   }
 
   getDeleteTimerResponseData(): StopToggleDialogResponseData {
     return {
       dialogAction: StopToggleDialogAction.DeleteTimer,
+      comment: '',
     };
   }
 
   getStoreResponseData(): StopToggleDialogResponseData {
     return {
       dialogAction: StopToggleDialogAction.Store,
+      comment: this.comment,
     };
   }
 }

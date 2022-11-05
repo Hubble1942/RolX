@@ -9,6 +9,11 @@
   (keydown.escape)="close()"
   autocomplete="off"></form>
 
+<mat-form-field>
+  <mat-label>Kommentar</mat-label>
+  <input matInput [(ngModel)]="comment" />
+</mat-form-field>
+
 <mat-dialog-actions>
   <button mat-stroked-button [mat-dialog-close]="getMoreWorkResponseData()">Weiterarbeiten</button>
   <button mat-stroked-button [mat-dialog-close]="getDeleteTimerResponseData()">

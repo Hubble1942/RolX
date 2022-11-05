@@ -23,6 +23,8 @@ public sealed record Subproject(
     Guid? ManagerId,
     string ManagerName,
     bool IsClosed,
+    long Budget,
+    long Actual,
     ImmutableList<Activity> Activities)
     : SubprojectShallow(
         Id: Id,

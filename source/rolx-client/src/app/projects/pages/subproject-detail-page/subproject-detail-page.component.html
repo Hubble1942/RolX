@@ -21,7 +21,9 @@
 
   <rolx-activity-table
     *ngIf="subproject.activities.length > 0"
-    [activities]="subproject.activities">
+    [activities]="subproject.activities"
+    [totalActualHours]="subproject.actual"
+    [totalBudgetHours]="subproject.budget">
   </rolx-activity-table>
 
   <section class="exports" *ngIf="mayExport">

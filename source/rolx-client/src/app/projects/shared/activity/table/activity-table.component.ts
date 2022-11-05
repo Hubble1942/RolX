@@ -3,6 +3,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AuthService } from '@app/auth/core/auth.service';
 import { SortService } from '@app/core/persistence/sort.service';
+import { Duration } from '@app/core/util/duration';
 import { assertDefined } from '@app/core/util/utils';
 import { Activity } from '@app/projects/core/activity';
 
@@ -27,6 +28,12 @@ export class ActivityTableComponent implements OnInit {
     this._activities = value;
     this.dataSource.data = value;
   }
+
+  @Input()
+  totalActualHours = Duration.Zero;
+
+  @Input()
+  totalBudgetHours = Duration.Zero;
 
   displayedColumns: string[] = [
     'number',
@@ -64,5 +71,13 @@ export class ActivityTableComponent implements OnInit {
 
   tpd(activity: Activity): Activity {
     return activity;
+  }
+
+  overBudgetClass(actual: Duration, budget: Duration): string{
+    return actual > budget? 'over-budget':'';
+  }
+
+  activityOverBudgetClass(activity: Activity): string{
+    return this.overBudgetClass(activity.actual, activity.budget);
   }
 }

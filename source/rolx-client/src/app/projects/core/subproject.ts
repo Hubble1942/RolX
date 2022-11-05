@@ -1,3 +1,4 @@
+import { Duration, TransformAsDuration } from '@app/core/util/duration';
 import { assertDefined } from '@app/core/util/utils';
 import { SubprojectShallow } from '@app/projects/core/subproject-shallow';
 import { Type } from 'class-transformer';
@@ -10,6 +11,11 @@ export class Subproject extends SubprojectShallow {
   projectNumber!: number;
   number!: number;
   managerId?: string;
+  @TransformAsDuration()
+  budget!: Duration;
+
+  @TransformAsDuration()
+  actual!: Duration;
 
   @Type(() => Activity)
   activities: Activity[] = [];
@@ -20,6 +26,8 @@ export class Subproject extends SubprojectShallow {
     assertDefined(this, 'fullName');
     assertDefined(this, 'projectNumber');
     assertDefined(this, 'number');
+    assertDefined(this, 'actual');
+    assertDefined(this, 'budget');
     assertDefined(this, 'activities');
 
     this.activities.forEach((a) => a.validateModel());

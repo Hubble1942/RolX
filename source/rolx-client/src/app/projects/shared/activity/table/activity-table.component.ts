@@ -72,4 +72,12 @@ export class ActivityTableComponent implements OnInit {
   tpd(activity: Activity): Activity {
     return activity;
   }
+
+  overBudgetClass(actual: Duration, budget: Duration): string{
+    return actual > budget? 'over-budget':'';
+  }
+
+  activityOverBudgetClass(activity: Activity): string{
+    return this.overBudgetClass(activity.actual, activity.budget);
+  }
 }

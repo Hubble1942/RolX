@@ -43,11 +43,13 @@
 
   <ng-container matColumnDef="actualHours">
     <th mat-header-cell *matHeaderCellDef>Ist</th>
-    <td mat-cell *matCellDef="let activity">
+    <td mat-cell *matCellDef="let activity" [ngClass]="activityOverBudgetClass(tpd(activity))">
       {{tpd(activity).actual.personDays | number:'1.1-1'}} PT
     </td>
     <td mat-footer-cell *matFooterCellDef mat-footer-header>
-      <span>{{totalActualHours.personDays| number:'1.1-1'}} PT </span>
+      <span [ngClass]="overBudgetClass(totalActualHours, totalBudgetHours)">
+        {{totalActualHours.personDays| number:'1.1-1'}} PT
+      </span>
     </td>
   </ng-container>
 
@@ -69,7 +71,7 @@
     <td mat-footer-cell *matFooterCellDef mat-footer-header></td>
   </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
   <tr
     mat-row
     *matRowDef="let activity; columns: displayedColumns;"

@@ -6,7 +6,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using RolXServer.Common.Util;
 using RolXServer.Reports.Domain.Model;
 
 namespace RolXServer.Reports.Domain;
@@ -19,14 +18,10 @@ public interface IExportService
     /// <summary>
     /// Gets the export for the specified range and subproject.
     /// </summary>
-    /// <param name="range">The range.</param>
-    /// <param name="creatorId">The creator.</param>
-    /// <param name="subprojectId">The subproject identifier.</param>
+    /// <param name="creatorId">The creator of the export.</param>
+    /// <param name="filter">The filter.</param>
     /// <returns>
     /// The data.
     /// </returns>
-    /// <remarks>
-    /// When no subproject identifier is provided, the data of all subprojects is returned.
-    /// </remarks>
-    Task<Export> GetFor(DateRange range, Guid creatorId, int? subprojectId);
+    Task<Export> GetFor(Guid creatorId, ExportFilter filter);
 }

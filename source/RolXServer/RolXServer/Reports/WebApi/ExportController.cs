@@ -14,6 +14,7 @@ using RolXServer.Common.Util;
 using RolXServer.Projects.DataAccess;
 using RolXServer.Projects.Domain;
 using RolXServer.Reports.Domain;
+using RolXServer.Reports.Domain.Model;
 using RolXServer.Reports.WebApi.Mapping;
 
 namespace RolXServer.Reports.WebApi;
@@ -69,8 +70,9 @@ public class ExportController : ControllerBase
             return this.BadRequest("A month or begin and end dates must be provided");
         }
 
+        var exportFilter = new ExportFilter(range.Value, null, subprojectId, Array.Empty<Guid>(), null);
         return this.ExcelExport(
-            await this.exportService.GetFor(range.Value, this.User.GetUserId(), subprojectId),
+            await this.exportService.GetFor(this.User.GetUserId(), exportFilter),
             GetFileName(month, begin, end, subproject));
     }
 

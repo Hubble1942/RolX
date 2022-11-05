@@ -37,9 +37,7 @@
       </span>
     </td>
     <td mat-footer-cell *matFooterCellDef mat-footer-header>
-      <span *ngIf="!totalBudgetHours.isZero">
-        {{totalBudgetHours.personDays| number:'1.1-1'}} PT
-      </span>
+      <span>{{totalBudgetHours.personDays| number:'1.1-1'}} PT</span>
     </td>
   </ng-container>
 
@@ -49,9 +47,7 @@
       {{tpd(activity).actual.personDays | number:'1.1-1'}} PT
     </td>
     <td mat-footer-cell *matFooterCellDef mat-footer-header>
-      <span *ngIf="!totalActualHours.isZero">
-        {{totalActualHours.personDays| number:'1.1-1'}} PT
-      </span>
+      <span>{{totalActualHours.personDays| number:'1.1-1'}} PT </span>
     </td>
   </ng-container>
 

@@ -1,0 +1,41 @@
+<mat-card>
+  <mat-card-title>Report Filter</mat-card-title>
+  <ng-form [formGroup]="filterFormGroup" style="display: flex; gap: 1em">
+    <mat-form-field appearance="standard">
+      <mat-label>Zeitbereich</mat-label>
+      <mat-date-range-input [rangePicker]="picker" formGroupName="dateRange">
+        <input matStartDate placeholder="Startdatum" formControlName="begin" />
+        <input matEndDate placeholder="Enddatum" formControlName="end" />
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+      <mat-label>Mitarbeiter</mat-label>
+      <mat-select multiple formControlName="userIds">
+        <mat-option *ngFor="let userAndId of possibleUsers" [value]="userAndId.id">
+          {{userAndId.fullName}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Subprojekt</mat-label>
+      <mat-select formControlName="subprojectNumber">
+        <mat-option *ngFor="let subproject of possibleSubprojects" [value]="subproject.id">
+          {{subproject.fullNumber}} {{subproject.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Kommentarfilter</mat-label>
+      <input matInput formControlName="commentFilter" />
+    </mat-form-field>
+  </ng-form>
+
+  <mat-card-actions>
+    <button mat-flat-button (click)="applyFilterClicked()">Apply</button>
+  </mat-card-actions>
+</mat-card>

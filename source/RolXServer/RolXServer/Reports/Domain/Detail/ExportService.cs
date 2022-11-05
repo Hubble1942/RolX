@@ -44,54 +44,69 @@ internal sealed class ExportService : IExportService
     }
 
     /// <inheritdoc/>
-    public async Task<Export> GetFor(DateRange range, Guid creatorId, int? subprojectId)
+    public async Task<Export> GetFor(Guid creatorId, ExportFilter filter)
     {
         var creator = await this.dbContext.Users.FirstOrThrowNotFoundAsync(u => u.Id == creatorId);
 
-        var subproject = subprojectId.HasValue
-            ? (await this.dbContext.Subprojects.FirstOrThrowNotFoundAsync(s => s.Id == subprojectId)).FullName()
+        var subproject = filter.SubprojectNumber.HasValue
+            ? (await this.dbContext.Subprojects.FirstOrThrowNotFoundAsync(s => s.Id == filter.SubprojectNumber)).FullName()
             : "Alle";
 
         return new Export(
             subproject,
-            range,
+            filter.Range,
             creator.FullName(),
             DateTime.Now,
-            (await this.GetEntries(range, subprojectId)).OrderBy(entry => entry.Date));
+            (await this.GetEntries(filter)).OrderBy(entry => entry.Date));
     }
 
-    private async Task<IEnumerable<ExportEntry>> GetEntries(DateRange range, int? subprojectId)
+    private async Task<IEnumerable<ExportEntry>> GetEntries(ExportFilter filter)
     {
         var entries = this.dbContext.RecordEntries
             .AsNoTracking()
-            .Where(entry => entry.Record!.Date >= range.Begin && entry.Record!.Date < range.End);
+            .Where(entry => entry.Record!.Date >= filter.Range.Begin && entry.Record!.Date < filter.Range.End);
 
-        if (subprojectId.HasValue)
+        if (filter.ProjectNumber is { } projectNumber)
         {
-            entries = entries.Where(entry => entry.Activity!.SubprojectId == subprojectId.Value);
+            entries = entries.Where(e => e.Activity!.Subproject!.ProjectNumber == projectNumber);
+        }
+
+        if (filter.SubprojectNumber is { } subprojectNumber)
+        {
+            entries = entries.Where(e => e.Activity!.SubprojectId == subprojectNumber);
+        }
+
+        if (filter.UserIds is { Count: > 0 } userIds)
+        {
+            entries = entries.Where(entry => userIds.Contains(entry.Record!.UserId));
+        }
+
+        if (!string.IsNullOrEmpty(filter.CommentFilter))
+        {
+            entries = entries.Where(entry => entry.Comment.Contains(filter.CommentFilter));
         }
 
         var exportEntries = (await entries
-            .Select(entry => new ExportEntry(
-                entry.Record!.Date,
-                entry.Activity!.Subproject!.ProjectNumber,
-                entry.Activity!.Subproject!.CustomerName,
-                entry.Activity!.Subproject!.ProjectName,
-                entry.Activity!.Subproject!.Number,
-                entry.Activity!.Subproject!.Name,
-                entry.Activity!.Number,
-                entry.Activity!.Name,
-                entry.Activity.Billability!.Name,
-                entry.Record.User!.FirstName + " " + entry.Record.User.LastName,
-                entry.Duration,
-                entry.Comment))
-            .ToListAsync())
+                .Select(entry => new ExportEntry(
+                    entry.Record!.Date,
+                    entry.Activity!.Subproject!.ProjectNumber,
+                    entry.Activity!.Subproject!.CustomerName,
+                    entry.Activity!.Subproject!.ProjectName,
+                    entry.Activity!.Subproject!.Number,
+                    entry.Activity!.Subproject!.Name,
+                    entry.Activity!.Number,
+                    entry.Activity!.Name,
+                    entry.Activity.Billability!.Name,
+                    entry.Record.User!.FirstName + " " + entry.Record.User.LastName,
+                    entry.Duration,
+                    entry.Comment))
+                .ToListAsync())
             .AsEnumerable();
 
-        if (!subprojectId.HasValue)
+        if (filter.SubprojectNumber is null)
         {
             exportEntries = exportEntries
-                .Concat(await this.GetPaidLeaveEntries(range));
+                .Concat(await this.GetPaidLeaveEntries(filter.Range));
         }
 
         return exportEntries;

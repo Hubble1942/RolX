@@ -1,0 +1,19 @@
+<table mat-table [dataSource]="dataSource" matSort matSortDisableClear class="mat-elevation-z8">
+  <ng-container matColumnDef="userName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>User</th>
+    <td mat-cell class="userName" *matCellDef="let reportEntry">{{tpd(reportEntry).userName}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="duration">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Dauer</th>
+    <td mat-cell class="duration" *matCellDef="let reportEntry">{{tpd(reportEntry).duration}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="comment">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Komentar</th>
+    <td mat-cell class="comment" *matCellDef="let reportEntry">{{tpd(reportEntry).comment}}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let activity; columns: displayedColumns;"></tr>
+</table>

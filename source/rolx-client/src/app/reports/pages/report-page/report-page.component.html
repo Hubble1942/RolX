@@ -1,0 +1,7 @@
+<mat-card>
+  <rolx-report-filter (reportFilterChanged)="reportFilterChanged($event)"></rolx-report-filter>
+  <button mat-flat-button (click)="exportRange()" color="primary">Export</button>
+  <div *ngIf="report?.entries?.length">
+    <rolx-report-table [reportEntries]="report.entries"></rolx-report-table>
+  </div>
+</mat-card>

@@ -78,11 +78,11 @@ export class ToggleComponent implements OnInit {
             let recordEntry = new RecordEntry();
             recordEntry.activityId = this.activity.id;
             recordEntry.comment = r.comment;
-            /*
+
             let durationInHours =
               (new Date().getTime() - (startTime as Date).getTime()) / (1000 * 60 * 60);
-            */
-            let durationInHours = 2;
+
+            //let durationInHours = 2;
             recordEntry.duration = Duration.fromHours(durationInHours);
             reocrdOfToday.entries.push(recordEntry);
             this.changed.emit(reocrdOfToday);

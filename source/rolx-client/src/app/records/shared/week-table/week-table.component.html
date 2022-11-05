@@ -45,7 +45,7 @@
           (selected)="addHomegrown($event);table.renderRows()"></rolx-activity-selector>
       </ng-template>
       <rolx-toggle
-        *ngIf="isActivity(item);"
+        *ngIf="isActivity(item) && getRecordNumberOfRecordToday() !== -1;"
         [activity]="item"
         [records]="records"
         (changed)="submitRecord($event)"

@@ -13,7 +13,7 @@
 
     <mat-form-field appearance="standard">
       <mat-label>Mitarbeiter</mat-label>
-      <mat-select multiple formGroupName="userIds">
+      <mat-select multiple formControlName="userIds">
         <mat-option *ngFor="let userAndId of possibleUsers" [value]="userAndId.id">
           {{userAndId.fullName}}
         </mat-option>
@@ -22,11 +22,16 @@
 
     <mat-form-field>
       <mat-label>Subprojekt</mat-label>
-      <mat-select>
+      <mat-select formControlName="subprojectNumber">
         <mat-option *ngFor="let subproject of possibleSubprojects" [value]="subproject.id">
           {{subproject.fullNumber}} {{subproject.name}}
         </mat-option>
       </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Kommentarfilter</mat-label>
+      <input matInput formControlName="commentFilter" />
     </mat-form-field>
   </ng-form>
 

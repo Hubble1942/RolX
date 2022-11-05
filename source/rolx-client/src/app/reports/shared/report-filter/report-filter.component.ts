@@ -52,6 +52,7 @@ export class ReportFilterComponent {
     reportFilter.projectNumber = this.filterFormGroup.get('projectNumber')?.value;
     reportFilter.subprojectNumber = this.filterFormGroup.get('subprojectNumber')?.value;
     reportFilter.userIds = this.filterFormGroup.get('userIds')?.value;
+    reportFilter.commentFilter = this.filterFormGroup.get('commentFilter')?.value;
 
     return reportFilter;
   }

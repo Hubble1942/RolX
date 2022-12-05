@@ -153,12 +153,10 @@ export class RecordEntryParserUtils {
       zwanzig: '2',
       dreissig: '3',
       drei砸ig: '3',
+      dreißig: '3',
       vierzig: '4',
       fünfzig: '5',
     };
-
-    text = this.replaceWords(text, numbers_1_10);
-    text = this.replaceWords(text, numbers_10_19);
 
     Object.entries(numbers_20_50).forEach((ten_entry) => {
       Object.entries(numbers_1_10).forEach((one_entry) => {
@@ -170,6 +168,9 @@ export class RecordEntryParserUtils {
       const regex = new RegExp('\\b' + entry[0] + '\\b', 'gi');
       text = text.replace(regex, entry[1] + '0');
     });
+
+    text = this.replaceWords(text, numbers_1_10);
+    text = this.replaceWords(text, numbers_10_19);
 
     return text;
   }

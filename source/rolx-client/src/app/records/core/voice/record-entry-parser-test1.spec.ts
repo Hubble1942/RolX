@@ -49,6 +49,15 @@ describe('RecordEntryParser.parse()', () => {
       4500,
     ));
 
+  it('Von Bis ohne Kommentar - zeit1', () =>
+    expect(RecordEntryParser.parse('9 uhr 30 uhr bis 14:30').entry?.duration.seconds).toBe(
+      5*3600,
+    ));
+  it('Von Bis ohne Kommentar mit Doppel-S (ß)- zeit2', () =>
+    expect(RecordEntryParser.parse('9 uhr dreißig bis 14:30').entry?.duration.seconds).toBe(
+      5*3600,
+    ));
+
   it('Von Bis ohne minuten', () =>
     expect(RecordEntryParser.parse('von 8 uhr bis 9 uhr').entry?.duration.seconds).toBe(3600));
   it('Von Bis ohne minuten, zeittexte', () =>

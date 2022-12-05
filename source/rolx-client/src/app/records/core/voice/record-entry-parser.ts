@@ -39,26 +39,26 @@ export class RecordEntryParser {
   }
 
   static parseFromTo(text: string, entry: RecordEntry): boolean {
-    const von = RecordEntryParserUtils.getStringBeforeFirstWordOfList(text, this.language.until);
-    const h1 = RecordEntryParserUtils.findNthNumber(von, 0);
-    let m1 = RecordEntryParserUtils.findNthNumber(von, 1);
-    m1 = m1 === undefined ? 0 : m1;
+    const fromTimePart = RecordEntryParserUtils.getStringBeforeFirstWordOfList(text, this.language.until);
+    const hour1 = RecordEntryParserUtils.findNthNumber(fromTimePart, 0);
+    let minute1 = RecordEntryParserUtils.findNthNumber(fromTimePart, 1);
+    minute1 ??=0;
 
-    const bis = RecordEntryParserUtils.getStringAfterFirstWordOfList(text, this.language.until);
-    const h2 = RecordEntryParserUtils.findNthNumber(bis, 0);
-    let m2 = RecordEntryParserUtils.findNthNumber(bis, 1);
-    m2 = m2 === undefined ? 0 : m2;
+    const untilTimePart = RecordEntryParserUtils.getStringAfterFirstWordOfList(text, this.language.until);
+    const hour2 = RecordEntryParserUtils.findNthNumber(untilTimePart, 0);
+    let minute2 = RecordEntryParserUtils.findNthNumber(untilTimePart, 1);
+    minute2 ??=0;
 
-    //console.log(text+' -> '+von+' - '+bis+' '+h1+':'+m1+'   -    '+h2+':'+m1);
-    if (h1 === undefined || h2 === undefined) {
+    if (hour1 === undefined || hour2 === undefined) {
       return false;
     }
 
-    const timeFrom = TimeOfDay.fromHours(h1 + m1 / 60.0);
-    const timeTo = TimeOfDay.fromHours(h2 + m2 / 60.0);
+    const timeFrom = TimeOfDay.fromHours(hour1 + minute1 / 60.0);
+    const timeTo = TimeOfDay.fromHours(hour2 + minute2 / 60.0);
 
     entry.begin = timeFrom;
     entry.duration = timeTo.sub(timeFrom);
+
     return true;
   }
 
@@ -109,7 +109,7 @@ export class RecordEntryParser {
         return true;
       }
       state.success = false;
-      state.errorMsg = 'Does not seem to include two time specifications like "8:15"';
+      state.errorMsg = 'Eingabe enthält keine zwei Zeiten wie z.B. "8 Uhr 15 bis 9 Uhr 30"';
     }
     return false;
   }
@@ -122,15 +122,16 @@ export class RecordEntryParser {
         return true;
       }
       state.success = false;
-      state.errorMsg = 'Does not seem to include a duration like "8 Stunden 15 Minuten"';
+      state.errorMsg = 'Eingabe enthält keine Zeitdauer wie z.B. "8 Stunden 15 Minuten"';
     }
     return false;
   }
 
   static parse(text: string): ParserResult {
     // Spezifikation
-    // - Wenn Text das Wort "Stunde" enthält, gehen wir davon aus, dass im Text eine fixe Zeitdauer vorkommt
-    // - Wenn der Text das Wort "Uhr" enthält, gehen wir davon aus, dass von -bis vorkommt
+    // - Wenn Text das Wort "Stunde" oder "Minute" enthält, gehen wir davon aus, dass im Text eine fixe Zeitdauer vorkommt
+    // - Wenn der Text das Wort "bis" enthält, gehen wir davon aus, dass es sich um einen
+    //   von-bis Eintrag handelt
     // - Wenn der Text das Wort "Kommentar" enthält, wird alles danach als Kommentar gespeichert
 
     const state: parserState = new parserState();

@@ -79,6 +79,10 @@ describe('RecordEntryParserUtils helper functions', () => {
     expect(RecordEntryParserUtils.replaceWrittenNumbers('zwanzig')).toBe('20'));
   it('replace written number zweiundvierzig', () =>
     expect(RecordEntryParserUtils.replaceWrittenNumbers('zweiundvierzig')).toBe('42'));
+  it('replace written number dreissig', () =>
+    expect(RecordEntryParserUtils.replaceWrittenNumbers('dreissig')).toBe('30'));
+  it('replace written number drei\u{7838}ig', () =>
+    expect(RecordEntryParserUtils.replaceWrittenNumbers('drei\u{7838}ig')).toBe('30'));
   it('replace written number dreiunddreissig', () =>
     expect(RecordEntryParserUtils.replaceWrittenNumbers('dreiunddreissig')).toBe('33'));
   it('replace written number dreiunddrei\u{7838}ig', () =>

@@ -28,14 +28,14 @@ public static class RecordExtensions
     /// The paid-leave group.
     /// </returns>
     public static WorkItemGroup ToPaidLeaveWorkItemGroup(this IEnumerable<Record> records, IPaidLeaveActivities paidLeaveActivities)
-        => new WorkItemGroup(
-            paidLeaveActivities.Subproject.FullName(),
+        => new(
+            paidLeaveActivities.Subproject.FullName,
             records
                 .Where(record => record.PaidLeaveType.HasValue)
                 .GroupBy(record => record.PaidLeaveType!.Value)
                 .OrderBy(group => group.Key)
                 .Select(group => new WorkItem(
-                    paidLeaveActivities[group.Key].NumberedName(),
+                    paidLeaveActivities[group.Key].NumberedName,
                     group.Sum(record => record.PaidLeaveTime())))
                 .ToImmutableList());
 

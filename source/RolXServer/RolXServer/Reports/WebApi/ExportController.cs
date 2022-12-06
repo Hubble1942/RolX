@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 
 using RolXServer.Auth.Domain;
 using RolXServer.Common.Util;
-using RolXServer.Projects.DataAccess;
 using RolXServer.Projects.Domain;
 using RolXServer.Reports.Domain;
 using RolXServer.Reports.WebApi.Mapping;
@@ -53,7 +52,7 @@ public class ExportController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetExcel(int? subprojectId, string? month, string? begin, string? end)
     {
-        Subproject? subproject = null;
+        Projects.Domain.Model.Subproject? subproject = null;
         if (subprojectId.HasValue)
         {
             subproject = await this.subprojectService.GetById(subprojectId.Value);
@@ -92,14 +91,14 @@ public class ExportController : ControllerBase
         return null;
     }
 
-    private static string GetFileName(string? month, string? begin, string? end, Subproject? subproject)
+    private static string GetFileName(string? month, string? begin, string? end, Projects.Domain.Model.Subproject? subproject)
     {
         if (end != null)
         {
             end = IsoDate.Parse(end).AddDays(-1).ToIsoDate();
         }
 
-        var subprojectPart = subproject != null ? subproject.FullNumber() : "all";
+        var subprojectPart = subproject != null ? subproject.FullNumber : "all";
         var rangePart = month != null
             ? month
             : begin != null && end != null

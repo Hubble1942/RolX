@@ -7,7 +7,7 @@
 // -----------------------------------------------------------------------
 
 using RolXServer.Common.Util;
-using RolXServer.Projects.Domain;
+using RolXServer.Projects.Domain.Mapping;
 using RolXServer.Records.DataAccess;
 using RolXServer.Reports.Domain.Model;
 
@@ -27,7 +27,7 @@ public static class RecordEntryExtensions
         => recordEntries
         .GroupBy(entry => entry.Activity!.Subproject!)
         .Select(group => new WorkItemGroup(
-            group.Key.FullName(),
+            group.Key.ToDomain().FullName,
             group.ToWorkItems().ToImmutableList()))
         .OrderBy(workItemGroup => workItemGroup.Name);
 
@@ -40,7 +40,7 @@ public static class RecordEntryExtensions
         => recordEntries
         .GroupBy(entry => entry.Activity!)
         .Select(group => new WorkItem(
-            group.Key.NumberedName(),
+            group.Key.ToDomain().NumberedName,
             group.Sum(entry => entry.Duration)))
         .OrderBy(workItem => workItem.Name);
 }

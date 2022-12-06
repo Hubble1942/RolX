@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using RolXServer.Common.Util;
 using RolXServer.Common.WebApi;
 using RolXServer.Projects.Domain;
+using RolXServer.Projects.Domain.Mapping;
 using RolXServer.Records;
 using RolXServer.Reports.Domain.Model;
 using RolXServer.Users.Domain;
@@ -49,7 +50,7 @@ internal sealed class ExportService : IExportService
         var creator = await this.dbContext.Users.FirstOrThrowNotFoundAsync(u => u.Id == creatorId);
 
         var subproject = subprojectId.HasValue
-            ? (await this.dbContext.Subprojects.FirstOrThrowNotFoundAsync(s => s.Id == subprojectId)).FullName()
+            ? (await this.dbContext.Subprojects.FirstOrThrowNotFoundAsync(s => s.Id == subprojectId)).ToDomain().FullName
             : "Alle";
 
         return new Export(

@@ -9,6 +9,7 @@
 using Microsoft.EntityFrameworkCore;
 
 using RolXServer.Projects.DataAccess;
+using RolXServer.Projects.Domain.Mapping;
 using RolXServer.Records.DataAccess;
 using RolXServer.Users.DataAccess;
 
@@ -198,12 +199,13 @@ public sealed class RolXContext : DbContext
         var activities = subproject.Activities;
         subproject.Activities = new();
 
-        modelBuilder.Entity<Subproject>().HasData(subproject);
+        modelBuilder.Entity<Subproject>().HasData(subproject.ToEntity());
 
         foreach (var activity in activities)
         {
-            activity.Subproject = null;
-            modelBuilder.Entity<Activity>().HasData(activity);
+            var activityEntity = activity.ToEntity();
+            activityEntity.Billability = null;
+            modelBuilder.Entity<Activity>().HasData(activityEntity);
         }
     }
 }

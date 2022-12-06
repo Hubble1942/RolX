@@ -6,8 +6,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using RolXServer.Projects.DataAccess;
-
 namespace RolXServer.Projects.Domain.Detail;
 
 /// <summary>
@@ -15,7 +13,7 @@ namespace RolXServer.Projects.Domain.Detail;
 /// </summary>
 public sealed class PaidLeaveActivities : IPaidLeaveActivities
 {
-    private readonly Dictionary<PaidLeaveType, Activity> activities;
+    private readonly Dictionary<PaidLeaveType, Model.Activity> activities;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PaidLeaveActivities"/> class.
@@ -23,22 +21,24 @@ public sealed class PaidLeaveActivities : IPaidLeaveActivities
     public PaidLeaveActivities()
     {
         this.activities = Enum.GetValues<PaidLeaveType>()
-            .ToDictionary(e => e, e => new Activity
+            .ToDictionary(e => e, e => new Model.Activity
             {
                 Id = ((int)e) + 1,
                 Number = ((int)e) + 1,
                 Name = e.ToPrettyString(),
                 StartDate = new DateOnly(2020, 1, 1),
-                SubprojectId = this.Subproject.Id,
                 Subproject = this.Subproject,
-                BillabilityId = 7, // Abwesenheit. See RolXContext.SeedBillabilities
+                Billability = new() // Abwesenheit. See RolXContext.SeedBillabilities
+                {
+                    Id = 7,
+                },
             });
 
         this.Subproject.Activities = this.activities.Values.ToList();
     }
 
     /// <inheritdoc/>
-    public Subproject Subproject { get; } = new Subproject
+    public Model.Subproject Subproject { get; } = new()
     {
         Id = 1,
         ProjectNumber = 8900,
@@ -49,6 +49,6 @@ public sealed class PaidLeaveActivities : IPaidLeaveActivities
     };
 
     /// <inheritdoc/>
-    public Activity this[PaidLeaveType paidLeaveType]
+    public Model.Activity this[PaidLeaveType paidLeaveType]
         => this.activities[paidLeaveType];
 }

@@ -6,7 +6,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using RolXServer.Projects.DataAccess;
+using RolXServer.Projects.Domain.Model;
 
 namespace RolXServer.Projects.Domain;
 

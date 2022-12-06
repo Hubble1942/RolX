@@ -7,8 +7,8 @@
 // -----------------------------------------------------------------------
 
 using Microsoft.EntityFrameworkCore;
-
 using RolXServer.Projects.DataAccess;
+using RolXServer.Projects.Domain.Mapping;
 
 namespace RolXServer.Projects.Domain.Detail;
 
@@ -35,9 +35,9 @@ internal sealed class FavouriteService : IFavouriteService
     /// <returns>
     /// The favourite activities.
     /// </returns>
-    public async Task<IEnumerable<Activity>> GetAll(Guid userId)
+    public async Task<IEnumerable<Model.Activity>> GetAll(Guid userId)
     {
-        return await this.context.FavouriteActivities
+        return (await this.context.FavouriteActivities
             .Where(f => f.UserId == userId)
             .Include(f => f.Activity)
                 .ThenInclude(a => a!.Subproject)
@@ -45,7 +45,8 @@ internal sealed class FavouriteService : IFavouriteService
                 .ThenInclude(a => a!.Billability)
             .Select(f => f.Activity!)
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync())
+            .Select(p => p.ToDomain());
     }
 
     /// <summary>
@@ -56,9 +57,9 @@ internal sealed class FavouriteService : IFavouriteService
     /// <returns>
     /// The async task.
     /// </returns>
-    public async Task Add(Activity activity, Guid userId)
+    public async Task Add(Model.Activity activity, Guid userId)
     {
-        this.context.FavouriteActivities.Add(ToEntity(activity, userId));
+        this.context.FavouriteActivities.Add(activity.ToFavouriteActivity(userId));
         await this.context.SaveChangesAsync();
     }
 
@@ -70,15 +71,9 @@ internal sealed class FavouriteService : IFavouriteService
     /// <returns>
     /// The async task.
     /// </returns>
-    public async Task Remove(Activity activity, Guid userId)
+    public async Task Remove(Model.Activity activity, Guid userId)
     {
-        this.context.FavouriteActivities.Remove(ToEntity(activity, userId));
+        this.context.FavouriteActivities.Remove(activity.ToFavouriteActivity(userId));
         await this.context.SaveChangesAsync();
     }
-
-    private static FavouriteActivity ToEntity(Activity activity, Guid userId) => new FavouriteActivity
-    {
-        UserId = userId,
-        ActivityId = activity.Id,
-    };
 }

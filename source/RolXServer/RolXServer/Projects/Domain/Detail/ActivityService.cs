@@ -9,6 +9,7 @@
 using Microsoft.EntityFrameworkCore;
 
 using RolXServer.Projects.DataAccess;
+using RolXServer.Projects.Domain.Mapping;
 
 namespace RolXServer.Projects.Domain.Detail;
 
@@ -29,7 +30,7 @@ internal sealed class ActivityService : IActivityService
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<Activity>> GetAll(DateOnly? unlessEndedBefore)
+    public async Task<IEnumerable<Model.Activity>> GetAll(DateOnly? unlessEndedBefore)
     {
         var query = this.dbContext.Activities
             .AsNoTracking()
@@ -42,16 +43,20 @@ internal sealed class ActivityService : IActivityService
             query = query.Where(a => !a.EndedDate.HasValue || a.EndedDate.Value > unlessEndedBefore.Value);
         }
 
-        return await query.ToListAsync();
+        return (await query.ToListAsync()).GroupBy(a => a.Subproject).SelectMany(group =>
+        {
+            var subproject = group.Key!.ToDomain();
+            return group.Select(a => a.ToDomain(subproject: subproject));
+        });
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<Activity>> GetSuitable(Guid userId, DateOnly date)
+    public async Task<IEnumerable<Model.Activity>> GetSuitable(Guid userId, DateOnly date)
     {
         var begin = date.AddDays(-7);
         var end = date.AddDays(7);
 
-        return await this.dbContext.Records
+        return (await this.dbContext.Records
             .Where(r => r.UserId == userId && r.Date >= begin && r.Date < end)
             .Include(r => r.Entries)
                 .ThenInclude(e => e.Activity)
@@ -63,7 +68,7 @@ internal sealed class ActivityService : IActivityService
             .Select(e => e.Activity!)
             .Distinct()
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync()).Select(a => a.ToDomain());
     }
 
     /// <inheritdoc/>

@@ -20,6 +20,7 @@ public sealed record Activity(
     int BillabilityId,
     string BillabilityName,
     bool IsBillable,
+    bool IsOverBudget,
     long Budget,
     long Actual,
     string ProjectName,

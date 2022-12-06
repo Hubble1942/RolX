@@ -67,9 +67,7 @@ public sealed class SubprojectController : ControllerBase
             return this.NotFound();
         }
 
-        var sums = await this.activityService.GetActualSums(id);
-
-        return domain.ToResource(sums);
+        return domain.ToResource();
     }
 
     /// <summary>
@@ -84,9 +82,7 @@ public sealed class SubprojectController : ControllerBase
     public async Task<ActionResult<Subproject>> Create(Subproject subproject)
     {
         var domain = subproject.ToDomain();
-        await this.subprojectService.Add(domain);
-
-        return domain.ToResource();
+        return (await this.subprojectService.Add(domain)).ToResource();
     }
 
     /// <summary>

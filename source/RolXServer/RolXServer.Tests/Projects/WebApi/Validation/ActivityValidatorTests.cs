@@ -23,6 +23,7 @@ public sealed class ActivityValidatorTests
             BillabilityId: 1,
             BillabilityName: "Billable",
             IsBillable: true,
+            IsOverBudget: false,
             Budget: 0,
             Actual: 0,
             ProjectName: "Any",

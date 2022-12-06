@@ -6,7 +6,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using RolXServer.Projects.Domain;
 using RolXServer.Users.Domain;
 
 namespace RolXServer.Projects.WebApi.Mapping;
@@ -20,13 +19,12 @@ internal static class SubprojectMapper
     /// Converts to resource.
     /// </summary>
     /// <param name="domain">The domain.</param>
-    /// <param name="actualSums">The actual sums.</param>
     /// <returns>The resource.</returns>
-    public static Resource.Subproject ToResource(this DataAccess.Subproject domain, IDictionary<int, TimeSpan>? actualSums = null)
-        => new Resource.Subproject(
+    public static Resource.Subproject ToResource(this Domain.Model.Subproject domain)
+        => new(
             Id: domain.Id,
-            FullNumber: domain.FullNumber(),
-            FullName: domain.FullName(),
+            FullNumber: domain.FullNumber,
+            FullName: domain.FullName,
             CustomerName: domain.CustomerName,
             ProjectNumber: domain.ProjectNumber,
             ProjectName: domain.ProjectName,
@@ -34,23 +32,23 @@ internal static class SubprojectMapper
             Name: domain.Name,
             ManagerId: domain.ManagerId,
             ManagerName: domain.Manager?.FullName() ?? "vakant",
-            IsClosed: domain.IsClosed(),
-            Activities: domain.Activities.Select(ph => ph.ToResource(actualSums)).ToImmutableList());
+            IsClosed: domain.IsClosed,
+            Activities: domain.Activities.Select(a => a.ToResource()).ToImmutableList());
 
     /// <summary>
     /// Converts to shallow resource.
     /// </summary>
     /// <param name="domain">The domain.</param>
     /// <returns>The resource.</returns>
-    public static Resource.SubprojectShallow ToShallowResource(this DataAccess.Subproject domain)
-        => new Resource.SubprojectShallow(
+    public static Resource.SubprojectShallow ToShallowResource(this Domain.Model.Subproject domain)
+        => new(
             Id: domain.Id,
-            FullNumber: domain.FullNumber(),
+            FullNumber: domain.FullNumber,
             CustomerName: domain.CustomerName,
             ProjectName: domain.ProjectName,
             Name: domain.Name,
             ManagerName: domain.Manager?.FullName() ?? "vakant",
-            IsClosed: domain.IsClosed());
+            IsClosed: domain.IsClosed);
 
     /// <summary>
     /// Converts to domain.
@@ -59,9 +57,9 @@ internal static class SubprojectMapper
     /// <returns>
     /// The domain.
     /// </returns>
-    public static DataAccess.Subproject ToDomain(this Resource.Subproject resource)
+    public static Domain.Model.Subproject ToDomain(this Resource.Subproject resource)
     {
-        var domain = new DataAccess.Subproject
+        var domain = new Domain.Model.Subproject()
         {
             Id = resource.Id,
             Number = resource.Number,
@@ -73,7 +71,7 @@ internal static class SubprojectMapper
         };
 
         domain.Activities = resource.Activities
-                .Select(ph => ph.ToDomain(domain))
+                .Select(a => a.ToDomain(domain))
                 .ToList();
 
         return domain;

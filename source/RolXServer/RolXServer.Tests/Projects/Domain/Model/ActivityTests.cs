@@ -1,19 +1,19 @@
 // -----------------------------------------------------------------------
-// <copyright file="ActivityExtensionTests.cs" company="Christian Ewald">
+// <copyright file="ActivityTests.cs" company="Christian Ewald">
 // Copyright (c) Christian Ewald. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE.md in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------------
 
-using RolXServer.Projects.DataAccess;
+using RolXServer.Projects.Domain.Model;
 
 namespace RolXServer.Projects.Domain;
 
 [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
-public sealed class ActivityExtensionTests
+public sealed class ActivityTests
 {
-    private readonly Subproject subproject = new Subproject
+    private readonly Subproject subproject = new()
     {
         ProjectNumber = 4711,
         Number = 1,
@@ -26,7 +26,7 @@ public sealed class ActivityExtensionTests
         },
     };
 
-    public ActivityExtensionTests()
+    public ActivityTests()
     {
         foreach (var activity in this.subproject.Activities)
         {
@@ -37,7 +37,7 @@ public sealed class ActivityExtensionTests
     [Test]
     public void FullNumber()
     {
-        this.subproject.Activities[0].FullNumber()
+        this.subproject.Activities[0].FullNumber
             .Should().Be("#4711.001.03");
     }
 

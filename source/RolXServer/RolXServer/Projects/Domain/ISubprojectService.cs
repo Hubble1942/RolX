@@ -6,7 +6,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using RolXServer.Projects.DataAccess;
+using RolXServer.Projects.Domain.Model;
 
 namespace RolXServer.Projects.Domain;
 
@@ -33,7 +33,7 @@ public interface ISubprojectService
     /// </summary>
     /// <param name="subproject">The subproject.</param>
     /// <returns>The async task.</returns>
-    Task Add(Subproject subproject);
+    Task<Subproject> Add(Subproject subproject);
 
     /// <summary>
     /// Updates the specified subproject.

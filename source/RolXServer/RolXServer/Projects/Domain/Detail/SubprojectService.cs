@@ -9,6 +9,7 @@
 using Microsoft.EntityFrameworkCore;
 
 using RolXServer.Projects.DataAccess;
+using RolXServer.Projects.Domain.Mapping;
 
 namespace RolXServer.Projects.Domain.Detail;
 
@@ -18,14 +19,17 @@ namespace RolXServer.Projects.Domain.Detail;
 internal sealed class SubprojectService : ISubprojectService
 {
     private readonly RolXContext dbContext;
+    private readonly IActivityService activityService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SubprojectService" /> class.
     /// </summary>
     /// <param name="dbContext">The database context.</param>
-    public SubprojectService(RolXContext dbContext)
+    /// /// <param name="activityService">The activity service.</param>
+    public SubprojectService(RolXContext dbContext, IActivityService activityService)
     {
         this.dbContext = dbContext;
+        this.activityService = activityService;
     }
 
     /// <summary>
@@ -34,13 +38,13 @@ internal sealed class SubprojectService : ISubprojectService
     /// <returns>
     /// The subprojects.
     /// </returns>
-    public async Task<IEnumerable<Subproject>> GetAll()
-        => await this.dbContext.Subprojects
-            .AsNoTracking()
-            .Include(p => p.Manager)
-            .Include(p => p.Activities)
-            .ThenInclude(a => a.Billability)
-            .ToListAsync();
+    public async Task<IEnumerable<Model.Subproject>> GetAll() => (await this.dbContext.Subprojects
+        .AsNoTracking()
+        .Include(p => p.Manager)
+        .Include(p => p.Activities)
+        .ThenInclude(a => a.Billability)
+        .ToListAsync())
+        .Select(p => p.ToDomain());
 
     /// <summary>
     /// Gets a subproject by the specified identifier.
@@ -49,25 +53,30 @@ internal sealed class SubprojectService : ISubprojectService
     /// <returns>
     /// The subproject or <c>null</c> if none has been found.
     /// </returns>
-    public async Task<Subproject?> GetById(int id)
-        => await this.dbContext.Subprojects
-            .AsNoTracking()
-            .Include(p => p.Manager)
-            .Include(p => p.Activities)
-            .ThenInclude(a => a.Billability)
-            .FirstOrDefaultAsync(p => p.Id == id);
+    public async Task<Model.Subproject?> GetById(int id)
+    {
+        var actualSums = await this.activityService.GetActualSums(id);
+        return (await this.dbContext.Subprojects
+             .AsNoTracking()
+             .Include(p => p.Manager)
+             .Include(p => p.Activities)
+             .ThenInclude(a => a.Billability)
+             .FirstOrDefaultAsync(p => p.Id == id))?.ToDomain(actualSums);
+    }
 
     /// <summary>
     /// Adds the specified subproject.
     /// </summary>
     /// <param name="subproject">The subproject.</param>
     /// <returns>The async task.</returns>
-    public async Task Add(Subproject subproject)
+    public async Task<Model.Subproject> Add(Model.Subproject subproject)
     {
         subproject.Activities.Sanitize();
 
-        this.dbContext.Subprojects.Add(subproject);
+        var entity = subproject.ToEntity();
+        this.dbContext.Subprojects.Add(entity);
         await this.dbContext.SaveChangesAsync();
+        return entity.ToDomain();
     }
 
     /// <summary>
@@ -75,7 +84,7 @@ internal sealed class SubprojectService : ISubprojectService
     /// </summary>
     /// <param name="subproject">The subproject.</param>
     /// <returns>The async task.</returns>
-    public async Task Update(Subproject subproject)
+    public async Task Update(Model.Subproject subproject)
     {
         subproject.Activities.Sanitize();
 
@@ -88,7 +97,7 @@ internal sealed class SubprojectService : ISubprojectService
             .Where(a => !activityIds.Contains(a.Id))
             .ToListAsync();
 
-        this.dbContext.Subprojects.Update(subproject);
+        this.dbContext.Subprojects.Update(subproject.ToEntity());
         this.dbContext.RemoveRange(orphanActivities);
 
         await this.dbContext.SaveChangesAsync();

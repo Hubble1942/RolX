@@ -17,6 +17,7 @@ export class Activity {
   billabilityId!: number;
   billabilityName!: string;
   isBillable!: boolean;
+  isOverBudget!: boolean;
 
   @TransformAsDuration()
   budget!: Duration;
@@ -39,6 +40,7 @@ export class Activity {
     assertDefined(this, 'billabilityId');
     assertDefined(this, 'billabilityName');
     assertDefined(this, 'isBillable');
+    assertDefined(this, 'isOverBudget');
     assertDefined(this, 'budget');
     assertDefined(this, 'actual');
     assertDefined(this, 'projectName');

@@ -9,12 +9,13 @@
 using Microsoft.EntityFrameworkCore;
 
 using RolXServer.Projects.DataAccess;
+using RolXServer.Projects.Domain.Mapping;
 
 namespace RolXServer.Projects.Domain.Detail;
 
 public sealed class SubprojectServiceTests
 {
-    private static Subproject SeedSubproject => new Subproject
+    private static Subproject SeedSubproject => new()
     {
         Id = 1,
         Number = 1,
@@ -25,11 +26,13 @@ public sealed class SubprojectServiceTests
                 {
                     Number = 1,
                     Name = "One",
+                    Billability = new() { Id = 1 },
                 },
                 new Activity
                 {
                     Number = 2,
                     Name = "Two",
+                    Billability = new() { Id = 2 },
                 },
             },
     };
@@ -37,13 +40,13 @@ public sealed class SubprojectServiceTests
     [Test]
     public async Task Update_ExistingActivityChanged()
     {
-        var subproject = SeedSubproject;
-        var contextFactory = InMemory.ContextFactory(subproject);
+        var contextFactory = InMemory.ContextFactory(SeedSubproject);
 
         using (var context = contextFactory())
         {
-            var sut = new SubprojectService(context);
-
+            IActivityService activityService = new ActivityService(context);
+            var sut = new SubprojectService(context, activityService);
+            var subproject = SeedSubproject.ToDomain();
             subproject.Activities[0].Name = "Changed";
             await sut.Update(subproject);
         }
@@ -61,13 +64,13 @@ public sealed class SubprojectServiceTests
     [Test]
     public async Task Update_ExistingActivityRemoved()
     {
-        var subproject = SeedSubproject;
-        var contextFactory = InMemory.ContextFactory(subproject);
+        var contextFactory = InMemory.ContextFactory(SeedSubproject);
 
         using (var context = contextFactory())
         {
-            var sut = new SubprojectService(context);
-
+            IActivityService activityService = new ActivityService(context);
+            var sut = new SubprojectService(context, activityService);
+            var subproject = SeedSubproject.ToDomain();
             subproject.Activities.RemoveAt(0);
             await sut.Update(subproject);
         }
@@ -84,18 +87,19 @@ public sealed class SubprojectServiceTests
     [Test]
     public async Task Update_NewActivityAdded()
     {
-        var subproject = SeedSubproject;
-        var contextFactory = InMemory.ContextFactory(subproject);
+        var contextFactory = InMemory.ContextFactory(SeedSubproject);
 
         using (var context = contextFactory())
         {
-            var sut = new SubprojectService(context);
-
-            subproject.Activities.Add(new Activity
+            IActivityService activityService = new ActivityService(context);
+            var sut = new SubprojectService(context, activityService);
+            var subproject = SeedSubproject.ToDomain();
+            subproject.Activities.Add(new Model.Activity
             {
                 Number = 3,
                 Name = "Three",
                 Subproject = subproject,
+                Billability = new() { Id = 3 },
             });
             await sut.Update(subproject);
         }

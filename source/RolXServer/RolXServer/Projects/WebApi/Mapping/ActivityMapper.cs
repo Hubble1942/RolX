@@ -7,7 +7,6 @@
 // -----------------------------------------------------------------------
 
 using RolXServer.Common.Util;
-using RolXServer.Projects.Domain;
 
 namespace RolXServer.Projects.WebApi.Mapping;
 
@@ -20,26 +19,26 @@ internal static class ActivityMapper
     /// Converts to resource.
     /// </summary>
     /// <param name="domain">The domain.</param>
-    /// <param name="actualSums">The actual sums.</param>
     /// <returns>The resource.</returns>
-    public static Resource.Activity ToResource(this DataAccess.Activity domain, IDictionary<int, TimeSpan>? actualSums = null)
-        => new Resource.Activity(
+    public static Resource.Activity ToResource(this Domain.Model.Activity domain)
+        => new(
             Id: domain.Id,
             Number: domain.Number,
             Name: domain.Name,
             StartDate: domain.StartDate.ToIsoDate(),
             EndDate: domain.EndedDate?.AddDays(-1).ToIsoDate(),
-            BillabilityId: domain.Billability!.Id,
-            BillabilityName: domain.Billability!.Name,
-            IsBillable: domain.Billability!.IsBillable,
+            BillabilityId: domain.Billability.Id,
+            BillabilityName: domain.Billability.Name,
+            IsBillable: domain.Billability.IsBillable,
+            IsOverBudget: domain.IsOverBudget,
             Budget: (long)(domain.Budget?.TotalSeconds ?? 0),
-            Actual: GetActualSumSeconds(domain.Id, actualSums),
+            Actual: (long)(domain.Actual?.TotalSeconds ?? 0),
             ProjectName: domain.Subproject?.ProjectName ?? string.Empty,
             SubprojectName: domain.Subproject?.Name ?? string.Empty,
             CustomerName: domain.Subproject?.CustomerName ?? string.Empty,
-            FullNumber: domain.FullNumber(),
-            FullName: domain.FullName(),
-            AllSubprojectNames: domain.Subproject!.AllNames());
+            FullNumber: domain.FullNumber,
+            FullName: domain.FullName,
+            AllSubprojectNames: domain.Subproject?.AllNames ?? string.Empty);
 
     /// <summary>
     /// Converts to domain.
@@ -49,27 +48,17 @@ internal static class ActivityMapper
     /// <returns>
     /// The domain.
     /// </returns>
-    public static DataAccess.Activity ToDomain(this Resource.Activity resource, DataAccess.Subproject? subproject = null) =>
-        new DataAccess.Activity
+    public static Domain.Model.Activity ToDomain(this Resource.Activity resource, Domain.Model.Subproject? subproject = null) =>
+        new()
         {
             Id = resource.Id,
             Number = resource.Number,
-            SubprojectId = subproject?.Id ?? 0,
-            Subproject = subproject,
             Name = resource.Name,
             StartDate = IsoDate.Parse(resource.StartDate),
             EndedDate = IsoDate.ParseNullable(resource.EndDate)?.AddDays(1),
             Budget = TimeSpan.FromSeconds(resource.Budget),
-            BillabilityId = resource.BillabilityId,
+            Actual = TimeSpan.FromSeconds(resource.Actual),
+            Subproject = subproject,
+            Billability = new() { Id = resource.BillabilityId },
         };
-
-    private static long GetActualSumSeconds(int activityId, IDictionary<int, TimeSpan>? actualSums)
-    {
-        if (actualSums?.TryGetValue(activityId, out var actualSum) ?? false)
-        {
-            return (long)actualSum.TotalSeconds;
-        }
-
-        return 0;
-    }
 }

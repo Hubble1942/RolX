@@ -20,8 +20,10 @@
         {{params.monday.toDate() | date: 'mediumDate'}} - {{params.nextSunday.toDate() | date:
         'mediumDate'}}
 
-        <small>(KW{{params.monday.isoWeek() | number: '2.0'}})</small>
-      </div>
+      <small>(KW{{params.monday.isoWeek() | number: '2.0'}})</small>
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
 
       <section>
         <!--<rolx-toggle></rolx-toggle>-->
@@ -42,3 +44,24 @@
     </mat-card-content>
   </ng-container>
 </mat-card>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="toggleFlag('asTree')">
+    <mat-icon>{{checkBoxForFlag('asTree')}}</mat-icon>
+    <span>Baumansicht</span>
+  </button>
+
+  <button mat-menu-item (click)="toggleFlag('showWeekends')">
+    <mat-icon>{{checkBoxForFlag('showWeekends')}}</mat-icon>
+    <span>Wochenende</span>
+  </button>
+
+  <button
+    mat-menu-item
+    (click)="toggleFlag('voiceInput')"
+    [disabled]="!voiceService.isSupported"
+    [matTooltip]="voiceService.isSupported ? '' : 'Die Spracheingabe wird zurzeit nur von Chrome oder Edge unterstützt.'">
+    <mat-icon>{{checkBoxForFlag('voiceInput')}}</mat-icon>
+    <span>Spracheingabe</span>
+  </button>
+</mat-menu>

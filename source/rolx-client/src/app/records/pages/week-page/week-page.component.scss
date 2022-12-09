@@ -5,6 +5,10 @@ mat-card {
   height: calc(100% - 96px);
 }
 
+mat-card-title button {
+  float: right;
+}
+
 section {
   display: flex;
   gap: 16px;

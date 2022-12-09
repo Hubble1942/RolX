@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@app/auth/core/auth.service';
-import { FlagService } from '@app/core/persistence/flag-service';
+import { Flag, FlagService } from '@app/core/persistence/flag-service';
+import { VoiceService } from '@app/core/voice/voice.service';
 import { ActivityService } from '@app/projects/core/activity.service';
 import { EditLockService } from '@app/records/core/edit-lock.service';
 import { WorkRecordService } from '@app/records/core/work-record.service';
@@ -16,9 +17,6 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
   styleUrls: ['./week-page.component.scss'],
 })
 export class WeekPageComponent {
-  private _showWeekends = this.flagService.get('showWeekends', false);
-  private _asTree = this.flagService.get('asTree', false);
-
   readonly routeParams$: Observable<WeekPageParams> = this.route.url.pipe(
     withLatestFrom(this.route.paramMap, this.route.queryParamMap),
     map(([, paramMap, queryParamMap]) =>
@@ -49,19 +47,11 @@ export class WeekPageComponent {
   );
 
   get showWeekends() {
-    return this._showWeekends;
-  }
-  set showWeekends(value: boolean) {
-    this._showWeekends = value;
-    this.flagService.set('showWeekends', value);
+    return this.flagService.get('showWeekends', false);
   }
 
   get asTree() {
-    return this._asTree;
-  }
-  set asTree(value: boolean) {
-    this._asTree = value;
-    this.flagService.set('asTree', value);
+    return this.flagService.get('asTree', false);
   }
 
   constructor(
@@ -73,5 +63,14 @@ export class WeekPageComponent {
     private authService: AuthService,
     private editLockService: EditLockService,
     private flagService: FlagService,
+    public voiceService: VoiceService,
   ) {}
+
+  checkBoxForFlag(flag: Flag): string {
+    return this.flagService.get(flag, false) ? 'check_box' : 'check_box_outline_blank';
+  }
+
+  toggleFlag(flag: Flag) {
+    this.flagService.set(flag, !this.flagService.get(flag, false));
+  }
 }

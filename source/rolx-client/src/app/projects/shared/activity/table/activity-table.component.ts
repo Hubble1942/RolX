@@ -5,6 +5,7 @@ import { AuthService } from '@app/auth/core/auth.service';
 import { SortService } from '@app/core/persistence/sort.service';
 import { assertDefined } from '@app/core/util/utils';
 import { Activity } from '@app/projects/core/activity';
+import { Subproject } from '@app/projects/core/subproject';
 
 @Component({
   selector: 'rolx-activity-table',
@@ -12,35 +13,25 @@ import { Activity } from '@app/projects/core/activity';
   styleUrls: ['./activity-table.component.scss'],
 })
 export class ActivityTableComponent implements OnInit {
-  private _activities!: Activity[];
+  private _subproject!: Subproject;
   readonly dataSource = new MatTableDataSource<Activity>();
+
+  displayedColumns: string[] = [];
+  @ViewChild(MatSort, { static: true }) sort!: MatSort;
 
   get hasWriteAccess() {
     return this.authService.currentApprovalOrError.isSupervisor;
   }
 
   @Input()
-  get activities(): Activity[] {
-    return this._activities;
+  get subproject(): Subproject {
+    return this._subproject;
   }
-  set activities(value: Activity[]) {
-    this._activities = value;
-    this.dataSource.data = value;
+  set subproject(value: Subproject) {
+    this._subproject = value;
+    this.dataSource.data = value.activities;
+    this.displayedColumns = Array.from(this.getDisplayedColumns());
   }
-
-  displayedColumns: string[] = [
-    'number',
-    'name',
-    'startDate',
-    'endDate',
-    'budgetTime',
-    'actualTime',
-    'plannedTime',
-    'isBillable',
-    ...(this.hasWriteAccess ? ['tools'] : []),
-  ];
-
-  @ViewChild(MatSort, { static: true }) sort!: MatSort;
 
   constructor(
     private readonly authService: AuthService,
@@ -48,7 +39,7 @@ export class ActivityTableComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    assertDefined(this, '_activities');
+    assertDefined(this, '_subproject');
     assertDefined(this, 'sort');
 
     this.dataSource.sort = this.sort;
@@ -65,5 +56,24 @@ export class ActivityTableComponent implements OnInit {
 
   tpd(activity: Activity): Activity {
     return activity;
+  }
+
+  private *getDisplayedColumns() {
+    yield 'number';
+    yield 'name';
+    yield 'startDate';
+    yield 'endDate';
+    yield 'budgetTime';
+
+    if (!this.subproject.planned.isZero) {
+      yield 'plannedTime';
+    }
+
+    yield 'actualTime';
+    yield 'isBillable';
+
+    if (this.hasWriteAccess) {
+      yield 'tools';
+    }
   }
 }

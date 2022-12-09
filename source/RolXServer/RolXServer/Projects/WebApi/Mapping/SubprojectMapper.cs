@@ -32,6 +32,10 @@ internal static class SubprojectMapper
             Name: domain.Name,
             ManagerId: domain.ManagerId,
             ManagerName: domain.Manager?.FullName() ?? "vakant",
+            Budget: (long)domain.Budget.TotalSeconds,
+            Planned: (long)domain.Planned.TotalSeconds,
+            Actual: (long)domain.Actual.TotalSeconds,
+            IsOverBudget: domain.IsOverBudget,
             IsClosed: domain.IsClosed,
             Activities: domain.Activities.Select(a => a.ToResource()).ToImmutableList());
 

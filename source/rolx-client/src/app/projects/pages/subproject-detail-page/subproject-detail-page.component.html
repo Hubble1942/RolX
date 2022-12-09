@@ -19,9 +19,7 @@
 
   <mat-card-subtitle> <small>Projektleiter:</small> {{subproject.managerName}} </mat-card-subtitle>
 
-  <rolx-activity-table
-    *ngIf="subproject.activities.length > 0"
-    [activities]="subproject.activities">
+  <rolx-activity-table *ngIf="subproject.activities.length > 0" [subproject]="subproject">
   </rolx-activity-table>
 
   <section class="exports" *ngIf="mayExport">

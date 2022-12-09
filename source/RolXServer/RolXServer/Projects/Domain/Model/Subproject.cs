@@ -6,6 +6,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using RolXServer.Common.Util;
 using RolXServer.Users.DataAccess;
 
 namespace RolXServer.Projects.Domain.Model;
@@ -95,4 +96,32 @@ public sealed class Subproject
     /// Gets or sets the manager.
     /// </summary>
     public User? Manager { get; set; }
+
+    /// <summary>
+    /// Gets the budget time.
+    /// </summary>
+    public TimeSpan Budget => this.Activities
+        .Where(a => a.Budget.HasValue)
+        .Sum(a => a.Budget!.Value);
+
+    /// <summary>
+    /// Gets the planned time.
+    /// </summary>
+    public TimeSpan Planned => this.Activities
+        .Where(a => a.Planned.HasValue)
+        .Sum(a => a.Planned!.Value);
+
+    /// <summary>
+    /// Gets the actual time.
+    /// </summary>
+    public TimeSpan Actual => this.Activities
+        .Where(a => a.Actual.HasValue)
+        .Sum(a => a.Actual!.Value);
+
+    /// <summary>
+    /// Gets a value indicating whether the actual time is larger than the time budget.
+    /// </summary>
+    public bool IsOverBudget
+        => this.Activities.Any(a => a.Budget.HasValue)
+        && this.Actual > this.Budget;
 }

@@ -33,8 +33,9 @@ export class ActivityTableComponent implements OnInit {
     'name',
     'startDate',
     'endDate',
-    'budgetHours',
-    'actualHours',
+    'budgetTime',
+    'actualTime',
+    'plannedTime',
     'isBillable',
     ...(this.hasWriteAccess ? ['tools'] : []),
   ];

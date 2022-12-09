@@ -31,6 +31,7 @@ internal static class ActivityMapper
             StartDate = activity.StartDate,
             EndedDate = activity.EndedDate,
             Budget = activity.Budget,
+            Planned = activity.Planned,
             Actual = actualSums?.GetValueOrDefault(activity.Id),
             Subproject = subproject ?? activity.Subproject?.ToDomain(),
             Billability = activity.Billability!,
@@ -52,6 +53,7 @@ internal static class ActivityMapper
         StartDate = activity.StartDate,
         EndedDate = activity.EndedDate,
         Budget = activity.Budget,
+        Planned = activity.Planned,
         SubprojectId = activity.Subproject?.Id ?? 0,
         BillabilityId = activity.Billability.Id,
     };

@@ -59,11 +59,20 @@
       </mat-form-field>
 
       <mat-form-field appearance="standard">
-        <mat-label>Budget</mat-label>
+        <mat-label>Soll</mat-label>
         <input matInput type="number" formControlName="budget" />
         <span matSuffix>PT</span>
         <mat-error *ngIf="hasError('budget', 'min')">
-          Negative Budgets sind nur schwer einzuhalten.
+          Negative Soll-Zeiten sind nur schwer einzuhalten.
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="standard">
+        <mat-label>Geplant</mat-label>
+        <input matInput type="number" formControlName="planned" />
+        <span matSuffix>PT</span>
+        <mat-error *ngIf="hasError('planned', 'min')">
+          Negative Geplant-Zeiten ist nur schwer einzuhalten.
         </mat-error>
       </mat-form-field>
     </form>

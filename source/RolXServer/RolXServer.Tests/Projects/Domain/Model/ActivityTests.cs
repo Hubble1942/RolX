@@ -50,4 +50,14 @@ public sealed class ActivityTests
 
         activity.Budget.Should().BeNull();
     }
+
+    [Test]
+    public void Sanitize_Planned()
+    {
+        var activity = this.subproject.Activities[0];
+        activity.Planned = TimeSpan.FromMinutes(0.5);
+        activity.Sanitize();
+
+        activity.Planned.Should().BeNull();
+    }
 }

@@ -22,6 +22,7 @@ public sealed record Activity(
     bool IsBillable,
     bool IsOverBudget,
     long Budget,
+    long Planned,
     long Actual,
     string ProjectName,
     string SubprojectName,

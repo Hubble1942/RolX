@@ -26,6 +26,7 @@ export class ActivityFormComponent implements OnInit {
     startDate: ['', Validators.required],
     endDate: [null],
     budget: [null, Validators.min(0)],
+    planned: [null, Validators.min(0)],
     billabilityId: [null, Validators.required],
   });
 
@@ -50,6 +51,7 @@ export class ActivityFormComponent implements OnInit {
 
     this.form.patchValue(this.activity);
     this.formBudget = this.activity.budget;
+    this.formPlanned = this.activity.planned;
   }
 
   get isNew() {
@@ -57,19 +59,19 @@ export class ActivityFormComponent implements OnInit {
   }
 
   get formBudget(): Duration {
-    const budget = Number.parseFloat(this.form.controls['budget'].value);
-    return !Number.isNaN(budget) ? Duration.fromPersonDays(budget) : Duration.Zero;
+    return this.getFormDuration('budget');
   }
 
   set formBudget(value: Duration) {
-    const formValue =
-      value && !value.isZero
-        ? value.personDays.toLocaleString(this.locale, {
-            maximumFractionDigits: 1,
-            useGrouping: false,
-          })
-        : null;
-    this.form.controls['budget'].setValue(formValue);
+    this.setFormDuration('budget', value);
+  }
+
+  get formPlanned(): Duration {
+    return this.getFormDuration('planned');
+  }
+
+  set formPlanned(value: Duration) {
+    this.setFormDuration('planned', value);
   }
 
   hasError(controlName: string, errorName: string | string[]) {
@@ -83,6 +85,7 @@ export class ActivityFormComponent implements OnInit {
   submit() {
     Object.assign(this.activity, this.form.value);
     this.activity.budget = this.formBudget;
+    this.activity.planned = this.formPlanned;
 
     this.subprojectService.update(this.subproject).subscribe({
       next: () => this.cancel(),
@@ -93,6 +96,21 @@ export class ActivityFormComponent implements OnInit {
   cancel() {
     // noinspection JSIgnoredPromiseFromCall
     this.router.navigate(['/subproject', this.subproject.id]);
+  }
+  private getFormDuration(durationName: string): Duration {
+    const duration = Number.parseFloat(this.form.controls[durationName].value);
+    return !Number.isNaN(duration) ? Duration.fromPersonDays(duration) : Duration.Zero;
+  }
+
+  private setFormDuration(durationName: string, value: Duration) {
+    const formValue =
+    value && !value.isZero
+      ? value.personDays.toLocaleString(this.locale, {
+          maximumFractionDigits: 1,
+          useGrouping: false,
+        })
+      : null;
+  this.form.controls[durationName].setValue(formValue);
   }
 
   private handleError(errorResponse: ErrorResponse) {

@@ -23,6 +23,9 @@ export class Activity {
   budget!: Duration;
 
   @TransformAsDuration()
+  planned!: Duration;
+
+  @TransformAsDuration()
   actual!: Duration;
 
   projectName!: string;
@@ -43,6 +46,7 @@ export class Activity {
     assertDefined(this, 'isOverBudget');
     assertDefined(this, 'budget');
     assertDefined(this, 'actual');
+    assertDefined(this, 'planned');
     assertDefined(this, 'projectName');
     assertDefined(this, 'subprojectName');
     assertDefined(this, 'customerName');

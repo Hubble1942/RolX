@@ -25,6 +25,7 @@ public sealed class ActivityValidatorTests
             IsBillable: true,
             IsOverBudget: false,
             Budget: 0,
+            Planned: 0,
             Actual: 0,
             ProjectName: "Any",
             SubprojectName: "Full",

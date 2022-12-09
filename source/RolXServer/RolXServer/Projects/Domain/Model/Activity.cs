@@ -14,6 +14,7 @@ namespace RolXServer.Projects.Domain.Model;
 public sealed class Activity
 {
     private static readonly TimeSpan BudgetMin = TimeSpan.FromMinutes(1);
+    private static readonly TimeSpan PlannedMin = TimeSpan.FromMinutes(1);
 
     /// <summary>
     /// Gets or sets the identifier.
@@ -47,6 +48,11 @@ public sealed class Activity
     /// Gets or sets the time budget.
     /// </summary>
     public TimeSpan? Budget { get; set; }
+
+    /// <summary>
+    /// Gets or sets the planned time.
+    /// </summary>
+    public TimeSpan? Planned { get; set; }
 
     /// <summary>
     /// Gets or sets the actual time worked on this activity.
@@ -122,6 +128,7 @@ public sealed class Activity
     internal void Sanitize()
     {
         this.ClearEmptyBudget();
+        this.ClearEmptyPlanned();
     }
 
     private void ClearEmptyBudget()
@@ -129,6 +136,14 @@ public sealed class Activity
         if ((this.Budget ?? default) < BudgetMin)
         {
             this.Budget = null;
+        }
+    }
+
+    private void ClearEmptyPlanned()
+    {
+        if ((this.Planned ?? default) < PlannedMin)
+        {
+            this.Planned = null;
         }
     }
 }

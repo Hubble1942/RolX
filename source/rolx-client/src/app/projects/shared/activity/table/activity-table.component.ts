@@ -6,6 +6,7 @@ import { SortService } from '@app/core/persistence/sort.service';
 import { assertDefined } from '@app/core/util/utils';
 import { Activity } from '@app/projects/core/activity';
 import { Subproject } from '@app/projects/core/subproject';
+import * as moment from 'moment';
 
 @Component({
   selector: 'rolx-activity-table',
@@ -21,6 +22,10 @@ export class ActivityTableComponent implements OnInit {
 
   get hasWriteAccess() {
     return this.authService.currentApprovalOrError.isSupervisor;
+  }
+
+  get now() {
+    return moment();
   }
 
   @Input()
@@ -71,6 +76,11 @@ export class ActivityTableComponent implements OnInit {
 
     yield 'actualTime';
     yield 'isBillable';
+    yield 'budgetConsumed';
+
+    if (!this.subproject.planned.isZero) {
+      yield 'plannedConsumed';
+    }
 
     if (this.hasWriteAccess) {
       yield 'tools';

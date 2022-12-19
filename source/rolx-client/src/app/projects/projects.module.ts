@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AppImportModule } from '@app/app-import.module';
+import { ProgressBarComponent } from '@app/core/progress-bar/progress-bar.component';
 import { ActivityEditPageComponent } from '@app/projects/pages/activity-edit-page/activity-edit-page.component';
 import { SubprojectDetailPageComponent } from '@app/projects/pages/subproject-detail-page/subproject-detail-page.component';
 import { SubprojectEditPageComponent } from '@app/projects/pages/subproject-edit-page/subproject-edit-page.component';
@@ -26,6 +27,7 @@ import { ReportsModule } from '@app/reports/reports.module';
     SubprojectFormComponent,
     SubprojectTableComponent,
     StarredActivityIndicatorComponent,
+    ProgressBarComponent,
   ],
   exports: [
     ActivityEditPageComponent,

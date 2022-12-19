@@ -25,7 +25,10 @@ public sealed record Subproject(
     long Budget,
     long Planned,
     long Actual,
+    double BudgetConsumedFraction,
+    double PlannedConsumedFraction,
     bool IsOverBudget,
+    bool IsOverPlanned,
     bool IsClosed,
     ImmutableList<Activity> Activities)
     : SubprojectShallow(

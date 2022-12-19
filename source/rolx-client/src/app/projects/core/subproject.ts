@@ -12,6 +12,7 @@ export class Subproject extends SubprojectShallow {
   number!: number;
   managerId?: string;
   isOverBudget!: boolean;
+  isOverPlanned!: boolean;
 
   @TransformAsDuration()
   budget!: Duration;
@@ -21,6 +22,9 @@ export class Subproject extends SubprojectShallow {
 
   @TransformAsDuration()
   actual!: Duration;
+
+  budgetConsumedFraction!: number;
+  plannedConsumedFraction!: number;
 
   @Type(() => Activity)
   activities: Activity[] = [];
@@ -35,6 +39,8 @@ export class Subproject extends SubprojectShallow {
     assertDefined(this, 'budget');
     assertDefined(this, 'planned');
     assertDefined(this, 'actual');
+    assertDefined(this, 'budgetConsumedFraction');
+    assertDefined(this, 'plannedConsumedFraction');
     assertDefined(this, 'activities');
 
     this.activities.forEach((a) => a.validateModel());

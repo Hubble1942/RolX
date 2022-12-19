@@ -60,6 +60,32 @@ public sealed class Activity
     public TimeSpan? Actual { get; set; }
 
     /// <summary>
+    /// Gets the ratio of actual time to budget time.
+    /// </summary>
+    public double? BudgetConsumedFraction
+    {
+        get
+        {
+            return this.Budget is not null && this.Actual is not null
+                ? this.Actual?.TotalSeconds / this.Budget?.TotalSeconds
+                : null;
+        }
+    }
+
+    /// <summary>
+    /// Gets the ratio of actual time to planned time.
+    /// </summary>
+    public double? PlannedConsumedFraction
+    {
+        get
+        {
+            return this.Planned is not null && this.Actual is not null
+                ? this.Actual?.TotalSeconds / this.Planned?.TotalSeconds
+                : null;
+        }
+    }
+
+    /// <summary>
     /// Gets a value indicating whether the actual time is larger than the time budget.
     /// </summary>
     public bool IsOverBudget
@@ -67,6 +93,17 @@ public sealed class Activity
         get
         {
             return this.Budget is not null && this.Actual > this.Budget;
+        }
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether the actual time is larger than the planned time.
+    /// </summary>
+    public bool IsOverPlanned
+    {
+        get
+        {
+            return this.Planned is not null && this.Actual > this.Planned;
         }
     }
 

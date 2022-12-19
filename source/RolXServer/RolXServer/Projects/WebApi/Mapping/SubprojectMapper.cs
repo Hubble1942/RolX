@@ -35,7 +35,10 @@ internal static class SubprojectMapper
             Budget: (long)domain.Budget.TotalSeconds,
             Planned: (long)domain.Planned.TotalSeconds,
             Actual: (long)domain.Actual.TotalSeconds,
+            BudgetConsumedFraction: domain.BudgetConsumedFraction ?? 0,
+            PlannedConsumedFraction: domain.PlannedConsumedFraction ?? 0,
             IsOverBudget: domain.IsOverBudget,
+            IsOverPlanned: domain.IsOverPlanned,
             IsClosed: domain.IsClosed,
             Activities: domain.Activities.Select(a => a.ToResource()).ToImmutableList());
 

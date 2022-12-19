@@ -97,6 +97,7 @@ export class ActivityFormComponent implements OnInit {
     // noinspection JSIgnoredPromiseFromCall
     this.router.navigate(['/subproject', this.subproject.id]);
   }
+
   private getFormDuration(durationName: string): Duration {
     const duration = Number.parseFloat(this.form.controls[durationName].value);
     return !Number.isNaN(duration) ? Duration.fromPersonDays(duration) : Duration.Zero;

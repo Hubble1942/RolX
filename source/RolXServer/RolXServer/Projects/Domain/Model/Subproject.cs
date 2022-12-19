@@ -119,9 +119,32 @@ public sealed class Subproject
         .Sum(a => a.Actual!.Value);
 
     /// <summary>
+    /// Gets the ratio of actual time to budgeted time.
+    /// </summary>
+    public double? BudgetConsumedFraction
+        => this.Activities.Any(a => a.Actual.HasValue) && this.Activities.Any(a => a.Budget.HasValue)
+        ? this.Actual.TotalSeconds / this.Budget.TotalSeconds
+        : null;
+
+    /// <summary>
+    /// Gets the ratio of actual time to planned time.
+    /// </summary>
+    public double? PlannedConsumedFraction
+        => this.Activities.Any(a => a.Actual.HasValue) && this.Activities.Any(a => a.Planned.HasValue)
+        ? this.Actual.TotalSeconds / this.Planned.TotalSeconds
+        : null;
+
+    /// <summary>
     /// Gets a value indicating whether the actual time is larger than the time budget.
     /// </summary>
     public bool IsOverBudget
         => this.Activities.Any(a => a.Budget.HasValue)
         && this.Actual > this.Budget;
+
+    /// <summary>
+    /// Gets a value indicating whether the actual time is larger than the planned time.
+    /// </summary>
+    public bool IsOverPlanned
+        => this.Activities.Any(a => a.Planned.HasValue)
+        && this.Actual > this.Planned;
 }

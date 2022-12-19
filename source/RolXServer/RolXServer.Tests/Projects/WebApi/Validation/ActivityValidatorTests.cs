@@ -13,7 +13,7 @@ namespace RolXServer.Projects.WebApi.Validation;
 [FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
 public sealed class ActivityValidatorTests
 {
-    private readonly ActivityValidator sut = new ActivityValidator();
+    private readonly ActivityValidator sut = new();
     private readonly Activity model = new(
             Id: 1,
             Number: 1,
@@ -24,9 +24,12 @@ public sealed class ActivityValidatorTests
             BillabilityName: "Billable",
             IsBillable: true,
             IsOverBudget: false,
+            IsOverPlanned: false,
             Budget: 0,
             Planned: 0,
             Actual: 0,
+            BudgetConsumedFraction: 0,
+            PlannedConsumedFraction: 0,
             ProjectName: "Any",
             SubprojectName: "Full",
             CustomerName: string.Empty,
@@ -165,5 +168,26 @@ public sealed class ActivityValidatorTests
     {
         var model = this.model with { Budget = 0 };
         this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(activity => activity.Budget);
+    }
+
+    [Test]
+    public void Planned_MustNotBeNegative()
+    {
+        var model = this.model with { Planned = -42 };
+        this.sut.TestValidate(model).ShouldHaveValidationErrorFor(activity => activity.Planned);
+    }
+
+    [Test]
+    public void Planned_ShouldBePositive()
+    {
+        var model = this.model with { Planned = 42 };
+        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(activity => activity.Planned);
+    }
+
+    [Test]
+    public void Planned_MayBeZero()
+    {
+        var model = this.model with { Planned = 0 };
+        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(activity => activity.Planned);
     }
 }

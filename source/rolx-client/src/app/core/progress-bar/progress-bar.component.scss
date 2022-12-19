@@ -1,0 +1,17 @@
+.progress-bar {
+  position: relative;
+}
+
+mat-progress-bar {
+  height: 16px !important;
+}
+
+.percentage {
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  right: 0;
+  bottom: 0;
+  display: flex; 
+  justify-content: center;
+}

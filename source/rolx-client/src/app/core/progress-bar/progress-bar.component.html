@@ -1,0 +1,4 @@
+<span ngClass="progress-bar">
+  <mat-progress-bar value="{{value * 100}}" color="{{color}}"></mat-progress-bar>
+  <span ngClass="percentage">{{value * 100 | number:'1.0-0'}}%</span>
+</span>

@@ -28,11 +28,23 @@ tr {
   }
 }
 
-.mat-icon {
-  margin-left: 8px;
-  vertical-align: middle;
-}
-
 td {
   vertical-align: middle;
+  max-width: 15em;
+}
+
+td.mat-column-budgetConsumed{
+  padding-right: 1.5%;
+}
+
+td.mat-column-budgetConsumed, td.mat-column-plannedConsumed{
+  width: 8%;
+}
+
+tr.past-end-date {
+  opacity: 0.4;
+}
+
+.over-budget {
+  color: #F44336;
 }

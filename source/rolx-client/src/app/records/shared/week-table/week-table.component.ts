@@ -7,6 +7,7 @@ import { FavouriteActivityService } from '@app/projects/core/favourite-activity.
 import { Record } from '@app/records/core/record';
 import { WorkRecordService } from '@app/records/core/work-record.service';
 import { User } from '@app/users/core/user';
+import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 
 import { TreeNode } from './tree-node';
@@ -49,6 +50,9 @@ export class WeekTableComponent implements OnInit, OnDestroy {
   user!: User;
 
   @Input()
+  showToggle = false;
+
+  @Input()
   get isCurrentUser(): boolean {
     return this._isCurrentUser;
   }
@@ -81,6 +85,7 @@ export class WeekTableComponent implements OnInit, OnDestroy {
       : this.allWeekdays.slice(0, this.allWeekdays.length - 2);
     this.displayedColumns = ['activity', ...this.weekdays];
   }
+
   @Input()
   get asTreeView() {
     return this._asTreeView;
@@ -118,6 +123,10 @@ export class WeekTableComponent implements OnInit, OnDestroy {
     this.isAddingActivity = false;
 
     this.update();
+  }
+
+  get todaysRecord(): Record | undefined {
+    return this.records.find((r) => r.isToday);
   }
 
   isActivity(item: TreeNode | Activity | null): boolean {
@@ -167,6 +176,10 @@ export class WeekTableComponent implements OnInit, OnDestroy {
     this.update();
   }
 
+  isToggleShownFor(node: TreeNode | Activity | null) {
+    return this.showToggle && this.isActivity(node) && (node as Activity).isOpenAt(moment());
+  }
+
   submit(record: Record, index: number) {
     this.workRecordService.update(this.user.id, record).subscribe({
       next: (r) => (this.records[index] = r),
@@ -175,6 +188,13 @@ export class WeekTableComponent implements OnInit, OnDestroy {
         this.errorService.notifyGeneralError();
       },
     });
+  }
+
+  submitToggleRecord(record: Record): void {
+    this.submit(
+      record,
+      this.records.findIndex((r) => r.isToday),
+    );
   }
 
   private set favourites(value: Activity[]) {

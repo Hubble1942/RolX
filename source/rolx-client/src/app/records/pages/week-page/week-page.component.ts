@@ -54,6 +54,10 @@ export class WeekPageComponent {
     return this.flagService.get('asTree', false);
   }
 
+  get showToggle() {
+    return this.flagService.get('showToggle', false);
+  }
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,

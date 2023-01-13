@@ -30,7 +30,8 @@
         [user]="recordsActivitiesUser[2]"
         [isCurrentUser]="params.isCurrentUser"
         [showWeekends]="showWeekends"
-        [asTreeView]="asTree"></rolx-week-table>
+        [asTreeView]="asTree"
+        [showToggle]="showToggle"></rolx-week-table>
     </mat-card-content>
   </ng-container>
 </mat-card>
@@ -44,6 +45,11 @@
   <button mat-menu-item (click)="toggleFlag('showWeekends')">
     <mat-icon>{{checkBoxForFlag('showWeekends')}}</mat-icon>
     <span>Wochenende</span>
+  </button>
+
+  <button mat-menu-item (click)="toggleFlag('showToggle')">
+    <mat-icon>{{checkBoxForFlag('showToggle')}}</mat-icon>
+    <span>Toggle</span>
   </button>
 
   <button

@@ -1,49 +1,63 @@
 <table mat-table #table [dataSource]="items" [trackBy]="trackByNode" class="mat-elevation-z8">
   <ng-container matColumnDef="activity">
-    <th mat-header-cell *matHeaderCellDef>Aktivität</th>
+    <th mat-header-cell *matHeaderCellDef>
+      <div class="activity-row">
+        <span>Aktivität</span>
+        <rolx-start-toggle *ngIf="showToggle"></rolx-start-toggle>
+      </div>
+    </th>
 
     <td mat-cell *matCellDef="let item" [attr.colspan]="item ? 1 : 8">
-      <span *ngIf="isActivity(item); else treeNode">
-        <ng-container *ngIf="asTreeView; else tableView">
-          <rolx-starred-activity-indicator
-            *ngIf="isCurrentUser"
-            [activity]="item"></rolx-starred-activity-indicator>
-          <span>{{item.name}} <small>{{item.fullNumber}}</small> </span>
-        </ng-container>
-        <ng-template #tableView>
-          <rolx-starred-activity-indicator
-            *ngIf="isCurrentUser"
-            [activity]="item"></rolx-starred-activity-indicator>
-          <span>
-            <small> {{item.allSubprojectNames}} </small>
-            <br />
-            {{item.name}} <small>{{item.fullNumber}}</small>
-          </span>
+      <div class="activity-row">
+        <span *ngIf="isActivity(item); else treeNode">
+          <ng-container *ngIf="asTreeView; else tableView">
+            <rolx-starred-activity-indicator
+              *ngIf="isCurrentUser"
+              [activity]="item"></rolx-starred-activity-indicator>
+            <span>{{item.name}} <small>{{item.fullNumber}}</small> </span>
+          </ng-container>
+          <ng-template #tableView>
+            <rolx-starred-activity-indicator
+              *ngIf="isCurrentUser"
+              [activity]="item"></rolx-starred-activity-indicator>
+            <span>
+              <small> {{item.allSubprojectNames}} </small>
+              <br />
+              {{item.name}} <small>{{item.fullNumber}}</small>
+            </span>
+          </ng-template>
+        </span>
+
+        <ng-template #treeNode>
+          <ng-container *ngIf="isTreeNode(item); else activitySelector">
+            <span>
+              <button
+                class="expand-button"
+                mat-icon-button
+                (click)="toggleExpand(item)"
+                [class.expanded]="item.isExpanded">
+                <mat-icon>expand_more</mat-icon>
+              </button>
+              <span class="tree-node">{{item.name}} <small>{{item.number}}</small></span>
+            </span>
+          </ng-container>
         </ng-template>
-      </span>
 
-      <ng-template #treeNode>
-        <ng-container *ngIf="isTreeNode(item); else activitySelector">
-          <span>
-            <button
-              class="expand-button"
-              mat-icon-button
-              (click)="toggleExpand(item)"
-              [class.expanded]="item.isExpanded">
-              <mat-icon>expand_more</mat-icon>
-            </button>
-            <span class="tree-node">{{item.name}} <small>{{item.number}}</small></span>
-          </span>
-        </ng-container>
-      </ng-template>
+        <ng-template #activitySelector>
+          <rolx-activity-selector
+            [excluded]="allActivities"
+            [begin]="records[0].date"
+            [end]="records[records.length-1].date"
+            (selected)="addHomegrown($event);table.renderRows()"></rolx-activity-selector>
+        </ng-template>
 
-      <ng-template #activitySelector>
-        <rolx-activity-selector
-          [excluded]="allActivities"
-          [begin]="records[0].date"
-          [end]="records[records.length-1].date"
-          (selected)="addHomegrown($event);table.renderRows()"></rolx-activity-selector>
-      </ng-template>
+        <rolx-stop-toggle
+          *ngIf="isToggleShownFor(item) && todaysRecord"
+          [activity]="item"
+          [record]="todaysRecord"
+          (changed)="submitToggleRecord($event)">
+        </rolx-stop-toggle>
+      </div>
     </td>
 
     <td mat-footer-cell *matFooterCellDef>

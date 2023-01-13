@@ -15,6 +15,8 @@ import { PaidLeaveSelectComponent } from './shared/paid-leave-select/paid-leave-
 import { ReasonDialogComponent } from './shared/paid-leave-select/reason-dialog/reason-dialog.component';
 import { ParserFailedDialogComponent } from './shared/parser-failed-dialog/parser-failed-dialog.component';
 import { SetEditLockFormComponent } from './shared/set-edit-lock-form/set-edit-lock-form.component';
+import { StartToggleComponent } from './shared/start-toggle/start-toggle.component';
+import { StopToggleComponent } from './shared/stop-toggle/stop-toggle.component';
 import { WeekTableCellComponent } from './shared/week-table/cell/week-table-cell.component';
 import { WeekTableComponent } from './shared/week-table/week-table.component';
 
@@ -36,6 +38,8 @@ const exportedDeclarations = [
     PaidLeaveSelectComponent,
     ParserFailedDialogComponent,
     ReasonDialogComponent,
+    StartToggleComponent,
+    StopToggleComponent,
     WeekTableCellComponent,
     WeekTableComponent,
   ],

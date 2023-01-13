@@ -1,4 +1,5 @@
 import { Transform } from 'class-transformer';
+import { duration, Moment } from 'moment';
 
 import { DurationBase } from './duration.base';
 
@@ -13,6 +14,11 @@ export class Duration extends DurationBase<Duration> {
   };
 
   private static readonly HoursPerPersonDay = 8;
+
+  static fromMoments(from: Moment, to: Moment) {
+    const momentDuration = duration({ from, to });
+    return Duration.fromHours(momentDuration.asHours());
+  }
 
   static fromHours(hours: number) {
     return new Duration(Math.round(hours * DurationBase.SecondsPerHour));

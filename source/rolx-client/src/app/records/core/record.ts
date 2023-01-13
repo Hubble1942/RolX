@@ -65,8 +65,13 @@ export class Record {
     return this.isWorkday && !this.isComplete;
   }
 
+  addEntry(entry: RecordEntry) {
+    this.entries.push(entry);
+    this.entries = this.sortByBegin(this.entries);
+  }
+
   entriesOf(activity: Activity): RecordEntry[] {
-    return this.entries.filter((e) => e.activityId === activity.id);
+    return this.sortByBegin(this.entries.filter((e) => e.activityId === activity.id));
   }
 
   replaceEntriesOfActivity(activity: Activity, entries: RecordEntry[]): Record {
@@ -75,7 +80,9 @@ export class Record {
     entries = entries.filter((e) => !e.duration.isZero);
     entries.forEach((e) => (e.activityId = activity.id));
 
-    clone.entries = this.entries.filter((e) => e.activityId !== activity.id).concat(...entries);
+    clone.entries = this.sortByBegin(
+      this.entries.filter((e) => e.activityId !== activity.id).concat(...entries),
+    );
 
     if (!clone.mayHavePaidLeave) {
       clone.paidLeaveType = undefined;
@@ -102,5 +109,24 @@ export class Record {
     Object.assign(clone, this);
 
     return clone;
+  }
+
+  private sortByBegin(entries: RecordEntry[]): RecordEntry[] {
+    return entries.sort((a, b) => {
+      if (a.begin != null && b.begin != null) {
+        return a.begin.sub(b.begin).seconds;
+      }
+
+      if (a.begin != null && b.begin == null) {
+        return -1;
+      }
+
+      if (a.begin == null && b.begin != null) {
+        return 1;
+      }
+
+      // both nullish
+      return 0;
+    });
   }
 }

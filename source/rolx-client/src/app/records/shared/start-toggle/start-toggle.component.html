@@ -1,0 +1,6 @@
+<button mat-flat-button color="primary" *ngIf="!toggleActive" (click)="startToggle()">
+  <mat-icon>play_arrow</mat-icon>
+</button>
+<button mat-flat-button *ngIf="toggleActive" matTooltip="Toggle verwerfen" (click)="clearToggle()">
+  <mat-icon>delete</mat-icon>
+</button>

@@ -1,4 +1,5 @@
 import { Transform } from 'class-transformer';
+import { Moment } from 'moment';
 
 import { Duration } from './duration';
 import { DurationBase } from './duration.base';
@@ -13,6 +14,13 @@ export class TimeOfDay extends DurationBase<TimeOfDay> {
     Minutes: 2,
     DecimalHours: 3,
   };
+
+  static fromMoment(moment: Moment) {
+    const seconds =
+      moment.hours() * DurationBase.SecondsPerHour +
+      moment.minutes() * DurationBase.SecondsPerMinute;
+    return new TimeOfDay(seconds);
+  }
 
   static fromHours(hours: number) {
     return new TimeOfDay(Math.round(hours * DurationBase.SecondsPerHour));

@@ -7,7 +7,7 @@ table {
   width: 100%;
 }
 
-.mat-column-activity > span {
+.mat-column-activity > div > span {
   display: inline-flex;
   align-items: center;
 }
@@ -36,6 +36,17 @@ td.day {
   }
 }
 
+.activity-row {
+  display: flex;
+  align-items: center;
+}
+
+rolx-stop-toggle,
+rolx-start-toggle {
+  margin-left: auto;
+  margin-right: 0.5rem;
+}
+
 .day {
   text-align: right;
 }
@@ -44,7 +55,7 @@ td.day {
   text-align: center;
 }
 
-td[colspan="8"] {
+td[colspan='8'] {
   padding-right: 24px;
 }
 

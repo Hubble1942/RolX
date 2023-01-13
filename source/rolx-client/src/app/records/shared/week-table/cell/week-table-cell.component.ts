@@ -169,7 +169,7 @@ export class WeekTableCellComponent implements OnInit, OnDestroy {
     }
 
     result.entry.activityId = this.activity.id;
-    this.record.entries.push(result.entry);
+    this.record.addEntry(result.entry);
     this.changed.emit(this.record);
   }
 

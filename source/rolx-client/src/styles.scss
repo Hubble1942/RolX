@@ -1,7 +1,5 @@
 @use '@angular/material' as mat;
-@use 'theme' as theme;
-@use 'app/records/shared/theme' as shared;
-@use 'app/users/shared/user/table/user-table.component.scss-theme' as user-table;
+@use 'rolx-theme' as rolx-theme;
 
 html,
 body {
@@ -12,22 +10,16 @@ body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
-// see https://medium.com/@tomastrajan/the-complete-guide-to-angular-material-themes-4d165a9d24d1
-
+// Following the official guide for theming
+// see https://material.angular.io/guide/theming
 @include mat.core();
 
-@mixin apply-theme($theme) {
-  @include shared.work-record-shared-theme($theme);
-  @include user-table.component-theme($theme);
-  @include mat.all-component-themes($theme);
-}
-
 .bright-theme {
-  @include apply-theme(theme.$rolx-light-theme);
+  @include rolx-theme.apply-light();
 }
 
 .dark-theme {
-  @include apply-theme(theme.$rolx-dark-theme);
+  @include rolx-theme.apply-dark();
 }
 
 // disable all spin buttons on number inputs

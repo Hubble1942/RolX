@@ -1,0 +1,5 @@
+@use 'shared/user/table/user-table.component.scss-theme' as user-table;
+
+@mixin theme($theme) {
+  @include user-table.theme($theme);
+}

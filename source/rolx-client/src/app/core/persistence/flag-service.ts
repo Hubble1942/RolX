@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-export type Flag = 'asTree' | 'showWeekends' | 'voiceInput';
+export type Flag = 'asTree' | 'showWeekends' | 'voiceInput' | 'showColumn-';
 
 @Injectable({
   providedIn: 'root',

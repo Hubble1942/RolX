@@ -1,0 +1,29 @@
+@use '@angular/material' as mat;
+@use '@angular/material/theming' as theme;
+@use 'app/projects/projects-theme' as projects;
+@use 'app/records/records-theme' as records;
+@use 'app/users/users-theme' as users;
+
+@mixin apply-light() {
+  $primary: mat.define-palette(mat.$indigo-palette, 500);
+  $accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+  $theme: mat.define-light-theme($primary, $accent);
+
+  @include apply($theme);
+}
+
+@mixin apply-dark() {
+  $primary: mat.define-palette(mat.$purple-palette, 400, 800, 100);
+  $accent: mat.define-palette(mat.$green-palette, A200, A100, A400);
+  $theme: mat.define-dark-theme($primary, $accent);
+
+  @include apply($theme);
+}
+
+@mixin apply($theme) {
+  @include projects.theme($theme);
+  @include records.theme($theme);
+  @include users.theme($theme);
+
+  @include mat.all-component-themes($theme);
+}

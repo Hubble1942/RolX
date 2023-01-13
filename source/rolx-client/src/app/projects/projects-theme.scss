@@ -1,0 +1,5 @@
+@use 'shared/activity/table/activity-table.component-theme' as activity-table;
+
+@mixin theme($theme) {
+  @include activity-table.theme($theme);
+}

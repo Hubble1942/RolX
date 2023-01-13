@@ -1,0 +1,5 @@
+@use 'shared/week-table/week-table.component-theme' as week-table;
+
+@mixin theme($theme) {
+  @include week-table.theme($theme);
+}

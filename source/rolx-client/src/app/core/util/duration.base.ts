@@ -5,7 +5,7 @@ export class DurationBase<T extends DurationBase<T>> {
     return this.seconds / DurationBase.SecondsPerHour;
   }
 
-  toString(forcePlusSign = false): string {
+  toString(forcePlusSign = false, asDecimal = false): string {
     if (!this.isValid) {
       return '-';
     }
@@ -21,6 +21,10 @@ export class DurationBase<T extends DurationBase<T>> {
       } else if (this.seconds < 0) {
         sign = '-';
       }
+    }
+
+    if (asDecimal) {
+      return `${sign}${Number(Math.abs(this.hours).toFixed(2))}`;
     }
 
     return `${sign}${wholeHours}:${wholeMinutes.toString(10).padStart(2, '0')}`;

@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ErrorResponse } from '@app/core/error/error-response';
 import { Activity } from '@app/projects/core/activity';
 import { Subproject } from '@app/projects/core/subproject';
 import { SubprojectService } from '@app/projects/core/subproject.service';
@@ -25,12 +27,39 @@ export class ActivityEditPageComponent {
   );
 
   activity = new Activity();
+  error?: ErrorResponse;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private subprojectService: SubprojectService,
+    private snackBar: MatSnackBar,
   ) {}
+
+  cancel(subproject: Subproject) {
+    // noinspection JSIgnoredPromiseFromCall
+    this.router.navigate(['/subproject', subproject.id]);
+  }
+
+  save(subproject: Subproject, event: {activity: Activity; addAnother: boolean}) {
+    this.error = undefined;
+    this.subprojectService.update(subproject).subscribe({
+      next: () => {
+        this.snackBar.open('Aktivität erfolgreich gespeichert', undefined, {
+          duration: 1500,
+        });
+        if (event.addAnother) {
+          // If we were editing an existing activity, adjust url to represent the addition of a new one
+          // noinspection JSIgnoredPromiseFromCall
+          this.router.navigate(['/subproject', subproject.id, 'activity', 'new']);
+          this.activity = this.newPrefilledActivity(subproject, event.activity);
+        } else {
+          this.cancel(subproject);
+        }
+      },
+      error: (err) => this.error = err,
+    });
+  }
 
   private initializeSubproject(
     subprojectIdText: string | null,
@@ -46,7 +75,7 @@ export class ActivityEditPageComponent {
 
     const activity =
       activityIdText === 'new'
-        ? subproject.addActivity()
+        ? this.newPrefilledActivity(subproject, this.activity)
         : subproject.activities.find((a) => a.id === activityId);
 
     if (activity != null) {
@@ -57,5 +86,13 @@ export class ActivityEditPageComponent {
     }
 
     return subproject;
+  }
+
+  private newPrefilledActivity(subproject: Subproject, template: Activity){
+    const newActivity = subproject.addActivity();
+    newActivity.startDate = template.startDate;
+    newActivity.endDate = template.endDate;
+    newActivity.billabilityId = template.billabilityId;
+    return newActivity;
   }
 }

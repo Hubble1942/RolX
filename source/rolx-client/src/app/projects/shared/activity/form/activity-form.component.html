@@ -79,7 +79,7 @@
   </mat-card-content>
 
   <mat-card-actions>
-    <button mat-stroked-button (click)="cancel()">Abbruch</button>
+    <button mat-stroked-button (click)="cancel.emit()">Abbruch</button>
     <button
       mat-flat-button
       color="primary"
@@ -87,6 +87,15 @@
       form="activity-edit"
       [disabled]="!form.valid">
       Speichern
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      type="button"
+      form="activity-edit"
+      (click)="submit(true)"
+      [disabled]="!form.valid">
+      Speichern und Neu
     </button>
   </mat-card-actions>
 </mat-card>

@@ -1,6 +1,5 @@
-import { Component, Inject, Input, LOCALE_ID, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, LOCALE_ID, OnChanges, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { ErrorResponse } from '@app/core/error/error-response';
 import { ErrorService } from '@app/core/error/error.service';
 import { Duration } from '@app/core/util/duration';
@@ -9,16 +8,19 @@ import { Activity } from '@app/projects/core/activity';
 import { Billability } from '@app/projects/core/billability';
 import { BillabilityService } from '@app/projects/core/billability.service';
 import { Subproject } from '@app/projects/core/subproject';
-import { SubprojectService } from '@app/projects/core/subproject.service';
 
 @Component({
   selector: 'rolx-activity-form',
   templateUrl: './activity-form.component.html',
   styleUrls: ['./activity-form.component.scss'],
 })
-export class ActivityFormComponent implements OnInit {
+export class ActivityFormComponent implements OnChanges {
   @Input() subproject!: Subproject;
   @Input() activity!: Activity;
+  @Input() error?: ErrorResponse;
+  @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
+  @Output() save: EventEmitter<{activity: Activity; addAnother: boolean}> =
+    new EventEmitter<{activity: Activity; addAnother: boolean}>();
 
   form = this.fb.group({
     number: ['', [Validators.required, Validators.min(1), Validators.max(99)]],
@@ -33,9 +35,7 @@ export class ActivityFormComponent implements OnInit {
   billabilities: Billability[] = [];
 
   constructor(
-    private readonly router: Router,
     private readonly fb: FormBuilder,
-    private readonly subprojectService: SubprojectService,
     private readonly billabilityService: BillabilityService,
     private readonly errorService: ErrorService,
     @Inject(LOCALE_ID) private readonly locale: string,
@@ -45,10 +45,19 @@ export class ActivityFormComponent implements OnInit {
       .subscribe((billabilities) => (this.billabilities = billabilities));
   }
 
-  ngOnInit() {
+  ngOnChanges() {
     assertDefined(this, 'subproject');
     assertDefined(this, 'activity');
 
+    if(this.error != null){
+      // Force validators to show error message
+      this.form.markAllAsTouched();
+      this.handleError(this.error);
+    } else {
+      // clean form, validator and submitted state
+      this.form.reset();
+      this.form.markAsPristine();
+    }
     this.form.patchValue(this.activity);
     this.formBudget = this.activity.budget;
     this.formPlanned = this.activity.planned;
@@ -82,20 +91,11 @@ export class ActivityFormComponent implements OnInit {
     return this.form.controls[controlName].hasError(errorName);
   }
 
-  submit() {
+  submit(addNew=false) {
     Object.assign(this.activity, this.form.value);
     this.activity.budget = this.formBudget;
     this.activity.planned = this.formPlanned;
-
-    this.subprojectService.update(this.subproject).subscribe({
-      next: () => this.cancel(),
-      error: (err) => this.handleError(err),
-    });
-  }
-
-  cancel() {
-    // noinspection JSIgnoredPromiseFromCall
-    this.router.navigate(['/subproject', this.subproject.id]);
+    this.save.emit({activity: this.activity, addAnother: addNew});
   }
 
   private getFormDuration(durationName: string): Duration {

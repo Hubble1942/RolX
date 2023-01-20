@@ -1,3 +1,9 @@
 <div *ngIf="subproject$ | async as subproject">
-  <rolx-activity-form [subproject]="subproject" [activity]="activity"></rolx-activity-form>
+  <rolx-activity-form
+    [subproject]="subproject"
+    [activity]="activity"
+    [error]="error"
+    (cancel)="cancel(subproject)"
+    (save)="save(subproject, $event)">
+  </rolx-activity-form>
 </div>

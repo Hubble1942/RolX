@@ -32,6 +32,8 @@ internal static class SubprojectMapper
             Name: domain.Name,
             ManagerId: domain.ManagerId,
             ManagerName: domain.Manager?.FullName() ?? "vakant",
+            DeputyManagerId: domain.DeputyManagerId,
+            DeputyManagerName: domain.DeputyManager?.FullName(),
             Budget: (long)domain.Budget.TotalSeconds,
             Planned: (long)domain.Planned.TotalSeconds,
             Actual: (long)domain.Actual.TotalSeconds,
@@ -55,6 +57,7 @@ internal static class SubprojectMapper
             ProjectName: domain.ProjectName,
             Name: domain.Name,
             ManagerName: domain.Manager?.FullName() ?? "vakant",
+            DeputyManagerName: domain.DeputyManager?.FullName(),
             IsClosed: domain.IsClosed);
 
     /// <summary>
@@ -75,6 +78,7 @@ internal static class SubprojectMapper
             ProjectName = resource.ProjectName,
             CustomerName = resource.CustomerName,
             ManagerId = resource.ManagerId,
+            DeputyManagerId = resource.DeputyManagerId,
         };
 
         domain.Activities = resource.Activities

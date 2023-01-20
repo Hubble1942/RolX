@@ -59,4 +59,14 @@ public sealed class Subproject
     /// Gets or sets the manager.
     /// </summary>
     public User? Manager { get; set; }
+
+    /// <summary>
+    /// Gets or sets the deputy manager identifier.
+    /// </summary>
+    public Guid? DeputyManagerId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the deputy manager.
+    /// </summary>
+    public User? DeputyManager { get; set; }
 }

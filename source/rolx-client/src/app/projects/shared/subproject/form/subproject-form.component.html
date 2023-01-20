@@ -42,6 +42,14 @@
           <mat-option *ngFor="let user of users" [value]="user.id"> {{user.fullName}} </mat-option>
         </mat-select>
       </mat-form-field>
+
+      <mat-form-field appearance="standard">
+        <mat-label>Stellvertretender Projektleiter</mat-label>
+        <mat-select formControlName="deputyManagerId">
+          <mat-option> (Kein Stellvertreter) </mat-option>
+          <mat-option *ngFor="let user of users" [value]="user.id"> {{user.fullName}} </mat-option>
+        </mat-select>
+      </mat-form-field>
     </form>
   </mat-card-content>
 

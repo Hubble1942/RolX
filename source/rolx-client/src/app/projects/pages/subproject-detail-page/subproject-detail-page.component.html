@@ -17,7 +17,12 @@
     </a>
   </mat-card-title>
 
-  <mat-card-subtitle> <small>Projektleiter:</small> {{subproject.managerName}} </mat-card-subtitle>
+  <mat-card-subtitle>
+    <small>Projektleiter:</small> {{subproject.managerName}}
+    <span *ngIf="subproject.deputyManagerName">
+      - <small>Stellvertreter:</small> {{subproject.deputyManagerName}}
+    </span>
+  </mat-card-subtitle>
 
   <rolx-activity-table *ngIf="subproject.activities.length > 0" [subproject]="subproject">
   </rolx-activity-table>

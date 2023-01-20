@@ -224,9 +224,14 @@ namespace RolXServer.Migrations
                     b.Property<int>("ProjectNumber")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("DeputyManagerId")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ManagerId");
+
+                    b.HasIndex("DeputyManagerId");
 
                     b.HasIndex("ProjectNumber", "Number")
                         .IsUnique();
@@ -476,7 +481,13 @@ namespace RolXServer.Migrations
                         .WithMany()
                         .HasForeignKey("ManagerId");
 
+                    b.HasOne("RolXServer.Users.DataAccess.User", "DeputyManager")
+                        .WithMany()
+                        .HasForeignKey("DeputyManagerId");
+
                     b.Navigation("Manager");
+
+                    b.Navigation("DeputyManager");
                 });
 
             modelBuilder.Entity("RolXServer.Records.DataAccess.Record", b =>

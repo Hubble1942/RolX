@@ -41,6 +41,7 @@ internal sealed class SubprojectService : ISubprojectService
     public async Task<IEnumerable<Model.Subproject>> GetAll() => (await this.dbContext.Subprojects
         .AsNoTracking()
         .Include(p => p.Manager)
+        .Include(p => p.DeputyManager)
         .Include(p => p.Activities)
         .ThenInclude(a => a.Billability)
         .ToListAsync())
@@ -59,6 +60,7 @@ internal sealed class SubprojectService : ISubprojectService
         return (await this.dbContext.Subprojects
              .AsNoTracking()
              .Include(p => p.Manager)
+             .Include(p => p.DeputyManager)
              .Include(p => p.Activities)
              .ThenInclude(a => a.Billability)
              .FirstOrDefaultAsync(p => p.Id == id))?.ToDomain(actualSums);

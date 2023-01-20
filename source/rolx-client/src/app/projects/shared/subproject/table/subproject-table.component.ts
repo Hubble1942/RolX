@@ -20,6 +20,7 @@ export class SubprojectTableComponent implements OnInit {
     'projectName',
     'name',
     'managerName',
+    'deputyManagerName',
     this.isClosedColumn,
     'tools',
   ];

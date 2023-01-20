@@ -11,6 +11,7 @@ export class Subproject extends SubprojectShallow {
   projectNumber!: number;
   number!: number;
   managerId?: string;
+  deputyManagerId?: string;
   isOverBudget!: boolean;
   isOverPlanned!: boolean;
 

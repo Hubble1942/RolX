@@ -27,6 +27,7 @@ export class SubprojectFormComponent implements OnInit {
     projectName: ['', Validators.required],
     customerName: ['', Validators.required],
     managerId: [null, Validators.required],
+    deputyManagerId: [null],
   });
 
   users: User[] = [];

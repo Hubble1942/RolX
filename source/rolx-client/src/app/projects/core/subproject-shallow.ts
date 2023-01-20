@@ -7,6 +7,7 @@ export class SubprojectShallow {
   projectName!: number;
   name!: string;
   managerName!: string;
+  deputyManagerName?: string;
   isClosed!: boolean;
 
   validateModel(): void {

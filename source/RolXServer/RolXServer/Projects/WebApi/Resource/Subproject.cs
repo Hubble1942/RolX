@@ -22,6 +22,8 @@ public sealed record Subproject(
     string Name,
     Guid? ManagerId,
     string ManagerName,
+    Guid? DeputyManagerId,
+    string? DeputyManagerName,
     long Budget,
     long Planned,
     long Actual,
@@ -38,4 +40,5 @@ public sealed record Subproject(
         ProjectName: ProjectName,
         Name: Name,
         ManagerName: ManagerName,
+        DeputyManagerName: DeputyManagerName,
         IsClosed: IsClosed);

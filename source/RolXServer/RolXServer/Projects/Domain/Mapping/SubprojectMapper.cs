@@ -32,6 +32,8 @@ public static class SubprojectMapper
             CustomerName = domain.CustomerName,
             ManagerId = domain.ManagerId,
             Manager = domain.Manager,
+            DeputyManagerId = domain.DeputyManagerId,
+            DeputyManager = domain.DeputyManager,
             Activities = domain.Activities.Select(a => a.ToEntity()).ToList(),
         };
         return entity;
@@ -57,6 +59,8 @@ public static class SubprojectMapper
             CustomerName = subproject.CustomerName,
             ManagerId = subproject.ManagerId,
             Manager = subproject.Manager,
+            DeputyManagerId = subproject.DeputyManagerId,
+            DeputyManager = subproject.DeputyManager,
         };
 
         domain.Activities = subproject.Activities

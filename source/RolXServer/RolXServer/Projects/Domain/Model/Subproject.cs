@@ -98,6 +98,16 @@ public sealed class Subproject
     public User? Manager { get; set; }
 
     /// <summary>
+    /// Gets or sets the deputy manager identifier.
+    /// </summary>
+    public Guid? DeputyManagerId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the Deputy manager.
+    /// </summary>
+    public User? DeputyManager { get; set; }
+
+    /// <summary>
     /// Gets the budget time.
     /// </summary>
     public TimeSpan Budget => this.Activities

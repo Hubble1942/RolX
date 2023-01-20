@@ -42,6 +42,11 @@
     <td mat-cell *matCellDef="let subproject">{{tpd(subproject).managerName}}</td>
   </ng-container>
 
+  <ng-container matColumnDef="deputyManagerName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Stellvertreter</th>
+    <td mat-cell *matCellDef="let subproject">{{tpd(subproject).deputyManagerName}}</td>
+  </ng-container>
+
   <ng-container matColumnDef="isClosed">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
     <td mat-cell *matCellDef="let subproject">{{tpd(subproject).isClosed ? 'geschlossen' : ''}}</td>

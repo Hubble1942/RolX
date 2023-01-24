@@ -5,7 +5,8 @@
     fixedInViewport
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
-    [opened]="(isHandset$ | async) === false">
+    [opened]="(isHandset$ | async) === false"
+    [disableClose]="(isHandset$ | async) === false">
     <mat-toolbar [class.non-production]="installationIdService.suffix$ | async">
       RolX{{installationIdService.suffix$ | async}}
     </mat-toolbar>

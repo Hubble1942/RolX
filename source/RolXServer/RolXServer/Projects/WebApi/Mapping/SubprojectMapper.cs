@@ -6,6 +6,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using RolXServer.Common.Util;
 using RolXServer.Users.Domain;
 
 namespace RolXServer.Projects.WebApi.Mapping;
@@ -25,6 +26,7 @@ internal static class SubprojectMapper
             Id: domain.Id,
             FullNumber: domain.FullNumber,
             FullName: domain.FullName,
+            StartDate: domain.StartDate?.ToIsoDate(),
             CustomerName: domain.CustomerName,
             ProjectNumber: domain.ProjectNumber,
             ProjectName: domain.ProjectName,

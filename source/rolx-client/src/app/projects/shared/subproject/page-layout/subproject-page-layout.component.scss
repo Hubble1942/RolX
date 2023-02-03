@@ -1,0 +1,42 @@
+mat-card {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 96px);
+}
+
+mat-card-title {
+  position: relative;
+  > a {
+    opacity: 0.1;
+    transition: opacity 0.3s ease-out;
+
+    &:hover {
+      opacity: 1;
+      transition: opacity 0.3s ease-in;
+    }
+  }
+}
+
+.titleWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 16px;
+
+  > *:nth-child(2) {
+    margin-left: auto;
+  }
+}
+
+.titleRight {
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}

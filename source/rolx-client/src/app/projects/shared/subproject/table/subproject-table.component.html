@@ -55,8 +55,11 @@
   <ng-container matColumnDef="tools">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell class="tools" *matCellDef="let subproject">
-      <a mat-icon-button [routerLink]="[tpd(subproject).id]">
-        <mat-icon>layers</mat-icon>
+      <a mat-icon-button [routerLink]="[tpd(subproject).id, 'activity']" matTooltip="Aktivitäten">
+        <mat-icon>rowing</mat-icon>
+      </a>
+      <a mat-icon-button [routerLink]="[tpd(subproject).id, 'record']" matTooltip="Buchungen">
+        <mat-icon>menu_book</mat-icon>
       </a>
     </td>
   </ng-container>
@@ -64,6 +67,7 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr
     mat-row
+    class="highlight-hover"
     *matRowDef="let subproject; columns: displayedColumns;"
-    [routerLink]="[tpd(subproject).id]"></tr>
+    [routerLink]="[tpd(subproject).id, 'activity']"></tr>
 </table>

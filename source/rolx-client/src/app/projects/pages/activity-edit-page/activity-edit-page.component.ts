@@ -38,10 +38,10 @@ export class ActivityEditPageComponent {
 
   cancel(subproject: Subproject) {
     // noinspection JSIgnoredPromiseFromCall
-    this.router.navigate(['/subproject', subproject.id]);
+    this.router.navigate(['/subproject', subproject.id, 'activity']);
   }
 
-  save(subproject: Subproject, event: {activity: Activity; addAnother: boolean}) {
+  save(subproject: Subproject, event: { activity: Activity; addAnother: boolean }) {
     this.error = undefined;
     this.subprojectService.update(subproject).subscribe({
       next: () => {
@@ -57,7 +57,7 @@ export class ActivityEditPageComponent {
           this.cancel(subproject);
         }
       },
-      error: (err) => this.error = err,
+      error: (err) => (this.error = err),
     });
   }
 
@@ -88,7 +88,7 @@ export class ActivityEditPageComponent {
     return subproject;
   }
 
-  private newPrefilledActivity(subproject: Subproject, template: Activity){
+  private newPrefilledActivity(subproject: Subproject, template: Activity) {
     const newActivity = subproject.addActivity();
     newActivity.startDate = template.startDate;
     newActivity.endDate = template.endDate;

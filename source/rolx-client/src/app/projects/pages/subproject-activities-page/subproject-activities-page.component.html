@@ -1,0 +1,19 @@
+<rolx-subproject-page-layout *ngIf="subproject$ | async as subproject" [subproject]="subproject">
+  <ng-container titleRight>
+    <button mat-stroked-button (click)="exportLastMonth(subproject)" *ngIf="mayExport">
+      Export Monat
+    </button>
+
+    <a
+      *ngIf="mayEdit"
+      mat-mini-fab
+      aria-label="Aktivität hinzufügen"
+      [routerLink]="['new']"
+      color="accent">
+      <mat-icon>add</mat-icon>
+    </a>
+  </ng-container>
+
+  <rolx-activity-table *ngIf="subproject.activities.length > 0" [subproject]="subproject">
+  </rolx-activity-table>
+</rolx-subproject-page-layout>

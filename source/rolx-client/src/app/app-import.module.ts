@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -25,6 +26,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
+import { NgLetModule } from 'ng-let';
 
 const modules = [
   CommonModule,
@@ -33,6 +35,7 @@ const modules = [
   LayoutModule,
   MatAutocompleteModule,
   MatButtonModule,
+  MatButtonToggleModule,
   MatCardModule,
   MatCheckboxModule,
   MatDatepickerModule,
@@ -43,8 +46,8 @@ const modules = [
   MatListModule,
   MatMenuModule,
   MatMomentDateModule,
-  MatProgressSpinnerModule,
   MatProgressBarModule,
+  MatProgressSpinnerModule,
   MatSelectModule,
   MatSidenavModule,
   MatSnackBarModule,
@@ -52,6 +55,7 @@ const modules = [
   MatTableModule,
   MatToolbarModule,
   MatTooltipModule,
+  NgLetModule,
   ReactiveFormsModule,
   RouterModule,
 ];

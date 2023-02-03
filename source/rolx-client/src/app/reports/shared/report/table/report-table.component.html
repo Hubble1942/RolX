@@ -1,0 +1,102 @@
+<div ngClass="filters">
+  <mat-form-field appearance="standard">
+    <mat-label>Filter</mat-label>
+    <input
+      #filter
+      matInput
+      [value]="filterService.filterText"
+      (keyup)="applyFilter(filter.value)" />
+    <button mat-icon-button matSuffix (click)="applyFilter('')" [disabled]="filter.value === ''">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
+
+<div class="table-wrapper">
+  <table mat-table [dataSource]="dataSource" matSort matSortDisableClear class="mat-elevation-z8">
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Datum</th>
+      <td mat-cell *matCellDef="let reportEntry">
+        {{tpd(reportEntry).date.toDate() | date : 'mediumDate'}}
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="projectNumber">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Projekt Nr</th>
+      <td mat-cell ngClass="number" *matCellDef="let reportEntry">
+        {{tpd(reportEntry).projectNumber | number:'4.0'}}
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="customerName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Kunde</th>
+      <td mat-cell *matCellDef="let reportEntry">{{tpd(reportEntry).customerName}}</td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="projectName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Projekt</th>
+      <td mat-cell *matCellDef="let reportEntry">{{tpd(reportEntry).projectName}}</td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="subprojectNumber">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Subprojekt Nr</th>
+      <td mat-cell ngClass="number" *matCellDef="let reportEntry">
+        {{tpd(reportEntry).subprojectNumber | number:'3.0'}}
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="subprojectName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Subprojekt</th>
+      <td mat-cell *matCellDef="let reportEntry">{{tpd(reportEntry).subprojectName}}</td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="activityNumber">
+      <th mat-header-cell ngClass="number" *matHeaderCellDef mat-sort-header>Nr</th>
+      <td mat-cell *matCellDef="let reportEntry">
+        {{tpd(reportEntry).activityNumber | number:'2.0'}}
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="activityName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Aktivität</th>
+      <td mat-cell *matCellDef="let reportEntry">{{tpd(reportEntry).activityName}}</td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="billabilityName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Verrechenbarkeit</th>
+      <td mat-cell *matCellDef="let reportEntry">{{tpd(reportEntry).billabilityName}}</td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="userName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Mitarbeiter</th>
+      <td mat-cell *matCellDef="let reportEntry">{{tpd(reportEntry).userName}}</td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="duration">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Zeit [h]</th>
+      <td mat-cell *matCellDef="let reportEntry">
+        {{tpd(reportEntry).duration.hours | number: '1.2-2'}}
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="comment">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Kommentar</th>
+      <td mat-cell *matCellDef="let reportEntry">{{tpd(reportEntry).comment}}</td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let reportEntry; columns: displayedColumns;"></tr>
+  </table>
+</div>

@@ -1,0 +1,38 @@
+<mat-card>
+  <div class="titleWrapper">
+    <mat-card-title>
+      {{subproject?.fullName}}
+      <a
+        *ngIf="mayEdit && subproject !== undefined"
+        mat-icon-button
+        aria-label="Subprojekt editieren"
+        [routerLink]="['/','subproject',subproject.id,'edit']">
+        <mat-icon>edit</mat-icon>
+      </a>
+      <ng-content select="[titleDate]"></ng-content>
+    </mat-card-title>
+    <div class="titleRight">
+      <ng-content select="[titleRight]"></ng-content>
+      <ng-content select=""></ng-content>
+      <mat-button-toggle-group class="buttons">
+        <mat-button-toggle
+          *ngFor="let tab of tabs$|async"
+          [checked]="tab.isCurrent"
+          [routerLink]="tab.path">
+          {{tab.label}}
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </div>
+  <mat-card-subtitle>
+    <ng-container *ngIf="subproject!==undefined">
+      <small>Projektleiter:</small> {{subproject.managerName}}
+      <ng-container *ngIf="subproject.deputyManagerName">
+        - <small>Stellvertreter:</small> {{subproject.deputyManagerName}}
+      </ng-container>
+    </ng-container>
+  </mat-card-subtitle>
+  <mat-card-content class="content">
+    <ng-content></ng-content>
+  </mat-card-content>
+</mat-card>

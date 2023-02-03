@@ -85,6 +85,7 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr
     mat-row
+    class="highlight-hover"
     *matRowDef="let user; columns: displayedColumns;"
     [class.unconfirmed]="!tpd(user).isConfirmed"
     [routerLink]="['/reports']"

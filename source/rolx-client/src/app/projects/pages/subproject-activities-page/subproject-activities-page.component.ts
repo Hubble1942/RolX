@@ -10,11 +10,11 @@ import { lastValueFrom, Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'rolx-subproject-detail-page',
-  templateUrl: './subproject-detail-page.component.html',
-  styleUrls: ['./subproject-detail-page.component.scss'],
+  selector: 'rolx-subproject-activities-page',
+  templateUrl: './subproject-activities-page.component.html',
+  styleUrls: ['./subproject-activities-page.component.scss'],
 })
-export class SubprojectDetailPageComponent {
+export class SubprojectActivitiesPageComponent {
   readonly mayEdit = this.authService.currentApprovalOrError.isSupervisor;
   readonly mayExport = this.authService.currentApprovalOrError.isSupervisor;
 

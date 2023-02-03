@@ -1,0 +1,54 @@
+.filters {
+  display: flex;
+  align-items: baseline;
+
+  *:first-child {
+    flex-grow: 1;
+  }
+}
+
+:host {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+}
+
+table {
+  width: 100%;
+}
+
+.number {
+  width: 4em;
+}
+
+td.mat-column-activityName {
+  max-width: 15em;
+  padding-right: 8px;
+}
+
+td.mat-column-comment {
+  max-width: 15em;
+}
+
+.table-wrapper {
+  display: block;
+  overflow-y: auto;
+  flex-basis: 0;
+  flex-grow: 1;
+  > table.mat-table {
+    tr {
+      &.mat-header-row {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
+    }
+  }
+}
+
+div.table-scroll-wrapper {
+  display: block;
+  overflow-y: auto;
+  flex-basis: 0;
+  flex-grow: 1;
+}

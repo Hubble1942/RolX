@@ -61,9 +61,10 @@ button:not(.mat-menu-item) {
 mat-card-title {
   position: relative;
 
-  a, button {
+  a,
+  button {
     position: relative;
-    top: -4px
+    top: -4px;
   }
 }
 

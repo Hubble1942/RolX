@@ -8,7 +8,7 @@
     <form id="activity-edit" [formGroup]="form" (ngSubmit)="submit()" autocomplete="off">
       <mat-form-field appearance="standard">
         <mat-label>Aktivitätsnummer</mat-label>
-        <input matInput formControlName="number" placeholder="AA" />
+        <input matInput formControlName="number" placeholder="AA" type="number" />
         <mat-error *ngIf="hasError('number', 'required')"> Pflichtfeld </mat-error>
         <mat-error *ngIf="hasError('number', ['min', 'max'])"> 1..99 </mat-error>
       </mat-form-field>

@@ -8,15 +8,28 @@ import { PendingRequestService } from './pending-request.service';
 
 @Injectable()
 export class PendingRequestInterceptor implements HttpInterceptor {
+  public static NO_REDIRECT_ON_ERROR_HEADER = 'X-ROLX-NO-REDIRECT-ON-ERROR';
+
   constructor(private pendingRequestService: PendingRequestService, private router: Router) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     this.pendingRequestService.requestStarted();
+
+    const redirectOnError = !request.headers.has(
+      PendingRequestInterceptor.NO_REDIRECT_ON_ERROR_HEADER,
+    );
+
+    if (!redirectOnError) {
+      request = request.clone({
+        headers: request.headers.delete(PendingRequestInterceptor.NO_REDIRECT_ON_ERROR_HEADER),
+      });
+    }
+
     let interceptedNext = next
       .handle(request)
       .pipe(finalize(() => this.pendingRequestService.requestFinished()));
 
-    if (request.method === 'GET') {
+    if (redirectOnError && request.method === 'GET') {
       interceptedNext = interceptedNext.pipe(catchError((err) => this.handleServerError(err)));
     }
 

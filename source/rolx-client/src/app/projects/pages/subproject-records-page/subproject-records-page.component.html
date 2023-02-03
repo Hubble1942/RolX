@@ -1,0 +1,24 @@
+<ng-container *ngLet="report$|async as report">
+  <rolx-subproject-page-layout *ngIf="subproject$ | async as subproject" [subproject]="subproject">
+    <span titleDate class="reportDateRange" *ngIf="report">
+      {{report.startDate.toDate() | date : 'mediumDate'}} - {{report.endDate.clone().subtract(1,
+      'days').toDate() | date : 'mediumDate'}}
+    </span>
+
+    <ng-container titleRight>
+      <rolx-report-range
+        [subprojectStartDate]="subproject.startDate"
+        [(range)]="range"></rolx-report-range>
+      <a
+        mat-mini-fab
+        aria-label="Export"
+        (click)="export(subproject, report)"
+        color="accent"
+        [disabled]="report===null"
+        ><mat-icon>download</mat-icon></a
+      >
+    </ng-container>
+
+    <rolx-report-table *ngIf="report" [report]="report"></rolx-report-table>
+  </rolx-subproject-page-layout>
+</ng-container>

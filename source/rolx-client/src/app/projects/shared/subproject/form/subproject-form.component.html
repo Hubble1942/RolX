@@ -6,14 +6,14 @@
     <form id="subproject-edit" [formGroup]="form" (ngSubmit)="submit()" autocomplete="off">
       <mat-form-field appearance="standard">
         <mat-label>Projektnummer</mat-label>
-        <input matInput formControlName="projectNumber" placeholder="PPPP" />
-        <mat-error *ngIf="hasError('projectNumber', 'required')"> Pflichtfeld </mat-error>
+        <input matInput formControlName="projectNumber" placeholder="PPPP" type="number" />
+        <mat-error *ngIf=" hasError('projectNumber', 'required' )"> Pflichtfeld </mat-error>
         <mat-error *ngIf="hasError('projectNumber', ['min', 'max'])"> 1..9999 </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="standard">
         <mat-label>Subprojektnummer</mat-label>
-        <input matInput formControlName="number" placeholder="SSS" />
+        <input matInput formControlName="number" placeholder="SSS" type="number" />
         <mat-error *ngIf="hasError('number', 'required')"> Pflichtfeld </mat-error>
         <mat-error *ngIf="hasError('number', ['min', 'max'])"> 1..999 </mat-error>
       </mat-form-field>

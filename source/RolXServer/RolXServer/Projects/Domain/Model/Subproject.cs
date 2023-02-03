@@ -39,10 +39,7 @@ public sealed class Subproject
     /// <summary>
     /// Gets the full-qualified number of the specified subproject.
     /// </summary>
-    public string FullNumber
-    {
-        get { return $"#{this.ProjectNumber:D4}.{this.Number:D3}"; }
-    }
+    public string FullNumber => $"#{this.ProjectNumber:D4}.{this.Number:D3}";
 
     /// <summary>
     /// Gets or sets the project name.
@@ -57,18 +54,12 @@ public sealed class Subproject
     /// <summary>
     /// Gets all names of the specified subproject.
     /// </summary>
-    public string AllNames
-    {
-        get { return $"{this.CustomerName} - {this.ProjectName} - {this.Name}"; }
-    }
+    public string AllNames => $"{this.CustomerName} - {this.ProjectName} - {this.Name}";
 
     /// <summary>
     /// Gets the full-qualified name of the specified subproject.
     /// </summary>
-    public string FullName
-    {
-        get { return $"{this.AllNames} ({this.FullNumber})"; }
-    }
+    public string FullName => $"{this.AllNames} ({this.FullNumber})";
 
     /// <summary>
     /// Gets or sets the activities.
@@ -76,16 +67,15 @@ public sealed class Subproject
     public List<Activity> Activities { get; set; } = new List<Activity>();
 
     /// <summary>
+    /// Gets or the date of the first activity.
+    /// </summary>
+    public DateOnly? StartDate => this.Activities.Select(a => a.StartDate).Min();
+
+    /// <summary>
     /// Gets a value indicating whether this instance is closed.
     /// </summary>
-    public bool IsClosed
-    {
-        get
-        {
-            return this.Activities
+    public bool IsClosed => this.Activities
                 .All(activity => activity.EndedDate != null && activity.EndedDate <= DateOnly.FromDateTime(DateTime.Now));
-        }
-    }
 
     /// <summary>
     /// Gets or sets the manager identifier.

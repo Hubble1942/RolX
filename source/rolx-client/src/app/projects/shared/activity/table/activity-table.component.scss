@@ -26,6 +26,18 @@ tr {
     opacity: 1;
     transition: opacity 0.3s ease-in;
   }
+
+  &.mat-header-row {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  &.mat-footer-row {
+    position: sticky;
+    bottom: -1px;
+    z-index: 1;
+  }
 }
 
 td {
@@ -46,6 +58,13 @@ td.mat-column-plannedConsumed {
   width: 8%;
 }
 
-tr.past-end-date {
+tr.past-end-date:not(:hover) {
   opacity: 0.4;
+}
+
+:host {
+  display: block;
+  overflow-y: auto;
+  flex-basis: 0;
+  flex-grow: 1;
 }

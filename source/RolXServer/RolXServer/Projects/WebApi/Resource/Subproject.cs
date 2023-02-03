@@ -15,6 +15,7 @@ public sealed record Subproject(
     int Id,
     string FullNumber,
     string FullName,
+    string? StartDate,
     string CustomerName,
     int ProjectNumber,
     string ProjectName,

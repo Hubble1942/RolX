@@ -1,0 +1,36 @@
+<mat-form-field appearance="standard">
+  <mat-select [formControl]="typeControl">
+    <mat-option *ngFor="let range of rangeTypes$|async" [value]="range.id">
+      {{range.label}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-form-field
+  appearance="standard"
+  *ngIf="currentRangeType?.hasCustomStart && currentRangeType?.hasCustomEnd">
+  <mat-date-range-input [rangePicker]="picker">
+    <input matStartDate placeholder="Startdatum" [formControl]="startControl" />
+    <input matEndDate placeholder="Enddatum" [formControl]="endControl" />
+  </mat-date-range-input>
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-date-range-picker #picker startView="multi-year"></mat-date-range-picker>
+</mat-form-field>
+
+<mat-form-field appearance="standard" *ngIf="currentRangeType?.hasCustomEndMonth" rolxMonthFormat>
+  <input
+    matInput
+    [matDatepicker]="monthPicker"
+    [formControl]="endMonthControl"
+    placeholder="mm.yyyy" />
+  <mat-datepicker-toggle matSuffix [for]="monthPicker"></mat-datepicker-toggle>
+  <mat-datepicker
+    #monthPicker
+    startView="multi-year"
+    (yearSelected)="endMonthYearSelected($event)"
+    (monthSelected)="endMonthMonthSelected($event, monthPicker)">
+  </mat-datepicker>
+  <mat-error *ngIf="endMonthControl.hasError('monthBeforeStart')">
+    Der Monat ist vor dem Start des Subprojekts
+  </mat-error>
+</mat-form-field>

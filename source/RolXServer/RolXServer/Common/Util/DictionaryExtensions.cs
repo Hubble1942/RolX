@@ -9,7 +9,7 @@
 namespace RolXServer.Common.Util;
 
 /// <summary>
-/// Extension methods for Dictionaries.
+/// Extension methods for <see cref="Dictionary{TKey, TValue}"/> instances.
 /// </summary>
 public static class DictionaryExtensions
 {

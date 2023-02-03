@@ -53,6 +53,9 @@ rolx-activity-selector {
 
 .day {
   text-align: right;
+  &.error {
+    cursor: pointer;
+  }
 }
 
 .day-header {

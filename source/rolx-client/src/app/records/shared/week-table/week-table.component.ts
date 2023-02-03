@@ -1,4 +1,5 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, OnChanges } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ErrorService } from '@app/core/error/error.service';
 import { ListService } from '@app/core/persistence/list-service';
 import { assertDefined } from '@app/core/util/utils';
@@ -8,7 +9,12 @@ import { Record } from '@app/records/core/record';
 import { WorkRecordService } from '@app/records/core/work-record.service';
 import { User } from '@app/users/core/user';
 import * as moment from 'moment';
-import { Subscription } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
+
+import {
+  InvalidEntriesDialogComponent,
+  InvalidEntriesDialogData,
+} from '../invalid-entries-dialog/invalid-entries-dialog.component';
 
 import { TreeNode } from './tree-node';
 
@@ -17,7 +23,7 @@ import { TreeNode } from './tree-node';
   templateUrl: './week-table.component.html',
   styleUrls: ['./week-table.component.scss'],
 })
-export class WeekTableComponent implements OnInit, OnDestroy {
+export class WeekTableComponent implements OnInit, OnDestroy, OnChanges {
   private readonly expandedNodes = new Set<string>(
     this.listService.get<string>('expanded-nodes', []),
   );
@@ -98,6 +104,7 @@ export class WeekTableComponent implements OnInit, OnDestroy {
   allActivities: Activity[] = [];
   items: (TreeNode | Activity | null)[] = [];
   tree: TreeNode[] = [];
+  recordIsInvalid: boolean[] = [];
 
   isAddingActivity = false;
 
@@ -106,6 +113,7 @@ export class WeekTableComponent implements OnInit, OnDestroy {
     private workRecordService: WorkRecordService,
     private errorService: ErrorService,
     private elementRef: ElementRef,
+    private readonly dialog: MatDialog,
     private listService: ListService,
   ) {
     this.showWeekends = false;
@@ -117,7 +125,10 @@ export class WeekTableComponent implements OnInit, OnDestroy {
   }
   set activities(value: Activity[]) {
     this.inputActivities = value.filter((activity) =>
-      this.records.some((record) => activity.isOpenAt(record.date)),
+      this.records.some(
+        (record) =>
+          activity.isOpenAt(record.date) || this.isRecordInvalidForActivity(record, activity),
+      ),
     );
     this.homegrownActivities = [];
     this.isAddingActivity = false;
@@ -139,6 +150,12 @@ export class WeekTableComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     assertDefined(this, 'user');
+  }
+
+  ngOnChanges() {
+    this.recordIsInvalid = this.records.map((r) =>
+      this.activities.some((a) => this.isRecordInvalidForActivity(r, a)),
+    );
   }
 
   ngOnDestroy() {
@@ -182,7 +199,11 @@ export class WeekTableComponent implements OnInit, OnDestroy {
 
   submit(record: Record, index: number) {
     this.workRecordService.update(this.user.id, record).subscribe({
-      next: (r) => (this.records[index] = r),
+      next: (r) => {
+        this.records[index] = r;
+        // API only succeeds if the record is valid
+        this.recordIsInvalid[index] = false;
+      },
       error: (err) => {
         console.error(err);
         this.errorService.notifyGeneralError();
@@ -195,6 +216,35 @@ export class WeekTableComponent implements OnInit, OnDestroy {
       record,
       this.records.findIndex((r) => r.isToday),
     );
+  }
+
+  hasInvalidRecord(activity: Activity | null): boolean {
+    return (
+      activity != null && this.records.some((r) => this.isRecordInvalidForActivity(r, activity))
+    );
+  }
+
+  isRecordInvalidForActivity(record: Record, activity: Activity): boolean {
+    return (
+      !activity.isOpenAt(record.date) && record.entries.some((e) => e.activityId === activity.id)
+    );
+  }
+
+  openInvalidEntryDialog(record: Record, index: number) {
+    const data: InvalidEntriesDialogData = {
+      record,
+      offendingActivities: this.activities.filter((a) =>
+        this.isRecordInvalidForActivity(record, a),
+      ),
+    };
+    this.dialog
+      .open(InvalidEntriesDialogComponent, {
+        closeOnNavigation: true,
+        data,
+      })
+      .afterClosed()
+      .pipe(filter((r) => r != null))
+      .subscribe((r) => this.submit(r, index));
   }
 
   private set favourites(value: Activity[]) {

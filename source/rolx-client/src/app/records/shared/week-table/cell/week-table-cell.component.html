@@ -5,7 +5,7 @@
   (keydown.arrowDown)="down(); false"
   (keydown.f2)="editEntries()">
   <rolx-duration-edit
-    *ngIf="isSimpleEditable; else total"
+    *ngIf="!hideEdit && isSimpleEditable; else total"
     [value]="entries[0]?.duration!"
     (changed)="submitSingleEntry($event)"
     (more)="editEntries()"
@@ -14,12 +14,29 @@
 
   <ng-template #total>
     <span
-      *ngIf="isActivityOpen && (!isLocked || !totalDuration.isZero)"
-      class="total"
+      *ngIf="isActivityOpen && (!(hideEdit || isLocked) || !totalDuration.isZero); else error"
+      [class.total]="!hideEdit"
       [matTooltip]="commentsText"
       matTooltipClass="multiline-tooltip">
-      <button #moreButton mat-icon-button class="small-icon-button" (click)="editEntries()">
+      <button
+        *ngIf="!hideEdit"
+        #moreButton
+        mat-icon-button
+        class="small-icon-button"
+        (click)="editEntries()">
         <mat-icon>more_horiz</mat-icon>
+      </button>
+      {{totalDuration}}
+    </span>
+  </ng-template>
+
+  <ng-template #error>
+    <span
+      *ngIf="!isActivityOpen && !totalDuration.isZero"
+      class="total"
+      matTooltip="Dieser Eintrag ist ungültig. Klicke für Details">
+      <button mat-icon-button class="warning">
+        <mat-icon>warning</mat-icon>
       </button>
       {{totalDuration}}
     </span>

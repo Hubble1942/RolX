@@ -10,11 +10,16 @@
   $primary-palette: map.get($color-config, 'primary');
   $background-palette: map.get($color-config, 'background');
   $foreground-palette: map.get($color-config, 'foreground');
+  $warn-palette: map.get($color-config, 'warn');
 
   $default-background: mat.get-color-from-palette($background-palette, card);
   $non-workday-background: mat.get-color-from-palette($background-palette, disabled-button);
 
   rolx-week-table {
+    .error {
+      background-color: mat.get-color-from-palette($warn-palette, 'lighter');
+    }
+
     .today {
       background-color: mat.get-color-from-palette($primary-palette, 'lighter');
     }
@@ -29,9 +34,10 @@
 
     // hack to make the header opaque
     th.non-workday {
-      &::before, &::after {
+      &::before,
+      &::after {
         z-index: -1;
-        content: "";
+        content: '';
         position: absolute;
         top: 0;
         bottom: 0;
@@ -42,6 +48,7 @@
       &::before {
         background-color: $default-background;
       }
+
       &::after {
         background-color: $non-workday-background;
       }
@@ -51,6 +58,7 @@
 
 @mixin theme($theme) {
   $color-config: mat.get-color-config($theme);
+
   @if $color-config != null {
     @include color($theme);
   }

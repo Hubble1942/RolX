@@ -53,6 +53,9 @@ export class WeekTableCellComponent implements OnInit, OnDestroy {
   user!: User;
 
   @Input()
+  hideEdit = false;
+
+  @Input()
   get row(): number {
     return this.coordinates.row;
   }

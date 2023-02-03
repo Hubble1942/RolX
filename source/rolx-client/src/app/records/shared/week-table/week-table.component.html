@@ -7,7 +7,11 @@
       </div>
     </th>
 
-    <td mat-cell *matCellDef="let item" [attr.colspan]="item ? 1 : 8">
+    <td
+      mat-cell
+      *matCellDef="let item"
+      [attr.colspan]="item ? 1 : 8"
+      [class.error]="isActivity(item) && hasInvalidRecord(item)">
       <div class="activity-row">
         <span *ngIf="isActivity(item); else treeNode">
           <ng-container *ngIf="asTreeView; else tableView">
@@ -77,8 +81,17 @@
       *matHeaderCellDef
       class="day-header"
       [class.non-workday]="!records[i].isWorkday && !records[i].isToday"
-      [class.today]="records[i].isToday">
-      <span>{{records[i].date.toDate() | date: 'mediumDate'}}</span>
+      [class.today]="records[i].isToday"
+      [class.error]="recordIsInvalid[i]">
+      <span>
+        <mat-icon
+          *ngIf="recordIsInvalid[i]"
+          [inline]="true"
+          matTooltip="Dieser Tag enthält ungültige Werte. Bearbeiten ist erst nach Bereinigung möglich">
+          warning
+        </mat-icon>
+        {{records[i].date.toDate() | date: 'mediumDate'}}
+      </span>
       <ng-container *ngIf="records[i].dayName">
         <br />
         <small>{{records[i].dayName}}</small>
@@ -91,7 +104,9 @@
       class="day"
       [hidden]="!item"
       [class.non-workday]="!records[i].isWorkday && !records[i].isToday"
-      [class.today]="records[i].isToday">
+      [class.today]="records[i].isToday && !recordIsInvalid[i]"
+      [class.error]="recordIsInvalid[i]"
+      (click)="recordIsInvalid[i] && openInvalidEntryDialog(records[i], i)">
       <rolx-week-table-cell
         *ngIf="isActivity(item); else treeNodeData"
         [row]="row"
@@ -99,6 +114,7 @@
         [record]="records[i]"
         [activity]="item"
         [user]="user"
+        [hideEdit]="recordIsInvalid[i]"
         (changed)="submit($event, i)">
       </rolx-week-table-cell>
 
@@ -114,9 +130,11 @@
       *matFooterCellDef
       class="day"
       [class.non-workday]="!records[i].isWorkday && !records[i].isToday"
-      [class.today]="records[i].isToday">
+      [class.today]="records[i].isToday"
+      [class.error]="recordIsInvalid[i]"
+      (click)="recordIsInvalid[i] && openInvalidEntryDialog(records[i], i)">
       <rolx-paid-leave-select
-        *ngIf="records[i].mayHavePaidLeave; else overtime"
+        *ngIf="records[i].mayHavePaidLeave && !recordIsInvalid[i]; else overtime"
         [record]="records[i]"
         (changed)="submit($event, i)"></rolx-paid-leave-select>
 

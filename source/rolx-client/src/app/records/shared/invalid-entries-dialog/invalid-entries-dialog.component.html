@@ -1,0 +1,52 @@
+<h1 mat-dialog-title>
+  Ungültige Einträge -
+  <small>
+    {{data.record.date.toDate() | date: 'mediumDate'}}
+    <span *ngIf="data.record.dayName">- {{data.record.dayName}}</span>
+  </small>
+</h1>
+<mat-dialog-content>
+  <p>
+    Die folgenden Einträge sind Aktivitäten zugeortnet, die vor dem {{data.record.date.toDate() |
+    date: 'mediumDate'}} bereits geschlossen wurden.<br />
+    Bitte lösche diese Einträge oder bitte deinen Projektleiter die Aktivität wieder zu öffnen.
+    <br />
+    Bei Fragen melde dich bei deinem Projektleiter.
+  </p>
+  <table mat-table [dataSource]="data.offendingActivities">
+    <ng-container matColumnDef="activity">
+      <th mat-header-cell *matHeaderCellDef>Aktivität</th>
+      <td mat-cell *matCellDef="let item">{{item.fullName}}</td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="closed">
+      <th mat-header-cell *matHeaderCellDef>Geschlossen am</th>
+      <td mat-cell *matCellDef="let item">{{item.endDate | date: 'mediumDate'}}</td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="duration">
+      <th mat-header-cell *matHeaderCellDef>Gebuchte Zeit</th>
+      <td mat-cell *matCellDef="let item">{{durationFor(item)}}</td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="reassign">
+      <th mat-header-cell *matHeaderCellDef>Andere Aktivität zuweisen</th>
+      <td mat-cell *matCellDef="let item">
+        <rolx-activity-selector
+          [begin]="data.record.date"
+          [end]="data.record.date"></rolx-activity-selector>
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let formRow; columns: displayedColumns;"></tr>
+  </table>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-stroked-button [mat-dialog-close]="null">Abbruch</button>
+  <button mat-flat-button color="primary" type="button" (click)="deleteEntries()">Löschen</button>
+</mat-dialog-actions>

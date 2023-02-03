@@ -9,6 +9,7 @@ import { YearOverviewPageComponent } from './pages/year-overview-page/year-overv
 import { BalanceIndicatorComponent } from './shared/balance-indicator/balance-indicator.component';
 import { DurationEditComponent } from './shared/duration-edit/duration-edit.component';
 import { HolidayTableComponent } from './shared/holiday-table/holiday-table.component';
+import { InvalidEntriesDialogComponent } from './shared/invalid-entries-dialog/invalid-entries-dialog.component';
 import { MonthlyWorkTimeTableComponent } from './shared/monthly-work-time-table/monthly-work-time-table.component';
 import { MultiEntriesDialogComponent } from './shared/multi-entries-dialog/multi-entries-dialog.component';
 import { PaidLeaveSelectComponent } from './shared/paid-leave-select/paid-leave-select.component';
@@ -33,6 +34,7 @@ const exportedDeclarations = [
     ...exportedDeclarations,
     DurationEditComponent,
     HolidayTableComponent,
+    InvalidEntriesDialogComponent,
     MonthlyWorkTimeTableComponent,
     MultiEntriesDialogComponent,
     PaidLeaveSelectComponent,

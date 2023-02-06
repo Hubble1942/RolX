@@ -95,6 +95,7 @@ export class SubprojectFormComponent implements OnInit {
     const target: (number | string)[] = ['subproject'];
     if (!this.isNew) {
       target.push(this.subproject.id);
+      target.push('activity');
     }
 
     // noinspection JSIgnoredPromiseFromCall

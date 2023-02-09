@@ -21,6 +21,11 @@ export const ProjectsRoutes: Routes = [
     component: SubprojectRecordsPageComponent,
   },
   {
+    path: 'subproject/:id',
+    redirectTo: 'subproject/:id/activity',
+    pathMatch: 'full',
+  },
+  {
     path: 'subproject/:id/edit',
     component: SubprojectEditPageComponent,
     canActivate: [RoleGuard],

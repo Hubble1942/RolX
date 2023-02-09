@@ -81,9 +81,8 @@ export class SubprojectFormComponent implements OnInit {
   }
 
   done(subproject: Subproject) {
-    const target = ['subproject', subproject.id];
+    const target = ['subproject', subproject.id, 'activity'];
     if (this.isNew) {
-      target.push('activity');
       target.push('new');
     }
 

@@ -69,7 +69,7 @@ public sealed class Subproject
     /// <summary>
     /// Gets or the date of the first activity.
     /// </summary>
-    public DateOnly? StartDate => this.Activities.Select(a => a.StartDate).Min();
+    public DateOnly? StartDate => this.Activities.Select(a => (DateOnly?)a.StartDate).Min();
 
     /// <summary>
     /// Gets a value indicating whether this instance is closed.

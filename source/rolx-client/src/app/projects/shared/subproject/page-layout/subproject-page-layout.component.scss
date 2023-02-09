@@ -6,15 +6,6 @@ mat-card {
 
 mat-card-title {
   position: relative;
-  > a {
-    opacity: 0.1;
-    transition: opacity 0.3s ease-out;
-
-    &:hover {
-      opacity: 1;
-      transition: opacity 0.3s ease-in;
-    }
-  }
 }
 
 .titleWrapper {

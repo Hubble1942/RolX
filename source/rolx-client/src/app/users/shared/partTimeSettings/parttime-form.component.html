@@ -1,0 +1,49 @@
+<table mat-table [dataSource]="formArrayAsArray">
+  <ng-container matColumnDef="startDate">
+    <th mat-header-cell *matHeaderCellDef>Startdatum</th>
+    <td mat-cell *matCellDef="let settingForm; index as i" [formGroup]="settingForm">
+      <mat-form-field *ngIf="i > 0; else entryDateFactor">
+        <input
+          matInput
+          formControlName="startDate"
+          [matDatepicker]="partTimeStartDatePicker"
+          [min]="entryDate"
+          [max]="leaveDate"
+          (focus)="partTimeStartDatePicker.open()" />
+        <mat-datepicker-toggle matSuffix [for]="partTimeStartDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #partTimeStartDatePicker></mat-datepicker>
+      </mat-form-field>
+      <ng-template #entryDateFactor>Bei Eintritt:</ng-template>
+    </td>
+    <td mat-footer-cell *matFooterCellDef>
+      <a mat-icon-button aria-label="Neues Pensum" (click)="addPartTimeRow()">
+        <mat-icon>add</mat-icon>
+      </a>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="factor">
+    <th mat-header-cell *matHeaderCellDef>Pensum</th>
+    <td mat-cell *matCellDef="let settingForm" class="factor" [formGroup]="settingForm">
+      <mat-form-field>
+        <input matInput type="number" formControlName="factor" />
+        <span matSuffix>&nbsp;%</span>
+      </mat-form-field>
+    </td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
+
+  <ng-container matColumnDef="tools">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell class="tools" *matCellDef="let settingForm; index as i">
+      <a *ngIf="i > 0" mat-icon-button matTooltip="Löschen" (click)="deletePartTimeRow(i)">
+        <mat-icon>delete</mat-icon>
+      </a>
+    </td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let settingForm; columns: displayedColumns"></tr>
+  <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+</table>

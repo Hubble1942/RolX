@@ -33,6 +33,7 @@ internal static class UserMapper
             EntryDate = entity.EntryDate.ToIsoDate(),
             LeavingDate = entity.LeftDate?.AddDays(-1).ToIsoDate(),
             IsConfirmed = entity.IsConfirmed,
+            PartTimeSettings = entity.PartTimeSettings.Select(s => s.ToResource()).ToImmutableList(),
         };
     }
 
@@ -51,6 +52,7 @@ internal static class UserMapper
             Role = resource.Role,
             EntryDate = IsoDate.Parse(resource.EntryDate),
             LeftDate = IsoDate.ParseNullable(resource.LeavingDate)?.AddDays(1),
+            PartTimeSettings = resource.PartTimeSettings.Select(s => s.ToDomain(resource.Id)).ToImmutableList(),
         };
     }
 }

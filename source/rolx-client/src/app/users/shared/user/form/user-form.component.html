@@ -46,6 +46,15 @@
         <mat-datepicker-toggle matSuffix [for]="leavingDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #leavingDatePicker></mat-datepicker>
       </mat-form-field>
+
+      <h4 class="part-time-title">Teilzeitpensum:</h4>
+
+      <rolx-parttime-form
+        formArrayName="partTimeSettings"
+        [formArray]="partTimeSettings"
+        [initialPartTimeSettings]="user.partTimeSettings"
+        [entryDate]="form.controls['entryDate'].value"
+        [leaveDate]="form.controls['leavingDate'].value"></rolx-parttime-form>
     </form>
   </mat-card-content>
 

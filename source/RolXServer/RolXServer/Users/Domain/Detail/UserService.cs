@@ -37,7 +37,7 @@ internal sealed class UserService : IUserService
     /// </returns>
     public async Task<IEnumerable<User>> GetAll()
     {
-        return await this.context.Users.ToListAsync();
+        return await this.context.Users.Include(u => u.PartTimeSettings).ToListAsync();
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ internal sealed class UserService : IUserService
     /// <returns>The user or <c>null</c> if none has been found.</returns>
     public async Task<User?> GetById(Guid id)
     {
-        return await this.context.Users
+        return await this.context.Users.Include(u => u.PartTimeSettings)
             .FirstOrDefaultAsync(p => p.Id == id);
     }
 
@@ -72,6 +72,22 @@ internal sealed class UserService : IUserService
         entry.Property(e => e.EntryDate).IsModified = true;
         entry.Property(e => e.LeftDate).IsModified = true;
         entry.Property(e => e.IsConfirmed).IsModified = true;
+
+        var startDates = user.PartTimeSettings.Select(s => s.StartDate).ToHashSet();
+        var oldSettings = await this.context.UserPartTimeSettings
+                    .AsNoTracking()
+                    .Where(s => s.UserId == user.Id)
+                    .ToListAsync();
+        var orphanSettings = oldSettings.Where(s => !startDates.Contains(s.StartDate));
+
+        this.context.UserPartTimeSettings.UpdateRange(
+            user.PartTimeSettings.Select(
+                s =>
+                {
+                    s.Id = oldSettings.FirstOrDefault(os => os.StartDate == s.StartDate)?.Id ?? 0;
+                    return s;
+                }));
+        this.context.RemoveRange(orphanSettings);
 
         try
         {

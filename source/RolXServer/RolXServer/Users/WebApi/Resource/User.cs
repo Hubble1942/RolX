@@ -57,4 +57,9 @@ public class User
     /// Gets or sets a value indicating whether this user is confirmed.
     /// </summary>
     public bool IsConfirmed { get; set; }
+
+    /// <summary>
+    /// Gets or sets the list of part time settings for the user.
+    /// </summary>
+    public IImmutableList<PartTimeSetting> PartTimeSettings { get; set; } = ImmutableList<PartTimeSetting>.Empty;
 }

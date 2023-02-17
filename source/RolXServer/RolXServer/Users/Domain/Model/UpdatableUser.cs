@@ -6,6 +6,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using RolXServer.Users.DataAccess;
+
 namespace RolXServer.Users.Domain.Model;
 
 /// <summary>
@@ -35,4 +37,9 @@ public class UpdatableUser
     /// This marks the first day the user no longer works with us.
     /// </remarks>
     public DateOnly? LeftDate { get; set; }
+
+    /// <summary>
+    /// Gets or sets the part time settings for the user.
+    /// </summary>
+    public IImmutableList<UserPartTimeSetting> PartTimeSettings { get; set; } = ImmutableList<UserPartTimeSetting>.Empty;
 }

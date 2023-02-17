@@ -29,6 +29,11 @@ input[type='number']::-webkit-outer-spin-button {
   margin: 0;
 }
 
+// disable all spin buttons on number inputs for firefox
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
 .small-icon-button {
   width: 24px !important;
   height: 24px !important;

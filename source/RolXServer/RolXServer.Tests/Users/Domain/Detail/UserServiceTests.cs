@@ -6,6 +6,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Collections.Immutable;
+
 using RolXServer.Common.Errors;
 using RolXServer.Users.DataAccess;
 using RolXServer.Users.Domain.Model;
@@ -99,5 +101,36 @@ public sealed class UserServiceTests
 
         (await this.sut.GetById(this.userId))
             !.LeftDate.Should().Be(date);
+    }
+
+    [Test]
+    public async Task Update_PartTimeSettings()
+    {
+        var date = DateOnly.FromDateTime(DateTime.Now);
+        var expectedFactor = 0.5;
+
+        var user = new UpdatableUser
+        {
+            Id = this.userId,
+            PartTimeSettings = ImmutableList.Create<UserPartTimeSetting>(
+                new UserPartTimeSetting()
+                {
+                    UserId = this.userId,
+                    Factor = expectedFactor,
+                    StartDate = date,
+                }),
+        };
+        await this.sut.Update(user);
+
+        (await this.sut.GetById(this.userId))
+            !.PartTimeSettings
+            .Should()
+            .ContainSingle()
+            .Which
+            .Should()
+            .Match<UserPartTimeSetting>(s =>
+                s.Factor == expectedFactor
+                && s.StartDate == date
+                && s.UserId == this.userId);
     }
 }

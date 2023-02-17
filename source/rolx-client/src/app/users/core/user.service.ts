@@ -27,7 +27,9 @@ export class UserService {
   getById(id: string): Observable<User> {
     return this.httpClient.get(UserService.UrlWithId(id)).pipe(
       mapPlainToInstance(User),
-      tap((u) => u.validateModel()),
+      tap((u) => {
+        u.validateModel();
+      }),
     );
   }
 

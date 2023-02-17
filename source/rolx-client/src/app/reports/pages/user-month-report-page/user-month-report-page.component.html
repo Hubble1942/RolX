@@ -23,7 +23,7 @@
         <li>
           Pensum:
           <span *ngFor="let setting of report.partTimeSettings; last as last">
-            <span><strong>{{setting.factor * 100}}%</strong></span>
+            <span><strong>{{setting.factor * 100 | number: '1.0-0'}}%</strong></span>
             <span *ngIf="!last">, vor {{setting.startDate.toDate() | date}}: </span>
           </span>
         </li>

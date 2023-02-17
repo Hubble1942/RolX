@@ -32,4 +32,9 @@ public class UpdatableUser
     /// Gets or sets the date the user leaves.
     /// </summary>
     public string? LeavingDate { get; set; }
+
+    /// <summary>
+    /// Gets or sets the part time settings for the user.
+    /// </summary>
+    public IImmutableList<PartTimeSetting> PartTimeSettings { get; set; } = ImmutableList<PartTimeSetting>.Empty;
 }

@@ -1,8 +1,9 @@
 import { TransformAsIsoDate } from '@app/core/util/iso-date';
 import { assertDefined } from '@app/core/util/utils';
-import { Exclude } from 'class-transformer';
+import { Exclude, Type } from 'class-transformer';
 import * as moment from 'moment';
 
+import { PartTimeSetting } from './part-time-setting';
 import { Role } from './role';
 
 export class User {
@@ -21,6 +22,9 @@ export class User {
 
   isConfirmed!: boolean;
 
+  @Type(() => PartTimeSetting)
+  partTimeSettings!: PartTimeSetting[];
+
   validateModel(): void {
     assertDefined(this, 'id');
     assertDefined(this, 'firstName');
@@ -30,6 +34,9 @@ export class User {
     assertDefined(this, 'role');
     assertDefined(this, 'entryDate');
     assertDefined(this, 'isConfirmed');
+    assertDefined(this, 'partTimeSettings');
+
+    this.partTimeSettings.forEach((e) => e.validateModel());
   }
 
   @Exclude()

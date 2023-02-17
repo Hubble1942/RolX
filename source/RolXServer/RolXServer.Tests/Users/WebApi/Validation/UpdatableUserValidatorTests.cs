@@ -6,6 +6,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Collections.Immutable;
+
 using RolXServer.Users.WebApi.Resource;
 
 namespace RolXServer.Users.WebApi.Validation;
@@ -121,5 +123,85 @@ public sealed class UpdatableUserValidatorTests
         };
 
         this.sut.TestValidate(model).ShouldHaveValidationErrorFor(record => record.LeavingDate);
+    }
+
+    [Test]
+    public void PartTimeSettings_MayBeEmpty()
+    {
+        var model = new UpdatableUser
+        {
+            PartTimeSettings = ImmutableList<PartTimeSetting>.Empty,
+        };
+
+        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(u => u.PartTimeSettings);
+    }
+
+    [Test]
+    public void PartTimeSettings_MustNotHaveInvalidEntries()
+    {
+        var model = new UpdatableUser
+        {
+            PartTimeSettings = ImmutableList.Create(
+                    new PartTimeSetting("2019-13-14", 1)),
+        };
+
+        this.sut.TestValidate(model).ShouldHaveValidationErrorFor("PartTimeSettings[0].StartDate");
+    }
+
+    [Test]
+    public void PartTimeSettings_MustNotHaveEntriesBeforeEntryDate()
+    {
+        var model = new UpdatableUser
+        {
+            EntryDate = "2019-12-14",
+            PartTimeSettings = ImmutableList.Create(
+                    new PartTimeSetting("2019-11-14", 1),
+                    new PartTimeSetting("2020-12-14", 1)),
+        };
+
+        this.sut.TestValidate(model).ShouldHaveValidationErrorFor("PartTimeSettings[0]");
+    }
+
+    [Test]
+    public void PartTimeSettings_MustNotHaveEntriesAfterLeavingDate()
+    {
+        var model = new UpdatableUser
+        {
+            LeavingDate = "2020-11-14",
+            PartTimeSettings = ImmutableList.Create(
+                    new PartTimeSetting("2019-11-14", 1),
+                    new PartTimeSetting("2020-12-14", 1)),
+        };
+
+        this.sut.TestValidate(model).ShouldHaveValidationErrorFor("PartTimeSettings[1]");
+    }
+
+    [Test]
+    public void PartTimeSettings_MustNotContainMultipleEntriesWithSameStartDate()
+    {
+        var model = new UpdatableUser
+        {
+            PartTimeSettings = ImmutableList.Create(
+                new PartTimeSetting("2019-12-14", 1),
+                new PartTimeSetting("2019-12-14", 0.4)),
+        };
+
+        this.sut.TestValidate(model)
+            .ShouldHaveValidationErrorFor(u => u.PartTimeSettings)
+            .WithErrorMessage("All start dates must be unique");
+    }
+
+    [Test]
+    public void PartTimeSettings_MustSucceedWithValidEntries()
+    {
+        var model = new UpdatableUser
+        {
+            EntryDate = "2019-11-14",
+            PartTimeSettings = ImmutableList.Create(
+                new PartTimeSetting("2019-12-14", 1),
+                new PartTimeSetting("2020-12-14", 0.4)),
+        };
+
+        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(u => u.PartTimeSettings);
     }
 }

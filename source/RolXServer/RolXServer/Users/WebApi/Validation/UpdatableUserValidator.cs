@@ -33,5 +33,13 @@ public sealed class UpdatableUserValidator : AbstractValidator<UpdatableUser>
             .SetValidator(new IsoDateValidator<UpdatableUser>())
             .GreaterThanOrEqualTo(u => u.EntryDate)
             .Unless(u => u.LeavingDate == null);
+
+        this.RuleForEach(u => u.PartTimeSettings)
+            .SetValidator(u => new PartTimeSettingValidator())
+            .Must((u, s) => s.StartDate.CompareTo(u.EntryDate) >= 0 && s.StartDate.CompareTo(u.LeavingDate ?? "2999-12-31") <= 0);
+
+        this.Transform(from: l => l.PartTimeSettings, to: l => l!.Select(s => s.StartDate))
+            .Must(s => s.Distinct().Count() == s.Count())
+            .WithMessage("All start dates must be unique");
     }
 }

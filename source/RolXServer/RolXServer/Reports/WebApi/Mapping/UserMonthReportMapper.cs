@@ -24,7 +24,7 @@ internal static class UserMonthReportMapper
     /// <returns>The mapped resource.</returns>
     public static UserMonthReport ToResource(this Domain.Model.UserMonthReport domain)
         => new(
-            IsoDate.ToIsoDate(domain.Month),
+            domain.Month.ToIsoDate(),
             domain.User.ToResource(),
             domain.PartTimeSettings.Select(s => s.ToResource()).ToImmutableList(),
             domain.BalanceCorrections.Select(s => s.ToResource()).ToImmutableList(),
@@ -34,9 +34,6 @@ internal static class UserMonthReportMapper
             domain.VacationDeltaDays,
             domain.WorkItemGroups);
 
-    private static PartTimeSetting ToResource(this Users.DataAccess.UserPartTimeSetting domain)
-        => new(IsoDate.ToIsoDate(domain.StartDate), domain.Factor);
-
     private static BalanceCorrection ToResource(this Users.DataAccess.UserBalanceCorrection domain)
-        => new(IsoDate.ToIsoDate(domain.Date), domain.Overtime, domain.Vacation);
+        => new(domain.Date.ToIsoDate(), domain.Overtime, domain.Vacation);
 }

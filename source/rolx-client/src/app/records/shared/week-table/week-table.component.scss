@@ -1,6 +1,11 @@
 :host {
   overflow-y: auto;
   height: 1px;
+  display: flex;
+  flex-direction: column;
+  cdk-virtual-scroll-viewport {
+    flex: 1;
+  }
 }
 
 table {
@@ -36,6 +41,16 @@ td.day {
   }
 }
 
+.filters {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+
+  *:first-child {
+    flex-grow: 1;
+  }
+}
+
 .activity-row {
   display: flex;
   align-items: center;
@@ -45,10 +60,6 @@ rolx-stop-toggle,
 rolx-start-toggle {
   margin-left: auto;
   margin-right: 0.5rem;
-}
-
-rolx-activity-selector {
-  width: 100%;
 }
 
 .day {

@@ -1,4 +1,5 @@
 import { LayoutModule } from '@angular/cdk/layout';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
@@ -58,6 +59,7 @@ const modules = [
   NgLetModule,
   ReactiveFormsModule,
   RouterModule,
+  ScrollingModule,
 ];
 
 @NgModule({

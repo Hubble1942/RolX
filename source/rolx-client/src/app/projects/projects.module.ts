@@ -8,7 +8,6 @@ import { SubprojectEditPageComponent } from '@app/projects/pages/subproject-edit
 import { SubprojectListPageComponent } from '@app/projects/pages/subproject-list-page/subproject-list-page.component';
 import { SubprojectRecordsPageComponent } from '@app/projects/pages/subproject-records-page/subproject-records-page.component';
 import { ActivityFormComponent } from '@app/projects/shared/activity/form/activity-form.component';
-import { ActivitySelectorComponent } from '@app/projects/shared/activity/selector/activity-selector.component';
 import { StarredActivityIndicatorComponent } from '@app/projects/shared/activity/starred-indicator/starred-activity-indicator.component';
 import { ActivityTableComponent } from '@app/projects/shared/activity/table/activity-table.component';
 import { SubprojectFormComponent } from '@app/projects/shared/subproject/form/subproject-form.component';
@@ -21,7 +20,6 @@ import { ReportsModule } from '@app/reports/reports.module';
   declarations: [
     ActivityEditPageComponent,
     ActivityFormComponent,
-    ActivitySelectorComponent,
     ActivityTableComponent,
     ProgressBarComponent,
     StarredActivityIndicatorComponent,
@@ -35,7 +33,6 @@ import { ReportsModule } from '@app/reports/reports.module';
   ],
   exports: [
     ActivityEditPageComponent,
-    ActivitySelectorComponent,
     StarredActivityIndicatorComponent,
     SubprojectActivitiesPageComponent,
     SubprojectEditPageComponent,

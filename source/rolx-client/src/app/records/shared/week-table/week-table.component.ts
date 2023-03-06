@@ -1,15 +1,14 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, OnChanges } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorService } from '@app/core/error/error.service';
 import { ListService } from '@app/core/persistence/list-service';
 import { assertDefined } from '@app/core/util/utils';
 import { Activity } from '@app/projects/core/activity';
-import { FavouriteActivityService } from '@app/projects/core/favourite-activity.service';
 import { Record } from '@app/records/core/record';
 import { WorkRecordService } from '@app/records/core/work-record.service';
 import { User } from '@app/users/core/user';
 import * as moment from 'moment';
-import { filter, Subscription } from 'rxjs';
+import { filter } from 'rxjs';
 
 import {
   InvalidEntriesDialogComponent,
@@ -23,7 +22,7 @@ import { TreeNode } from './tree-node';
   templateUrl: './week-table.component.html',
   styleUrls: ['./week-table.component.scss'],
 })
-export class WeekTableComponent implements OnInit, OnDestroy, OnChanges {
+export class WeekTableComponent implements OnInit, OnChanges {
   private readonly expandedNodes = new Set<string>(
     this.listService.get<string>('expanded-nodes', []),
   );
@@ -38,16 +37,14 @@ export class WeekTableComponent implements OnInit, OnDestroy, OnChanges {
     'sunday',
   ];
 
-  private _isCurrentUser = false;
+  private readonly maxFilterActivity = 25;
+
   private _showWeekends = false;
-  private _asTreeView = false;
-  private inputActivities: Activity[] = [];
-  private favouriteActivities: Activity[] = [];
-  private homegrownActivities: Activity[] = [];
-  private favouritesSubscription?: Subscription;
+  private _activities: Activity[] = [];
 
   weekdays: string[] = [];
   displayedColumns: string[] = [];
+  shownActivities = 0;
 
   @Input()
   records: Record[] = [];
@@ -59,25 +56,13 @@ export class WeekTableComponent implements OnInit, OnDestroy, OnChanges {
   showToggle = false;
 
   @Input()
-  get isCurrentUser(): boolean {
-    return this._isCurrentUser;
-  }
-  set isCurrentUser(value: boolean) {
-    if (value === this._isCurrentUser) {
-      return;
-    }
+  isCurrentUser = false;
 
-    this._isCurrentUser = value;
+  @Input()
+  asTreeView = false;
 
-    if (this._isCurrentUser) {
-      this.favouritesSubscription = this.favouriteActivityService.favourites$.subscribe(
-        (phs) => (this.favourites = phs),
-      );
-    } else {
-      this.favouritesSubscription?.unsubscribe();
-      this.favourites = [];
-    }
-  }
+  @Input()
+  forceExpandTree = false;
 
   @Input()
   get showWeekends() {
@@ -93,51 +78,30 @@ export class WeekTableComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   @Input()
-  get asTreeView() {
-    return this._asTreeView;
+  get activities() {
+    return this._activities;
   }
-  set asTreeView(value: boolean) {
-    this._asTreeView = value;
-    this.update();
+  set activities(value: Activity[]) {
+    this._activities = value.sort((a, b) => a.fullName.localeCompare(b.fullName));
   }
 
-  allActivities: Activity[] = [];
+  @Output()
+  recordChanged = new EventEmitter<Record>();
+
+  get todaysRecord(): Record | undefined {
+    return this.records.find((r) => r.isToday);
+  }
+
   items: (TreeNode | Activity | null)[] = [];
-  tree: TreeNode[] = [];
   recordIsInvalid: boolean[] = [];
 
-  isAddingActivity = false;
-
   constructor(
-    private favouriteActivityService: FavouriteActivityService,
     private workRecordService: WorkRecordService,
     private errorService: ErrorService,
-    private elementRef: ElementRef,
     private readonly dialog: MatDialog,
     private listService: ListService,
   ) {
     this.showWeekends = false;
-  }
-
-  @Input()
-  get activities(): Activity[] {
-    return this.inputActivities;
-  }
-  set activities(value: Activity[]) {
-    this.inputActivities = value.filter((activity) =>
-      this.records.some(
-        (record) =>
-          activity.isOpenAt(record.date) || this.isRecordInvalidForActivity(record, activity),
-      ),
-    );
-    this.homegrownActivities = [];
-    this.isAddingActivity = false;
-
-    this.update();
-  }
-
-  get todaysRecord(): Record | undefined {
-    return this.records.find((r) => r.isToday);
   }
 
   isActivity(item: TreeNode | Activity | null): boolean {
@@ -156,21 +120,6 @@ export class WeekTableComponent implements OnInit, OnDestroy, OnChanges {
     this.recordIsInvalid = this.records.map((r) =>
       this.activities.some((a) => this.isRecordInvalidForActivity(r, a)),
     );
-  }
-
-  ngOnDestroy() {
-    this.favouritesSubscription?.unsubscribe();
-  }
-
-  startAdding() {
-    this.isAddingActivity = true;
-    this.update();
-    setTimeout(() => this.scrollToBottom());
-  }
-
-  addHomegrown(activity: Activity) {
-    this.isAddingActivity = false;
-    this.homegrownActivities.push(activity);
     this.update();
   }
 
@@ -203,6 +152,7 @@ export class WeekTableComponent implements OnInit, OnDestroy, OnChanges {
         this.records[index] = r;
         // API only succeeds if the record is valid
         this.recordIsInvalid[index] = false;
+        this.recordChanged.next(r);
       },
       error: (err) => {
         console.error(err);
@@ -247,11 +197,6 @@ export class WeekTableComponent implements OnInit, OnDestroy, OnChanges {
       .subscribe((r) => this.submit(r, index));
   }
 
-  private set favourites(value: Activity[]) {
-    this.favouriteActivities = value;
-    this.update();
-  }
-
   private createTree(value: Activity[]): TreeNode[] {
     const baseNodes: TreeNode[] = [];
     for (const activity of value) {
@@ -262,7 +207,7 @@ export class WeekTableComponent implements OnInit, OnDestroy, OnChanges {
           `${activity.customerName} - ${activity.projectName}`,
           parsedNumbers[0],
         );
-        baseNode.isExpanded = this.expandedNodes.has(baseNode.number);
+        baseNode.isExpanded = this.expandedNodes.has(baseNode.number) || this.forceExpandTree;
         baseNodes.push(baseNode);
       }
 
@@ -272,7 +217,8 @@ export class WeekTableComponent implements OnInit, OnDestroy, OnChanges {
       if (subNode == null) {
         subNode = new TreeNode(activity.subprojectName, parsedNumbers[1]);
         subNode.parentNumber = baseNode.number;
-        subNode.isExpanded = this.expandedNodes.has(baseNode.number + subNode.number);
+        subNode.isExpanded =
+          this.expandedNodes.has(baseNode.number + subNode.number) || this.forceExpandTree;
         baseNode.children.push(subNode);
       }
 
@@ -293,36 +239,13 @@ export class WeekTableComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private update() {
-    const localActivitiesIds = new Set<number>(
-      [...this.inputActivities, ...this.homegrownActivities].map((ph) => ph.id),
-    );
-
-    const nonLocalFavourites = this.favouriteActivities.filter(
-      (ph) => !localActivitiesIds.has(ph.id),
-    );
-
-    const sortedActivities = [...this.inputActivities, ...nonLocalFavourites].sort((a, b) =>
-      a.fullName.localeCompare(b.fullName),
-    );
-
-    this.allActivities = [...sortedActivities, ...this.homegrownActivities];
-
+    const limitedActivities = this.activities.slice(0, this.maxFilterActivity);
+    this.shownActivities = limitedActivities.length;
     if (this.asTreeView) {
-      this.tree = this.createTree(this.allActivities);
-      const tempItems = Array.from(this.flattenTree(this.tree));
-      this.items = this.isAddingActivity ? [...tempItems, null] : tempItems;
+      this.items = Array.from(this.flattenTree(this.createTree(limitedActivities)));
       this.listService.set<string>('expanded-nodes', Array.from(this.expandedNodes.keys()));
     } else {
-      this.items = this.isAddingActivity ? [...this.allActivities, null] : this.allActivities;
+      this.items = limitedActivities;
     }
-  }
-
-  private scrollToBottom() {
-    try {
-      this.elementRef.nativeElement.scroll({
-        top: this.elementRef.nativeElement.scrollHeight,
-        behavior: 'instant',
-      });
-    } catch (err) {}
   }
 }

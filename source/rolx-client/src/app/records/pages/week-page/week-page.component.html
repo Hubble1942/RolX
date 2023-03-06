@@ -23,6 +23,25 @@
     </mat-card-title>
 
     <mat-card-content>
+      <div class="filters">
+        <mat-form-field appearance="standard">
+          <mat-label>Filter</mat-label>
+          <input
+            #filter
+            matInput
+            [formControl]="filterControl"
+            [value]=""
+            (keydown.escape)="setFilter('')"
+            (focus)="selectText($event)" />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="setFilter('')"
+            [disabled]="filter.value === ''">
+            <mat-icon>clear</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
       <rolx-week-table
         *ngIf="recordsActivitiesUser[2] !== undefined"
         [records]="recordsActivitiesUser[0]"
@@ -31,7 +50,9 @@
         [isCurrentUser]="params.isCurrentUser"
         [showWeekends]="showWeekends"
         [asTreeView]="asTree"
-        [showToggle]="showToggle"></rolx-week-table>
+        [showToggle]="showToggle"
+        [forceExpandTree]="recordsActivitiesUser[3]"
+        (recordChanged)="notifyRecordsChanged($event)"></rolx-week-table>
     </mat-card-content>
   </ng-container>
 </mat-card>

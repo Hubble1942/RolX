@@ -8,6 +8,7 @@ import { Record } from '@app/records/core/record';
 import { WorkRecordService } from '@app/records/core/work-record.service';
 import { User } from '@app/users/core/user';
 import * as moment from 'moment';
+import { TableVirtualScrollDataSource } from 'ng-table-virtual-scroll';
 import { filter } from 'rxjs';
 
 import {
@@ -37,17 +38,21 @@ export class WeekTableComponent implements OnInit, OnChanges {
     'sunday',
   ];
 
-  private readonly maxFilterActivity = 25;
-
   private _showWeekends = false;
   private _activities: Activity[] = [];
+  private _records: Record[] = [];
 
   weekdays: string[] = [];
   displayedColumns: string[] = [];
-  shownActivities = 0;
 
   @Input()
-  records: Record[] = [];
+  get records() {
+    return this._records;
+  }
+  set records(value) {
+    this._records = value;
+    this.todaysRecord = this.records.find((r) => r.isToday);
+  }
 
   @Input()
   user!: User;
@@ -86,13 +91,11 @@ export class WeekTableComponent implements OnInit, OnChanges {
   }
 
   @Output()
-  recordChanged = new EventEmitter<Record>();
+  readonly recordChanged = new EventEmitter<Record>();
 
-  get todaysRecord(): Record | undefined {
-    return this.records.find((r) => r.isToday);
-  }
+  readonly dataSource = new TableVirtualScrollDataSource<TreeNode | Activity>();
 
-  items: (TreeNode | Activity | null)[] = [];
+  todaysRecord?: Record;
   recordIsInvalid: boolean[] = [];
 
   constructor(
@@ -239,13 +242,11 @@ export class WeekTableComponent implements OnInit, OnChanges {
   }
 
   private update() {
-    const limitedActivities = this.activities.slice(0, this.maxFilterActivity);
-    this.shownActivities = limitedActivities.length;
     if (this.asTreeView) {
-      this.items = Array.from(this.flattenTree(this.createTree(limitedActivities)));
+      this.dataSource.data = Array.from(this.flattenTree(this.createTree(this.activities)));
       this.listService.set<string>('expanded-nodes', Array.from(this.expandedNodes.keys()));
     } else {
-      this.items = limitedActivities;
+      this.dataSource.data = this.activities;
     }
   }
 }

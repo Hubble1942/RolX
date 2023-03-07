@@ -28,6 +28,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { NgLetModule } from 'ng-let';
+import { TableVirtualScrollModule } from 'ng-table-virtual-scroll';
 
 const modules = [
   CommonModule,
@@ -60,6 +61,7 @@ const modules = [
   ReactiveFormsModule,
   RouterModule,
   ScrollingModule,
+  TableVirtualScrollModule,
 ];
 
 @NgModule({

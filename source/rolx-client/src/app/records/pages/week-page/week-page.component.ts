@@ -23,7 +23,7 @@ import {
   of,
   withLatestFrom,
 } from 'rxjs';
-import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { catchError, debounceTime, map, startWith, switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'rolx-week-page',
@@ -31,8 +31,8 @@ import { catchError, map, startWith, switchMap, tap } from 'rxjs/operators';
   styleUrls: ['./week-page.component.scss'],
 })
 export class WeekPageComponent {
-  filterControl = new FormControl();
-  readonly filterText$ = this.filterControl.valueChanges.pipe(startWith(''));
+  readonly filterControl = new FormControl();
+  readonly filterText$ = this.filterControl.valueChanges.pipe(debounceTime(200), startWith(''));
 
   readonly recordsChanged$ = new BehaviorSubject<Record | null>(null);
 

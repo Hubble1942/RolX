@@ -1,13 +1,9 @@
-<cdk-virtual-scroll-viewport [itemSize]="48">
-  <table mat-table #table [dataSource]="items" [trackBy]="trackByNode" class="mat-elevation-z8">
+<cdk-virtual-scroll-viewport tvsItemSize="48" [footerEnabled]="true">
+  <table mat-table [dataSource]="dataSource" [trackBy]="trackByNode" class="mat-elevation-z8">
     <ng-container matColumnDef="activity">
       <th mat-header-cell *matHeaderCellDef>
         <div class="activity-row">
-          <span>
-            Aktivität ({{ shownActivities }}<span *ngIf="shownActivities !== activities.length">
-              /{{activities.length}}</span
-            >)
-          </span>
+          <span> Aktivität </span>
           <rolx-start-toggle *ngIf="showToggle"></rolx-start-toggle>
         </div>
       </th>
@@ -61,11 +57,7 @@
         </div>
       </td>
 
-      <td mat-footer-cell *matFooterCellDef>
-        <span *ngIf="shownActivities !== activities.length">
-          {{activities.length - shownActivities}} weitere Aktivitäten gefunden.
-        </span>
-      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
 
     <ng-container *ngFor="let weekday of weekdays; let i = index" [matColumnDef]="weekday">

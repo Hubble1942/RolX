@@ -46,7 +46,7 @@ internal static class VacationBudgetEvaluation
         var lastStartDate = user.EntryDate;
         var lastFactor = 1.0;
 
-        foreach (var setting in user.PartTimeSettings)
+        foreach (var setting in user.PartTimeSettings.OrderBy(s => s.StartDate))
         {
             if (setting.StartDate.Year > year)
             {

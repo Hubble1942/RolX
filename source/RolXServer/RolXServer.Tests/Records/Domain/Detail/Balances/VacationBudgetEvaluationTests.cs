@@ -115,6 +115,24 @@ public sealed class VacationBudgetEvaluationTests
     }
 
     [Test]
+    public void VacationBudget_ChangeToPartTime()
+    {
+        var user = new User
+        {
+            EntryDate = new DateOnly(2019, 1, 1),
+        };
+
+        user.PartTimeSettings.Add(new UserPartTimeSetting
+        {
+            StartDate = new DateOnly(2020, 1, 1),
+            Factor = 0.5,
+        });
+
+        user.VacationBudget(2020, 24, NominalWorkTimePerDay)
+            .Should().Be(36 * NominalWorkTimePerDay);
+    }
+
+    [Test]
     public void VacationBudget_OftenChangingPartTime()
     {
         var user = new User

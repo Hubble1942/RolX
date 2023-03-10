@@ -71,16 +71,21 @@ export class StopToggleComponent implements OnInit {
     if (!startTime) {
       return undefined;
     }
-
+    const roundedStartTime = startTime.startOf('minute');
     const entry = new RecordEntry();
     entry.activityId = this.activity.id;
 
     const now = moment();
     // Just use duration when worked through midnight
-    if (startTime.date() === now.date()) {
-      entry.begin = TimeOfDay.fromMoment(startTime);
+    if (roundedStartTime.date() === now.date()) {
+      entry.begin = TimeOfDay.fromMoment(roundedStartTime);
     }
-    entry.duration = Duration.fromMoments(startTime, moment());
+    const end = moment();
+    const roundedEnd =
+      end.second() || end.millisecond()
+        ? end.add(1, 'minute').startOf('minute')
+        : end.startOf('minute');
+    entry.duration = Duration.fromMoments(roundedStartTime, roundedEnd);
 
     return entry;
   }

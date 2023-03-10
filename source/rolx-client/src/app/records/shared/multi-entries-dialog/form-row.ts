@@ -84,11 +84,30 @@ export class FormRow {
   }
 
   private validateDuration(): ValidationErrors | null {
+    if (this.isBeginEndBased) {
+      this.begin.setErrors(
+        this.begin.typedValue == null &&
+          (this.end.typedValue != null || this.pause.typedValue != null)
+          ? { endWithoutStart: true }
+          : this.begin.errors,
+      );
+      this.end.setErrors(
+        this.end.typedValue == null &&
+          (this.begin.typedValue != null || this.pause.typedValue != null)
+          ? { startWithoutEnd: true }
+          : this.end.errors,
+      );
+    }
+
     const duration = this.isBeginEndBased
       ? FormRow.toDuration(this.begin.typedValue, this.end.typedValue, this.pause.typedValue)
       : this.duration.typedValue ?? Duration.Zero;
 
-    return duration.isValid && duration.isNegative ? { negativeDuration: true } : null;
+    return duration.isValid &&
+      (duration.isNegative ||
+        (duration.isZero && this.begin.typedValue != null && this.end.typedValue != null))
+      ? { invalidDuration: true }
+      : null;
   }
 
   private updateMode() {

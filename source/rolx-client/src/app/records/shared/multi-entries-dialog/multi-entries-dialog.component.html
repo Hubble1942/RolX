@@ -36,7 +36,7 @@
             matInput
             [formControl]="formRow.begin"
             [errorStateMatcher]="errorStateMatcher"
-            (blur)="formRow.begin.resetValueIfValid()" />
+            (blur)="formRow.begin.setValueIfValid()" />
         </mat-form-field>
       </td>
       <td mat-footer-cell *matFooterCellDef></td>
@@ -50,7 +50,7 @@
             matInput
             [formControl]="formRow.end"
             [errorStateMatcher]="errorStateMatcher"
-            (blur)="formRow.end.resetValueIfValid()" />
+            (blur)="formRow.end.setValueIfValid()" />
         </mat-form-field>
       </td>
       <td mat-footer-cell *matFooterCellDef></td>
@@ -64,7 +64,7 @@
             matInput
             [formControl]="formRow.pause"
             [errorStateMatcher]="errorStateMatcher"
-            (blur)="formRow.pause.resetValueIfValid()" />
+            (blur)="formRow.pause.setValueIfValid()" />
         </mat-form-field>
       </td>
       <td mat-footer-cell *matFooterCellDef></td>
@@ -78,7 +78,7 @@
             matInput
             [formControl]="formRow.duration"
             [errorStateMatcher]="errorStateMatcher"
-            (blur)="formRow.duration.resetValueIfValid()" />
+            (blur)="formRow.duration.setValueIfValid()" />
         </mat-form-field>
       </td>
       <td mat-footer-cell *matFooterCellDef class="time">

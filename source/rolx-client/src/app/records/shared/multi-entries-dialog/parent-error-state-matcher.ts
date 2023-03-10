@@ -10,6 +10,8 @@ export class ParentErrorStateMatcher extends ShowOnDirtyErrorStateMatcher {
       return true;
     }
 
-    return control?.enabled === true && control?.parent?.errors != null;
+    return (
+      control?.enabled === true && control?.parent?.errors != null && control?.touched === true
+    );
   }
 }

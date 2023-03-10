@@ -32,9 +32,9 @@ export class StrongTypedFormControl<T> extends FormControl {
     return this.value == null || this.value === '';
   }
 
-  resetValueIfValid() {
+  setValueIfValid() {
     if (this.valid) {
-      this.reset(this.value, {
+      this.setValue(this.value, {
         emitEvent: false,
       });
     }

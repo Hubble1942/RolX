@@ -138,10 +138,11 @@ export class WeekPageComponent {
   }
 
   filterByName(filterText: string, activities: Activity[]) {
-    const filterParts = filterText.trim().split(' ');
-    return activities.filter((activity) =>
-      filterParts.every((f) => activity.fullName.toLocaleLowerCase().includes(f)),
-    );
+    const filterParts = filterText.trim().toLocaleLowerCase().split(' ');
+    return activities.filter((activity) => {
+      const activityName = activity.fullName.toLocaleLowerCase();
+      return filterParts.every((f) => activityName.includes(f));
+    });
   }
 
   selectText(event: FocusEvent): void {

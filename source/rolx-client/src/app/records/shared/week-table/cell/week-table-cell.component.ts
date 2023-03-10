@@ -93,7 +93,7 @@ export class WeekTableCellComponent implements OnInit, OnDestroy {
 
   get commentsText(): string {
     return this.entries
-      .map((entry) => entry.comment)
+      .map((entry) => entry.comment?.replace('\n', ' [...]\n').split('\n')[0])
       .filter((comment) => !!comment)
       .join('\n');
   }

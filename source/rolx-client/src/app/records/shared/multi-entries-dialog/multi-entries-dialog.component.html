@@ -90,11 +90,14 @@
       <th mat-header-cell *matHeaderCellDef>Kommentar</th>
       <td mat-cell *matCellDef="let formRow; let index = index">
         <mat-form-field>
-          <input
+          <textarea
             matInput
+            cdkTextareaAutosize
+            cdkAutosizeMinRows="1"
+            cdkAutosizeMaxRows="6"
             [formControl]="formRow.comment"
             (keydown.tab)="tryAddRow(index)"
-            (blur)="formRow.resetComment()" />
+            (blur)="formRow.resetComment()"></textarea>
         </mat-form-field>
       </td>
       <td mat-footer-cell *matFooterCellDef></td>

@@ -8,7 +8,7 @@
 </h1>
 
 <form
-  #scollable
+  #scrollable
   id="entries-edit"
   mat-dialog-content
   [formGroup]="form"
@@ -31,12 +31,15 @@
     <ng-container matColumnDef="begin">
       <th mat-header-cell *matHeaderCellDef>Start</th>
       <td mat-cell *matCellDef="let formRow" class="time">
-        <mat-form-field>
+        <mat-form-field
+          [matTooltip]="getActivityOverlappingTooltipTextFor(formRow.begin)"
+          matTooltipClass="multiline-tooltip">
           <input
             matInput
             [formControl]="formRow.begin"
             [errorStateMatcher]="errorStateMatcher"
-            (blur)="formRow.begin.setValueIfValid()" />
+            (blur)="formRow.begin.setValueIfBasicallyValid()" />
+          <mat-error *ngIf="isOverlapping(formRow.begin)">Kollision</mat-error>
         </mat-form-field>
       </td>
       <td mat-footer-cell *matFooterCellDef></td>
@@ -45,12 +48,15 @@
     <ng-container matColumnDef="end">
       <th mat-header-cell *matHeaderCellDef>Ende</th>
       <td mat-cell *matCellDef="let formRow" class="time">
-        <mat-form-field>
+        <mat-form-field
+          [matTooltip]="getActivityOverlappingTooltipTextFor(formRow.end)"
+          matTooltipClass="multiline-tooltip">
           <input
             matInput
             [formControl]="formRow.end"
             [errorStateMatcher]="errorStateMatcher"
-            (blur)="formRow.end.setValueIfValid()" />
+            (blur)="formRow.end.setValueIfBasicallyValid()" />
+          <mat-error *ngIf="isOverlapping(formRow.end)">Kollision</mat-error>
         </mat-form-field>
       </td>
       <td mat-footer-cell *matFooterCellDef></td>
@@ -64,7 +70,7 @@
             matInput
             [formControl]="formRow.pause"
             [errorStateMatcher]="errorStateMatcher"
-            (blur)="formRow.pause.setValueIfValid()" />
+            (blur)="formRow.pause.setValueIfBasicallyValid()" />
         </mat-form-field>
       </td>
       <td mat-footer-cell *matFooterCellDef></td>
@@ -78,7 +84,7 @@
             matInput
             [formControl]="formRow.duration"
             [errorStateMatcher]="errorStateMatcher"
-            (blur)="formRow.duration.setValueIfValid()" />
+            (blur)="formRow.duration.setValueIfBasicallyValid()" />
         </mat-form-field>
       </td>
       <td mat-footer-cell *matFooterCellDef class="time">

@@ -32,8 +32,8 @@ export class StrongTypedFormControl<T> extends FormControl {
     return this.value == null || this.value === '';
   }
 
-  setValueIfValid() {
-    if (this.valid) {
+  setValueIfBasicallyValid() {
+    if (this.baseValidators.every((validator) => validator(this) == null)) {
       this.setValue(this.value, {
         emitEvent: false,
       });

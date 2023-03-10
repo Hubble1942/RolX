@@ -73,6 +73,10 @@ export class TimeOfDay extends DurationBase<TimeOfDay> {
   sub(other: TimeOfDay): Duration {
     return new Duration(this.seconds - other.seconds);
   }
+
+  isInInterval(intervalStart: TimeOfDay, intervalEnd: TimeOfDay): boolean {
+    return this.sub(intervalStart).isPositive && intervalEnd.sub(this).isPositive;
+  }
 }
 
 export const TransformAsTimeOfDay = (): ((target: any, key: string) => void) => {

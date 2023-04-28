@@ -2,18 +2,19 @@
 
 set DB_HOST=rolx-database.mariadb.database.azure.com
 set DB_USER=theadmin
-set CA_FILE=BaltimoreCyberTrustRoot.crt.pem
+set CA_FILE=Combined.crt.pem
+
+if not exist %CA_FILE% (
+    echo Error: Certificate %CA_FILE% not found
+    echo Please follow the instructions in the readme.md to download and create the certificate.
+    goto end
+)
 
 echo Working on %DB_HOST% with user %DB_USER%
 set "psCommand=powershell -Command "$pword = read-host 'Enter password' -AsSecureString ; ^
     $BSTR=[System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($pword); ^
     [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)""
 for /f "usebackq delims=" %%p in (`%psCommand%`) do set MYSQL_PWD=%%p
-
-if not exist %CA_FILE% (
-    echo - fetching certificate
-    powershell -Command "wget https://www.digicert.com/CACerts/BaltimoreCyberTrustRoot.crt.pem -OutFile %CA_FILE%"
-)
 
 echo - dumping production
 mysqldump ^
@@ -46,3 +47,5 @@ mysql ^
     --ssl-ca=%CA_FILE% ^
     -D rolx_staging ^
     -e "UPDATE users SET users.IsConfirmed = 0 WHERE users.Role < 1000"
+
+:end

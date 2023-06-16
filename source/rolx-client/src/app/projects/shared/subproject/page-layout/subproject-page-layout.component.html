@@ -30,6 +30,9 @@
       <ng-container *ngIf="subproject.deputyManagerName">
         - <small>Stellvertreter:</small> {{subproject.deputyManagerName}}
       </ng-container>
+      <ng-container *ngIf="subproject?.architectName">
+        - <small>Architekt:</small> {{subproject.architectName}}
+      </ng-container>
     </ng-container>
   </mat-card-subtitle>
   <mat-card-content class="content">

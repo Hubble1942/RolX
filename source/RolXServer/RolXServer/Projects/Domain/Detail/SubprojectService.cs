@@ -42,6 +42,7 @@ internal sealed class SubprojectService : ISubprojectService
         .AsNoTracking()
         .Include(p => p.Manager)
         .Include(p => p.DeputyManager)
+        .Include(p => p.Architect)
         .Include(p => p.Activities)
         .ThenInclude(a => a.Billability)
         .ToListAsync())
@@ -58,12 +59,13 @@ internal sealed class SubprojectService : ISubprojectService
     {
         var actualSums = await this.activityService.GetActualSums(id);
         return (await this.dbContext.Subprojects
-             .AsNoTracking()
-             .Include(p => p.Manager)
-             .Include(p => p.DeputyManager)
-             .Include(p => p.Activities)
-             .ThenInclude(a => a.Billability)
-             .FirstOrDefaultAsync(p => p.Id == id))?.ToDomain(actualSums);
+            .AsNoTracking()
+            .Include(p => p.Manager)
+            .Include(p => p.DeputyManager)
+            .Include(p => p.Architect)
+            .Include(p => p.Activities)
+            .ThenInclude(a => a.Billability)
+            .FirstOrDefaultAsync(p => p.Id == id))?.ToDomain(actualSums);
     }
 
     /// <summary>

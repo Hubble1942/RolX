@@ -98,6 +98,16 @@ public sealed class Subproject
     public User? DeputyManager { get; set; }
 
     /// <summary>
+    /// Gets or sets the architects identifier.
+    /// </summary>
+    public Guid? ArchitectId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the architect.
+    /// </summary>
+    public User? Architect { get; set; }
+
+    /// <summary>
     /// Gets the budget time.
     /// </summary>
     public TimeSpan Budget => this.Activities

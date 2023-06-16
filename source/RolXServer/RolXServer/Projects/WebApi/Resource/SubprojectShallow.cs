@@ -16,4 +16,5 @@ public record SubprojectShallow(
     string Name,
     string ManagerName,
     string? DeputyManagerName,
+    string? ArchitectName,
     bool IsClosed);

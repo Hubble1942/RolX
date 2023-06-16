@@ -34,6 +34,8 @@ public static class SubprojectMapper
             Manager = domain.Manager,
             DeputyManagerId = domain.DeputyManagerId,
             DeputyManager = domain.DeputyManager,
+            ArchitectId = domain.ArchitectId,
+            Architect = domain.Architect,
             Activities = domain.Activities.Select(a => a.ToEntity()).ToList(),
         };
         return entity;
@@ -61,6 +63,8 @@ public static class SubprojectMapper
             Manager = subproject.Manager,
             DeputyManagerId = subproject.DeputyManagerId,
             DeputyManager = subproject.DeputyManager,
+            ArchitectId = subproject.ArchitectId,
+            Architect = subproject.Architect,
         };
 
         domain.Activities = subproject.Activities

@@ -8,6 +8,7 @@ export class SubprojectShallow {
   name!: string;
   managerName!: string;
   deputyManagerName?: string;
+  architectName?: string;
   isClosed!: boolean;
 
   validateModel(): void {

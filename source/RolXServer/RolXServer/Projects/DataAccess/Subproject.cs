@@ -51,7 +51,7 @@ public sealed class Subproject
     public List<Activity> Activities { get; set; } = new List<Activity>();
 
     /// <summary>
-    /// Gets or sets the manager identifier.
+    /// Gets or sets the managers identifier.
     /// </summary>
     public Guid? ManagerId { get; set; }
 
@@ -61,7 +61,7 @@ public sealed class Subproject
     public User? Manager { get; set; }
 
     /// <summary>
-    /// Gets or sets the deputy manager identifier.
+    /// Gets or sets the deputy managers identifier.
     /// </summary>
     public Guid? DeputyManagerId { get; set; }
 
@@ -69,4 +69,14 @@ public sealed class Subproject
     /// Gets or sets the deputy manager.
     /// </summary>
     public User? DeputyManager { get; set; }
+
+    /// <summary>
+    /// Gets or sets the architects identifier.
+    /// </summary>
+    public Guid? ArchitectId { get; set; }
+
+    /// <summary>
+    /// Gets or sets the architect.
+    /// </summary>
+    public User? Architect { get; set; }
 }

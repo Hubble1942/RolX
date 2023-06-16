@@ -39,7 +39,9 @@
       <mat-form-field appearance="standard">
         <mat-label>Projektleiter</mat-label>
         <mat-select formControlName="managerId">
-          <mat-option *ngFor="let user of users" [value]="user.id"> {{user.fullName}} </mat-option>
+          <mat-option *ngFor="let user of managers" [value]="user.id">
+            {{user.fullName}}
+          </mat-option>
         </mat-select>
       </mat-form-field>
 

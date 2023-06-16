@@ -31,6 +31,7 @@ export class SubprojectFormComponent implements OnInit {
   });
 
   users: User[] = [];
+  managers: User[] = [];
 
   constructor(
     private router: Router,
@@ -42,10 +43,11 @@ export class SubprojectFormComponent implements OnInit {
   ) {
     const now = moment();
     this.userService.getAll().subscribe((users) => {
-      // Filter in backend
       this.users = users
-        .filter((user) => user.role >= Role.Supervisor && user.isActiveAt(now))
+        .filter((user) => user.isActiveAt(now))
         .sort((a, b) => a.fullName.localeCompare(b.fullName));
+
+      this.managers = this.users.filter((user) => user.role >= Role.Supervisor);
     });
   }
 

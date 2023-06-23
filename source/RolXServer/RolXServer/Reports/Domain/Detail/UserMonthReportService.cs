@@ -95,7 +95,9 @@ internal sealed class UserMonthReportService : IUserMonthReportService
                 .ToImmutableList(),
             endBalance.Overtime,
             endBalance.Overtime - startBalance.Overtime,
+            endBalance.VacationAvailable,
             endBalance.VacationAvailableDays,
+            endBalance.VacationAvailable - startBalance.VacationAvailable,
             endBalance.VacationAvailableDays - startBalance.VacationAvailableDays,
             workItemGroups.AppendTotalGroup().ToImmutableList());
     }

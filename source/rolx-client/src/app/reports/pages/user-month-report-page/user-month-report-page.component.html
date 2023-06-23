@@ -37,11 +37,21 @@
 
         <li>
           Ferien:
-          <strong><rolx-days-indicator [days]="report.vacationDays"></rolx-days-indicator></strong>
-          <span *ngIf="report.vacationDeltaDays !== 0">
+          <strong>
+            <rolx-days-indicator
+              *ngIf="report.vacationDays !== null"
+              [days]="report.vacationDays"></rolx-days-indicator>
+            <span *ngIf="report.vacationDays === null">
+              {{report.vacation.toString(false, true)}} h
+            </span>
+          </strong>
+          <span *ngIf="!report.vacationDelta.isZero">
             (<rolx-days-indicator
+              *ngIf="report.vacationDeltaDays !== null"
               [days]="report.vacationDeltaDays"
               [forcePlusSign]="true"></rolx-days-indicator
+            ><span *ngIf="report.vacationDeltaDays === null"
+              >{{report.vacationDelta.toString(true, true)}} h</span
             >)
           </span>
         </li>

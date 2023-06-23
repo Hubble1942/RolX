@@ -57,6 +57,7 @@ public sealed class PartTimeSettingsValidatorTests
     [TestCase(0.5)]
     [TestCase(0.1234)]
     [TestCase(0.69)]
+    [TestCase(0)]
     public void Factor_MustBeBetweenZeroAndOneInclusive(double value)
     {
         var model = new PartTimeSetting("2019-12-14", value);
@@ -65,9 +66,9 @@ public sealed class PartTimeSettingsValidatorTests
     }
 
     [Test]
-    public void Factor_MustNotBeZero()
+    public void Factor_MustNotBeNegative()
     {
-        var model = new PartTimeSetting("2019-12-14", 0);
+        var model = new PartTimeSetting("2019-12-14", -0.00001);
 
         this.sut.TestValidate(model).ShouldHaveValidationErrorFor(setting => setting.Factor);
     }

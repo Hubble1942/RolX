@@ -26,7 +26,7 @@ public sealed class PartTimeSettingValidator : AbstractValidator<PartTimeSetting
             .NotEmpty()
             .SetValidator(new IsoDateValidator<PartTimeSetting>());
         this.RuleFor(s => s.Factor)
-            .GreaterThan(0)
+            .GreaterThanOrEqualTo(0)
             .LessThanOrEqualTo(1);
     }
 }

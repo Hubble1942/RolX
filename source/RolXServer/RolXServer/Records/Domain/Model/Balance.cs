@@ -24,12 +24,22 @@ public sealed class Balance
     public TimeSpan Overtime { get; set; }
 
     /// <summary>
+    /// Gets or sets the available vacation.
+    /// </summary>
+    public TimeSpan VacationAvailable { get; set; }
+
+    /// <summary>
     /// Gets or sets the available vacation days.
     /// </summary>
-    public double VacationAvailableDays { get; set; }
+    public double? VacationAvailableDays { get; set; }
+
+    /// <summary>
+    /// Gets or sets the planned vacation.
+    /// </summary>
+    public TimeSpan VacationPlanned { get; set; }
 
     /// <summary>
     /// Gets or sets the planned vacation days.
     /// </summary>
-    public double VacationPlannedDays { get; set; }
+    public double? VacationPlannedDays { get; set; }
 }

@@ -25,8 +25,10 @@ public static class BalanceMapper
         return new Resource.Balance
         {
             ByDate = domain.ByDate.ToIsoDate(),
-            Overtime = (long)domain.Overtime.TotalSeconds,
+            Overtime = domain.Overtime,
+            VacationAvailable = domain.VacationAvailable,
             VacationAvailableDays = domain.VacationAvailableDays,
+            VacationPlanned = domain.VacationPlanned,
             VacationPlannedDays = domain.VacationPlannedDays,
         };
     }

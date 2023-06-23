@@ -12,11 +12,22 @@
     <small>Ferien:</small>
 
     <span>
-      {{balance.vacationAvailableDays | number:'1.0-2'}}
-      <small>{{balance.vacationAvailableDays === 1 ? 'Tag' : 'Tage'}}</small>
+      <span *ngIf="balance.vacationAvailableDays !== null">
+        {{balance.vacationAvailableDays | number:'1.0-2'}}
+        <small>{{balance.vacationAvailableDays === 1 ? 'Tag' : 'Tage'}}</small>
+      </span>
+      <span *ngIf="balance.vacationAvailableDays === null">
+        {{balance.vacationAvailable.toString(false, true)}}
+        <small>h</small>
+      </span>
 
-      <small *ngIf="balance.vacationPlannedDays > 0">
-        ({{balance.vacationPlannedDays | number:'1.0-2'}} geplant)
+      <small *ngIf="balance.vacationPlanned.isPositive">
+        (<span *ngIf="balance.vacationPlannedDays !== null"
+          >{{balance.vacationPlannedDays | number:'1.0-2'}}</span
+        ><span *ngIf="balance.vacationPlannedDays === null"
+          >{{balance.vacationPlanned.toString(false, true)}} h</span
+        >
+        geplant)
       </small>
     </span>
   </span>

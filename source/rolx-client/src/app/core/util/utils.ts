@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 
 export const assertDefined = (item: any, propertyName: string): void => {
-  if (item[propertyName] == null) {
+  if (item[propertyName] === undefined) {
     console.log(item, propertyName);
     throw new Error(propertyName + ' must be defined');
   }

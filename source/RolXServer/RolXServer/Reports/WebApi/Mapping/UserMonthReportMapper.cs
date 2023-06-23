@@ -30,7 +30,9 @@ internal static class UserMonthReportMapper
             domain.BalanceCorrections.Select(s => s.ToResource()).ToImmutableList(),
             domain.Overtime,
             domain.OvertimeDelta,
+            domain.Vacation,
             domain.VacationDays,
+            domain.VacationDelta,
             domain.VacationDeltaDays,
             domain.WorkItemGroups);
 

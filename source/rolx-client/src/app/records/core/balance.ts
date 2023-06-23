@@ -10,13 +10,21 @@ export class Balance {
   @TransformAsDuration()
   overtime!: Duration;
 
-  vacationAvailableDays!: number;
-  vacationPlannedDays!: number;
+  @TransformAsDuration()
+  vacationAvailable!: Duration;
+
+  @TransformAsDuration()
+  vacationPlanned!: Duration;
+
+  vacationAvailableDays!: number | null;
+  vacationPlannedDays!: number | null;
 
   validateModel(): void {
     assertDefined(this, 'byDate');
     assertDefined(this, 'overtime');
+    assertDefined(this, 'vacationAvailable');
     assertDefined(this, 'vacationAvailableDays');
     assertDefined(this, 'vacationPlannedDays');
+    assertDefined(this, 'vacationPlanned');
   }
 }

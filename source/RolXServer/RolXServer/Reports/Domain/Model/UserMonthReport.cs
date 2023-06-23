@@ -20,6 +20,8 @@ public sealed record UserMonthReport(
     IImmutableList<UserBalanceCorrection> BalanceCorrections,
     TimeSpan Overtime,
     TimeSpan OvertimeDelta,
-    double VacationDays,
-    double VacationDeltaDays,
+    TimeSpan Vacation,
+    double? VacationDays,
+    TimeSpan VacationDelta,
+    double? VacationDeltaDays,
     IImmutableList<WorkItemGroup> WorkItemGroups);

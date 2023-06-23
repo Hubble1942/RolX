@@ -42,7 +42,7 @@ export class PartTimeSettingsFormComponent implements OnInit {
     const startDate = new FormControl(entry?.startDate, [Validators.required]);
     const factor = new FormControl(entry?.factor, [
       Validators.required,
-      Validators.min(1),
+      Validators.min(0),
       Validators.max(100),
     ]);
     const group = new FormGroup({

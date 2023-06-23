@@ -19,17 +19,27 @@ public sealed class Balance
     public string ByDate { get; set; } = string.Empty;
 
     /// <summary>
-    /// Gets or sets the overtime in seconds.
+    /// Gets or sets the overtime.
     /// </summary>
-    public long Overtime { get; set; }
+    public TimeSpan Overtime { get; set; }
+
+    /// <summary>
+    /// Gets or sets the available vacation.
+    /// </summary>
+    public TimeSpan VacationAvailable { get; set; }
 
     /// <summary>
     /// Gets or sets the available vacation in days.
     /// </summary>
-    public double VacationAvailableDays { get; set; }
+    public double? VacationAvailableDays { get; set; }
+
+    /// <summary>
+    /// Gets or sets the planned vacation.
+    /// </summary>
+    public TimeSpan VacationPlanned { get; set; }
 
     /// <summary>
     /// Gets or sets the planned vacation days.
     /// </summary>
-    public double VacationPlannedDays { get; set; }
+    public double? VacationPlannedDays { get; set; }
 }

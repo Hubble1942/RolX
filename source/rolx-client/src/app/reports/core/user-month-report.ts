@@ -27,8 +27,14 @@ export class UserMonthReport {
   @TransformAsDuration()
   overtimeDelta!: Duration;
 
-  vacationDays!: number;
-  vacationDeltaDays!: number;
+  @TransformAsDuration()
+  vacation!: Duration;
+
+  @TransformAsDuration()
+  vacationDelta!: Duration;
+
+  vacationDays!: number | null;
+  vacationDeltaDays!: number | null;
 
   @Type(() => WorkItemGroup)
   workItemGroups!: WorkItemGroup[];
@@ -40,7 +46,9 @@ export class UserMonthReport {
     assertDefined(this, 'balanceCorrections');
     assertDefined(this, 'overtime');
     assertDefined(this, 'overtimeDelta');
+    assertDefined(this, 'vacation');
     assertDefined(this, 'vacationDays');
+    assertDefined(this, 'vacationDelta');
     assertDefined(this, 'vacationDeltaDays');
     assertDefined(this, 'workItemGroups');
 

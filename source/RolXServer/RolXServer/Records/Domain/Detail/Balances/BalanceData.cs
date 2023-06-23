@@ -116,15 +116,16 @@ internal sealed class BalanceData
         }
 
         var nominalWorkTime = this.NominalWorkTimePerDay * this.User.PartTimeFactorAt(this.ByDate);
-        var vacationAvailableDays = (this.VacationBudget - this.VacationConsumed) / nominalWorkTime;
-        var vacationPlannedDays = this.VacationPlanned / nominalWorkTime;
+        var vacationAvailable = this.VacationBudget - this.VacationConsumed;
 
         return new Model.Balance
         {
             ByDate = this.ByDate,
             Overtime = this.Overtime,
-            VacationAvailableDays = vacationAvailableDays,
-            VacationPlannedDays = vacationPlannedDays,
+            VacationAvailable = vacationAvailable,
+            VacationAvailableDays = nominalWorkTime > TimeSpan.Zero ? vacationAvailable / nominalWorkTime : null,
+            VacationPlanned = this.VacationPlanned,
+            VacationPlannedDays = nominalWorkTime > TimeSpan.Zero ? this.VacationPlanned / nominalWorkTime : null,
         };
     }
 }

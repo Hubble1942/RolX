@@ -2,7 +2,6 @@ import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { NamedBlob } from '@app/core/util/named-blob';
 import { Subproject } from '@app/projects/core/subproject';
-import { environment } from '@env/environment';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -11,7 +10,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class ExportService {
-  private static readonly Url = environment.apiBaseUrl + '/v1/export';
+  private static readonly Url = '/api/v1/export';
 
   constructor(private httpClient: HttpClient) {}
 

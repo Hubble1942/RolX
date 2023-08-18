@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ErrorResponse } from '@app/core/error/error-response';
 import { mapPlainToInstance, mapPlainToInstances } from '@app/core/util/operators';
-import { environment } from '@env/environment';
 import { instanceToPlain } from 'class-transformer';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -13,7 +12,7 @@ import { User } from './user';
   providedIn: 'root',
 })
 export class UserService {
-  static readonly Url = environment.apiBaseUrl + '/v1/user';
+  static readonly Url = '/api/v1/user';
 
   constructor(private httpClient: HttpClient) {}
 

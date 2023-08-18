@@ -64,7 +64,7 @@ export class PaidLeaveSelectComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    assertDefined(this, 'recordShadow');
+    assertDefined(this, 'record');
   }
 
   ngOnDestroy(): void {

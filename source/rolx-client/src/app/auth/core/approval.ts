@@ -24,10 +24,6 @@ export class Approval {
     return this.expires.isBefore(moment().add(5, 'm'));
   }
 
-  get willExpireSoon(): boolean {
-    return this.expires.isBefore(moment().add(15, 'm'));
-  }
-
   get isSupervisor(): boolean {
     return this.user.role >= Role.Supervisor;
   }

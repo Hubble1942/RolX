@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { ErrorResponse } from '@app/core/error/error-response';
 import { IsoDate } from '@app/core/util/iso-date';
 import { mapPlainToInstances } from '@app/core/util/operators';
-import { environment } from '@env/environment';
 import { instanceToPlain } from 'class-transformer';
 import * as moment from 'moment';
 import { Observable, ReplaySubject, Subject, throwError } from 'rxjs';
@@ -15,7 +14,7 @@ import { Record } from './record';
   providedIn: 'root',
 })
 export class WorkRecordService {
-  private static readonly Url = environment.apiBaseUrl + '/v1/workrecord';
+  private static readonly Url = '/api/v1/workrecord';
 
   private readonly userUpdatedSubject = new Subject<string>();
   private updateSequence = new ReplaySubject<number>(1);

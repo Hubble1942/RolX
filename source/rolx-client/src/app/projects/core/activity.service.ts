@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IsoDate } from '@app/core/util/iso-date';
 import { mapPlainToInstances } from '@app/core/util/operators';
-import { environment } from '@env/environment';
 import * as moment from 'moment';
 import { Observable, tap } from 'rxjs';
 
@@ -12,7 +11,7 @@ import { Activity } from './activity';
   providedIn: 'root',
 })
 export class ActivityService {
-  public static readonly Url = environment.apiBaseUrl + '/v1/activity';
+  public static readonly Url = '/api/v1/activity';
 
   constructor(private httpClient: HttpClient) {}
 

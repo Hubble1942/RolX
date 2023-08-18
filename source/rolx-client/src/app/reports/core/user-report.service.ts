@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { AuthService } from '@app/auth/core/auth.service';
 import { mapPlainToInstance } from '@app/core/util/operators';
 import { UserMonthReport } from '@app/reports/core/user-month-report';
-import { environment } from '@env/environment';
 import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -12,7 +11,7 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class UserReportService {
-  private static readonly Url = environment.apiBaseUrl + '/v1/user-report';
+  private static readonly Url = '/api/v1/user-report';
 
   constructor(private httpClient: HttpClient, private authService: AuthService) {}
 

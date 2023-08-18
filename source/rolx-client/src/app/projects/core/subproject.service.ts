@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { ErrorResponse } from '@app/core/error/error-response';
 import { mapPlainToInstance, mapPlainToInstances } from '@app/core/util/operators';
 import { SubprojectShallow } from '@app/projects/core/subproject-shallow';
-import { environment } from '@env/environment';
 import { instanceToPlain } from 'class-transformer';
 import { Observable, tap, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -14,7 +13,7 @@ import { Subproject } from './subproject';
   providedIn: 'root',
 })
 export class SubprojectService {
-  private static readonly Url = environment.apiBaseUrl + '/v1/subproject';
+  private static readonly Url = '/api/v1/subproject';
 
   constructor(private httpClient: HttpClient) {}
 

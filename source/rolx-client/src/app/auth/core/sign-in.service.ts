@@ -1,15 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { PendingRequestInterceptor } from '@app/core/pending-request/pending-request.interceptor';
 import { mapPlainToInstance } from '@app/core/util/operators';
-import { environment } from '@env/environment';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { lastValueFrom, Observable, of } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 
 import { Approval } from './approval';
 import { Info } from './info';
 import { SignInData } from './sign-in.data';
 
-const SignInUrl = environment.apiBaseUrl + '/v1/signin';
+const SignInUrl = '/api/v1/signin';
 
 @Injectable({
   providedIn: 'root',
@@ -30,10 +30,19 @@ export class SignInService {
     );
   }
 
-  extend(): Observable<Approval> {
-    return this.httpClient.get(SignInUrl + '/extend').pipe(
-      mapPlainToInstance(Approval),
-      tap((a) => a.validateModel()),
+  async extend(): Promise<Approval | null> {
+    return await lastValueFrom(
+      this.httpClient
+        .get(SignInUrl + '/extend', {
+          headers: {
+            [PendingRequestInterceptor.NO_REQUEST_TRACKING_HEADER]: 'foo',
+          },
+        })
+        .pipe(
+          mapPlainToInstance(Approval),
+          tap((a) => a.validateModel()),
+          catchError(() => of(null)),
+        ),
     );
   }
 }

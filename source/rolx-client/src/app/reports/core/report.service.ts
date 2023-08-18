@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { PendingRequestInterceptor } from '@app/core/pending-request/pending-request.interceptor';
 import { mapPlainToInstance, mapPlainToInstances } from '@app/core/util/operators';
 import { Subproject } from '@app/projects/core/subproject';
-import { environment } from '@env/environment';
 import { Observable, shareReplay, tap } from 'rxjs';
 
 import { Report } from './report';
@@ -14,7 +13,7 @@ import { ReportRangeType } from './report-range-type';
   providedIn: 'root',
 })
 export class ReportService {
-  private static readonly Url = environment.apiBaseUrl + '/v1/report';
+  private static readonly Url = '/api/v1/report';
 
   reportRangeTypes$ = this.httpClient
     .get<ReportRangeType[]>(ReportService.Url + '/rangeTypes')

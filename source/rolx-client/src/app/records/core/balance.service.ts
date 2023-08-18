@@ -2,13 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IsoDate } from '@app/core/util/iso-date';
 import { mapPlainToInstance } from '@app/core/util/operators';
-import { environment } from '@env/environment';
 import * as moment from 'moment';
 import { Observable, tap } from 'rxjs';
 
 import { Balance } from './balance';
 
-const BalanceUrl = environment.apiBaseUrl + '/v1/balance';
+const BalanceUrl = '/api/v1/balance';
 
 @Injectable({
   providedIn: 'root',

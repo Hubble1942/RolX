@@ -66,7 +66,7 @@ export class ActivityTableComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    assertDefined(this, '_subproject');
+    assertDefined(this, 'subproject');
     assertDefined(this, 'sort');
 
     this.dataSource.sort = this.sort;

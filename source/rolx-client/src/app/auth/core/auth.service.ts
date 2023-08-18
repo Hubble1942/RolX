@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { environment } from '@env/environment';
 import { instanceToPlain, plainToInstance } from 'class-transformer';
-import { interval, lastValueFrom, of, switchMap } from 'rxjs';
-import { catchError, filter } from 'rxjs/operators';
+import { interval, lastValueFrom, switchMap } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 import { Approval } from './approval';
 import { SignInService } from './sign-in.service';
@@ -27,18 +29,24 @@ export class AuthService {
     return this._currentApproval;
   }
 
-  constructor(private signInService: SignInService) {
+  constructor(private signInService: SignInService, private router: Router) {
     console.log('--- AuthService.ctor()');
 
-    interval(1000 * 60)
+    interval(5 * 60 * 1000)
       .pipe(
-        filter(() => this.currentApproval != null && this.currentApproval.willExpireSoon),
-        switchMap(() => this.signInService.extend().pipe(catchError(() => of(null)))),
+        filter(() => this.currentApproval != null),
+        switchMap(() => this.signInService.extend()),
       )
       .subscribe((approval) => {
-        if (approval != null) {
+        if (approval) {
           console.log('--- AuthService: backend access extended');
           this.setCurrentApproval(approval);
+        } else if (environment.production) {
+          console.log('--- AuthService: backend access extension denied');
+          this.signOut();
+
+          // noinspection JSIgnoredPromiseFromCall
+          this.router.navigate(['/sign-in']);
         }
       });
   }
@@ -51,18 +59,11 @@ export class AuthService {
     console.log('--- AuthService.initialize()');
     this.isInitialized = true;
 
-    let approval = AuthService.LoadCurrentApproval();
-
+    const approval = AuthService.LoadCurrentApproval();
     if (!approval || approval.isExpired) {
-      AuthService.ClearCurrentApproval();
-      this._currentApproval = undefined;
-
+      this.signOut();
       console.log('--- AuthService.initialize() done');
       return;
-    }
-
-    if (approval.willExpireSoon) {
-      approval = await lastValueFrom(this.signInService.extend());
     }
 
     this.setCurrentApproval(approval);

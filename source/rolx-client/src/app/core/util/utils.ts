@@ -1,9 +1,10 @@
 import * as moment from 'moment';
 
-export const assertDefined = (item: any, propertyName: string): void => {
-  if (item[propertyName] === undefined) {
-    console.log(item, propertyName);
-    throw new Error(propertyName + ' must be defined');
+export const assertDefined = <T>(item: T, ...propertyNames: (keyof T)[]): void => {
+  for (const propertyName of propertyNames) {
+    if (item[propertyName] === undefined) {
+      throw new Error(`${String(propertyName)} must be defined`);
+    }
   }
 };
 

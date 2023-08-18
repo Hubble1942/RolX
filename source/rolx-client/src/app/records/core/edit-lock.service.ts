@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { mapPlainToInstance } from '@app/core/util/operators';
 import { EditLock } from '@app/records/core/edit-lock';
-import { environment } from '@env/environment';
 import { instanceToPlain } from 'class-transformer';
 import * as moment from 'moment';
 import { BehaviorSubject, lastValueFrom, Observable, of, Subject, switchMap } from 'rxjs';
@@ -12,7 +11,7 @@ import { catchError, distinctUntilChanged, map, tap, throttleTime } from 'rxjs/o
   providedIn: 'root',
 })
 export class EditLockService {
-  private static readonly Url = environment.apiBaseUrl + '/v1/edit-lock';
+  private static readonly Url = '/api/v1/edit-lock';
 
   private readonly refreshSubject = new Subject<void>();
   private readonly dateSubject = new BehaviorSubject<moment.Moment>(moment().startOf('day'));

@@ -3,6 +3,7 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   ViewChild,
@@ -13,17 +14,18 @@ import { FlagService } from '@app/core/persistence/flag-service';
 import { Duration } from '@app/core/util/duration';
 import { DurationValidators } from '@app/core/util/duration.validators';
 import { TimeFormControl } from '@app/core/util/time-form-control';
-import { Subject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'rolx-duration-edit',
   templateUrl: './duration-edit.component.html',
   styleUrls: ['./duration-edit.component.scss'],
 })
-export class DurationEditComponent implements OnInit {
+export class DurationEditComponent implements OnInit, OnDestroy {
   private readonly changedSubject = new Subject<Duration>();
   private valueShadow = Duration.Zero;
+  private subscriptions: Subscription = new Subscription();
 
   @ViewChild('input')
   private inputElement?: ElementRef;
@@ -59,10 +61,20 @@ export class DurationEditComponent implements OnInit {
     return this.value.isZero && this.flagService.get('voiceInput', false);
   }
 
-  constructor(private readonly flagService: FlagService) {}
+  constructor(private readonly flagService: FlagService) {
+    this.subscriptions.add(
+      this.flagService.flagChanged$
+        .pipe(filter((change) => change.flag === 'formatDurationsAsDecimal'))
+        .subscribe(() => this.cancel()),
+    );
+  }
 
   ngOnInit() {
     this.cancel();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   enter() {

@@ -20,4 +20,11 @@
     <mat-icon>logout</mat-icon>
     <span>Sign Out</span>
   </button>
+
+  <mat-divider></mat-divider>
+
+  <button mat-menu-item (click)="toggleDurationFormat()">
+    <mat-icon>{{checkBoxForFlag('formatDurationsAsDecimal')}}</mat-icon>
+    <span>Decimal Time Format</span>
+  </button>
 </mat-menu>

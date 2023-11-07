@@ -1,25 +1,37 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
-export type Flag = 'asTree' | 'showColumn-' | 'showToggle' | 'showWeekends' | 'voiceInput';
+export type Flag =
+  | 'asTree'
+  | 'showColumn-'
+  | 'showToggle'
+  | 'showWeekends'
+  | 'voiceInput'
+  | 'formatDurationsAsDecimal';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FlagService {
   private static readonly Key = 'rolx-flag-service';
-  private readonly data: { [key: string]: boolean } = FlagService.Load();
+  private readonly data: { [flag: string]: boolean } = FlagService.Load();
+  private readonly flagChangedSubject = new Subject<{ flag: Flag; state: boolean }>();
 
-  get(key: Flag, defaultValue: boolean): boolean {
-    const value = this.data[key];
-    return value ?? defaultValue;
+  readonly flagChanged$ = this.flagChangedSubject.asObservable();
+
+  get(flag: Flag, defaultState: boolean): boolean {
+    const state = this.data[flag];
+    return state ?? defaultState;
   }
 
-  set(key: Flag, value: boolean) {
-    this.data[key] = value;
+  set(flag: Flag, state: boolean) {
+    this.data[flag] = state;
     this.save();
+
+    this.flagChangedSubject.next({ flag, state });
   }
 
-  private static Load(): { [key: string]: boolean } {
+  private static Load(): { [flag: string]: boolean } {
     const text = localStorage.getItem(FlagService.Key);
     return text ? JSON.parse(text) : {};
   }

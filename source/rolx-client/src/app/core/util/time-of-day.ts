@@ -77,6 +77,18 @@ export class TimeOfDay extends DurationBase<TimeOfDay> {
   isInInterval(intervalStart: TimeOfDay, intervalEnd: TimeOfDay): boolean {
     return this.sub(intervalStart).isPositive && intervalEnd.sub(this).isPositive;
   }
+
+  override toString(): string {
+    if (!this.isValid) {
+      return '-';
+    }
+
+    const minutes = Math.round(this.seconds / 60);
+    const wholeHours = Math.abs(Math.trunc(minutes / 60));
+    const wholeMinutes = Math.abs(minutes % 60);
+
+    return `${wholeHours}:${wholeMinutes.toString(10).padStart(2, '0')}`;
+  }
 }
 
 export const TransformAsTimeOfDay = (): ((target: any, key: string) => void) => {

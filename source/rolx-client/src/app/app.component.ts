@@ -10,9 +10,12 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { PendingRequestService } from '@app/core/pending-request/pending-request.service';
+import { FlagService } from '@app/core/persistence/flag-service';
 import { Theme } from '@app/core/theme/theme';
 import { ThemeService } from '@app/core/theme/theme.service';
+import { Duration } from '@app/core/util/duration';
 import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'rolx-root',
@@ -32,6 +35,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private readonly viewContainerRef: ViewContainerRef,
     private readonly overlay: Overlay,
     public readonly themeService: ThemeService,
+    private readonly flagService: FlagService,
     public readonly overlayContainer: OverlayContainer,
   ) {}
 
@@ -41,6 +45,13 @@ export class AppComponent implements OnInit, OnDestroy {
       this.pendingRequestService.hasOverdueRequest$.subscribe((v) =>
         v ? this.showOverlay() : this.hideOverlay(),
       ),
+    );
+
+    Duration.formatAsDecimal = this.flagService.get('formatDurationsAsDecimal', false);
+    this.subscriptions.add(
+      this.flagService.flagChanged$
+        .pipe(filter((change) => change.flag === 'formatDurationsAsDecimal'))
+        .subscribe((change) => (Duration.formatAsDecimal = change.state)),
     );
   }
 

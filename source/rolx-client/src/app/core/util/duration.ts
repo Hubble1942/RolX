@@ -4,6 +4,8 @@ import { duration, Moment } from 'moment';
 import { DurationBase } from './duration.base';
 
 export class Duration extends DurationBase<Duration> {
+  static formatAsDecimal = false;
+
   static readonly Zero = new Duration();
   static readonly Pattern = /^(-?)(?:(\d+)(?::|\.\.|,,)([0-5]?\d)|(\d*[.,]?\d*))$/;
   static readonly PatternGroups = {
@@ -83,6 +85,31 @@ export class Duration extends DurationBase<Duration> {
 
   isGreaterThanOrEqualTo(other: Duration): boolean {
     return this.seconds >= other.seconds;
+  }
+
+  override toString(forcePlusSign = false): string {
+    if (!this.isValid) {
+      return '-';
+    }
+
+    const minutes = Math.round(this.seconds / 60);
+    const wholeHours = Math.abs(Math.trunc(minutes / 60));
+    const wholeMinutes = Math.abs(minutes % 60);
+
+    let sign = '';
+    if (minutes !== 0) {
+      if (this.seconds > 0 && forcePlusSign) {
+        sign = '+';
+      } else if (this.seconds < 0) {
+        sign = '-';
+      }
+    }
+
+    if (Duration.formatAsDecimal) {
+      return `${sign}${Number(Math.abs(this.hours).toFixed(2))}`;
+    }
+
+    return `${sign}${wholeHours}:${wholeMinutes.toString(10).padStart(2, '0')}`;
   }
 }
 

@@ -6,6 +6,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Data;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using RolXServer.Common.Util;
@@ -97,5 +99,18 @@ public sealed class RecordService : IRecordService
         }
 
         await this.dbContext.SaveChangesAsync();
+    }
+
+    /// <summary>
+    /// Update several records at once.
+    /// </summary>
+    /// <param name="records">The records to update.</param>
+    /// <returns>The async task.</returns>
+    public async Task BulkUpdate(IEnumerable<Record> records)
+    {
+            foreach (Record r in records)
+            {
+                await this.Update(r);
+            }
     }
 }

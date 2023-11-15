@@ -56,6 +56,21 @@ export class WorkRecordService {
     );
   }
 
+  bulkUpdate(userId: string, records: Record[]): Observable<Record[]> {
+    const currentSequence = this.updateSequence;
+    const nextSequence = new ReplaySubject<number>(1);
+    this.updateSequence = nextSequence;
+
+    return currentSequence.pipe(
+      switchMap(() => this.internalBulkUpdate(userId, records)),
+      tap(() => nextSequence.next(0)),
+      catchError((e) => {
+        nextSequence.next(0);
+        return throwError(() => e);
+      }),
+    );
+  }
+
   private static UrlWithId(userId: string): string {
     return WorkRecordService.Url + '/' + userId;
   }
@@ -65,6 +80,15 @@ export class WorkRecordService {
     return this.httpClient.put(url, instanceToPlain(record)).pipe(
       map(() => record),
       tap((r) => this.userUpdatedSubject.next(r.userId)),
+      catchError((e) => throwError(() => new ErrorResponse(e))),
+    );
+  }
+
+  private internalBulkUpdate(userId: string, records: Record[]): Observable<Record[]> {
+    const url = WorkRecordService.UrlWithId(userId) + '/bulkupdate';
+    return this.httpClient.put(url, instanceToPlain(records)).pipe(
+      map(() => records),
+      tap(() => this.userUpdatedSubject.next(userId)),
       catchError((e) => throwError(() => new ErrorResponse(e))),
     );
   }

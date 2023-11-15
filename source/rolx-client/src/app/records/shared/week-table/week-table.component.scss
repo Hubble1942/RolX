@@ -97,3 +97,22 @@ td[colspan='8'] {
     }
   }
 }
+
+.drop-list {
+  transition: all 500ms;
+}
+
+.cdk-drag {
+  display: inline-flex;
+}
+
+.cdk-drag-handle {
+  cursor: grab;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.cdk-drag-disabled .cdk-drag-handle {
+  cursor: default;
+  filter: opacity(0.15);
+}

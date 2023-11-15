@@ -53,6 +53,12 @@
         background-color: $non-workday-background;
       }
     }
+
+    .drop-list {    
+      &.targetted {
+        background-color: mat.get-color-from-palette($background-palette, disabled-button);
+      }
+    }
   }
 }
 

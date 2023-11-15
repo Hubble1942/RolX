@@ -32,8 +32,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<Domain.ISignInService, Domain.Detail.SignInService>();
         services.AddSingleton<Domain.Detail.BearerTokenFactory>();
 
-        var settings = settingsSection.Get<Settings>();
-
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

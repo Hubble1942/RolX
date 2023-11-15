@@ -70,24 +70,37 @@ export class Record {
     this.entries = this.sortByBegin(this.entries);
   }
 
+  hasEntriesOf(activity: Activity): boolean
+  {
+    return this.entries.some((e) => e.activityId === activity.id);
+  }
+
   entriesOf(activity: Activity): RecordEntry[] {
     return this.sortByBegin(this.entries.filter((e) => e.activityId === activity.id));
   }
 
   replaceEntriesOfActivity(activity: Activity, entries: RecordEntry[]): Record {
-    const clone = this.clone();
+    const clone = this.removeEntriesOfActivity(activity);
 
     entries = entries.filter((e) => !e.duration.isZero);
     entries.forEach((e) => (e.activityId = activity.id));
 
-    clone.entries = this.sortByBegin(
-      this.entries.filter((e) => e.activityId !== activity.id).concat(...entries),
+    clone.entries = clone.sortByBegin(
+      clone.entries.concat(...entries),
     );
 
     if (!clone.mayHavePaidLeave) {
       clone.paidLeaveType = undefined;
       clone.paidLeaveReason = undefined;
     }
+
+    return clone;
+  }
+
+  removeEntriesOfActivity(activity: Activity): Record {
+    const clone = this.clone();
+
+    clone.entries = this.entries.filter((e) => e.activityId !== activity.id);
 
     return clone;
   }
@@ -104,9 +117,15 @@ export class Record {
     return clone;
   }
 
-  private clone(): Record {
+  getTotalDurationOf(activity: Activity): Duration
+  {
+    return new Duration(this.entriesOf(activity).reduce((sum, e) => sum + e.duration.seconds, 0));
+  }
+
+  clone(): Record {
     const clone = new Record();
     Object.assign(clone, this);
+    clone.entries = this.entries.map((e) => e.clone());
 
     return clone;
   }

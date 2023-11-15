@@ -40,4 +40,11 @@ export class RecordEntry {
   get hasComment(): boolean {
     return this.comment != null && this.comment !== '';
   }
+
+  clone(): RecordEntry {
+    const clone = new RecordEntry();
+    Object.assign(clone, this);
+
+    return clone;
+  }
 }

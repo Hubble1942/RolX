@@ -32,4 +32,11 @@ public interface IRecordService
     /// <param name="record">The record.</param>
     /// <returns>The async task.</returns>
     Task Update(Record record);
+
+    /// <summary>
+    /// Updates several records in a single transaction.
+    /// </summary>
+    /// <param name="records">The records to update.</param>
+    /// <returns>The async task.</returns>
+    Task BulkUpdate(IEnumerable<Record> records);
 }

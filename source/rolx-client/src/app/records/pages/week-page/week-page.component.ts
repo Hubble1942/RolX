@@ -31,10 +31,10 @@ import { catchError, debounceTime, map, startWith, switchMap, tap } from 'rxjs/o
   styleUrls: ['./week-page.component.scss'],
 })
 export class WeekPageComponent {
+  private readonly recordsChangedSubject = new BehaviorSubject<void>(undefined);
+
   readonly filterControl = new FormControl();
   readonly filterText$ = this.filterControl.valueChanges.pipe(debounceTime(200), startWith(''));
-
-  readonly recordsChanged$ = new BehaviorSubject<Record | null>(null);
 
   readonly routeParams$: Observable<WeekPageParams> = this.route.url.pipe(
     withLatestFrom(this.route.paramMap, this.route.queryParamMap),
@@ -52,7 +52,7 @@ export class WeekPageComponent {
     }),
   );
 
-  readonly recordsAndSuitable$ = combineLatest([this.routeParams$, this.recordsChanged$]).pipe(
+  readonly recordsAndSuitable$ = combineLatest([this.routeParams$, this.recordsChangedSubject]).pipe(
     switchMap(([params]) =>
       forkJoin([
         this.workRecordService.getRange(params.userId, params.monday, params.nextMonday),
@@ -161,7 +161,7 @@ export class WeekPageComponent {
     this.flagService.set(flag, !this.flagService.get(flag, false));
   }
 
-  notifyRecordsChanged(record: Record) {
-    this.recordsChanged$.next(record);
+  notifyRecordsChanged() {
+    this.recordsChangedSubject.next();
   }
 }

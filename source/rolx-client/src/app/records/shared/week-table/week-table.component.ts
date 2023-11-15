@@ -1,4 +1,5 @@
-import { Component, Input, OnInit, OnChanges, Output, EventEmitter } from '@angular/core';
+import { CdkDrag, CdkDragDrop, CdkDragEnter, CdkDragMove, CdkDropList } from '@angular/cdk/drag-drop';
+import { Component, Input, OnInit, OnChanges, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorService } from '@app/core/error/error.service';
 import { ListService } from '@app/core/persistence/list-service';
@@ -90,13 +91,16 @@ export class WeekTableComponent implements OnInit, OnChanges {
     this._activities = value.sort((a, b) => a.fullName.localeCompare(b.fullName));
   }
 
+  @ViewChild('previewRef') previewRef?: ElementRef<HTMLElement>;
+
   @Output()
-  readonly recordChanged = new EventEmitter<Record>();
+  readonly recordsChanged = new EventEmitter<null>();
 
   readonly dataSource = new TableVirtualScrollDataSource<TreeNode | Activity>();
 
   todaysRecord?: Record;
   recordIsInvalid: boolean[] = [];
+  currentDropTarget?: HTMLElement;
 
   constructor(
     private workRecordService: WorkRecordService,
@@ -149,26 +153,113 @@ export class WeekTableComponent implements OnInit, OnChanges {
     return this.showToggle && this.isActivity(node) && (node as Activity).isOpenAt(moment());
   }
 
-  submit(record: Record, index: number) {
-    this.workRecordService.update(this.user.id, record).subscribe({
-      next: (r) => {
-        this.records[index] = r;
-        // API only succeeds if the record is valid
-        this.recordIsInvalid[index] = false;
-        this.recordChanged.next(r);
+  submit(record: Record) {
+    this.submitRecords([record]);
+  }
+
+  submitRecords(records: Record[]): void
+  {
+    this.workRecordService.bulkUpdate(this.user.id, records)
+    .subscribe({
+      next: (returnedRecords) => {
+        returnedRecords.forEach((r) => this.setRecordAndMarkAsGood(r));
+        this.recordsChanged.emit();
       },
-      error: (err) => {
-        console.error(err);
-        this.errorService.notifyGeneralError();
-      },
+      error: this.apiError,
     });
   }
 
-  submitToggleRecord(record: Record): void {
-    this.submit(
-      record,
-      this.records.findIndex((r) => r.isToday),
-    );
+  apiError(err: any): void
+  {
+    console.error(err);
+    this.errorService.notifyGeneralError();
+  }
+
+  setRecordAndMarkAsGood(record: Record): void
+  {
+    if (record.userId !== this.user.id)
+    {
+      return;
+    }
+
+    const index = this.records.findIndex((r) => r.date === record.date);
+    if (index >= 0)
+    {
+      this.recordIsInvalid[index] = false;
+      this.records[index] = record;
+    }
+  }
+
+  onDragDropped(event: CdkDragDrop<{ record: Record; activity: Activity }>): void {
+    this.currentDropTarget = undefined;
+
+    if (event.container.id === event.previousContainer.id)
+    {
+      return;
+    }
+
+    if (!event.isPointerOverContainer)
+    {
+      return;
+    }
+
+    const { record: fromRecord, activity: fromActivity } = event.previousContainer.data;
+    const { record: toRecord, activity: toActivity } = event.container.data;
+
+    let payload = [];
+    if(toRecord.date === fromRecord.date) {
+      payload = [
+        fromRecord
+        .replaceEntriesOfActivity(toActivity, fromRecord.entriesOf(fromActivity).map((e) => e.clone()))
+        .removeEntriesOfActivity(fromActivity),
+      ];
+    } else {
+      payload = [
+        toRecord
+        .replaceEntriesOfActivity(toActivity, fromRecord.entriesOf(fromActivity).map((e) => e.clone())),
+        fromRecord.removeEntriesOfActivity(fromActivity),
+      ];
+    }
+
+    this.submitRecords(payload);
+  }
+
+  isTargetEntryEmpty(
+    drag: CdkDrag,
+    drop: CdkDropList<{ record: Record; activity: Activity }>,
+  ): boolean
+  {
+    return !drop.data.record.hasEntriesOf(drop.data.activity);
+  }
+
+  onDragEntered(event: CdkDragEnter): void
+  {
+    this.currentDropTarget = event.container.element.nativeElement;
+  }
+
+  onDragExited(event: any): void
+  {
+    if (this.currentDropTarget?.id === event.target?.id)
+    {
+      this.currentDropTarget = undefined;
+    }
+  }
+
+  onDragMoved(event: CdkDragMove): void
+  {
+    const pointerX = event.pointerPosition.x;
+    const pointerY = event.pointerPosition.y;
+    const previewWidth = (this.previewRef?.nativeElement.getBoundingClientRect().width || 0);
+    const xPos = pointerX - 0.5 * previewWidth;
+
+    if (this.previewRef?.nativeElement)
+    {
+        this.previewRef.nativeElement.style.transform = `translate(${xPos}px, ${pointerY}px)`;
+    }
+}
+
+  isCurrentDropTarget(x: HTMLElement): boolean {
+    return this.currentDropTarget?.id === x.id;
   }
 
   hasInvalidRecord(activity: Activity | null): boolean {
@@ -183,7 +274,7 @@ export class WeekTableComponent implements OnInit, OnChanges {
     );
   }
 
-  openInvalidEntryDialog(record: Record, index: number) {
+  openInvalidEntryDialog(record: Record) {
     const data: InvalidEntriesDialogData = {
       record,
       offendingActivities: this.activities.filter((a) =>
@@ -197,7 +288,7 @@ export class WeekTableComponent implements OnInit, OnChanges {
       })
       .afterClosed()
       .pipe(filter((r) => r != null))
-      .subscribe((r) => this.submit(r, index));
+      .subscribe((r) => this.submit(r));
   }
 
   private createTree(value: Activity[]): TreeNode[] {

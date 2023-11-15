@@ -1,3 +1,4 @@
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { LayoutModule } from '@angular/cdk/layout';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
@@ -32,6 +33,7 @@ import { TableVirtualScrollModule } from 'ng-table-virtual-scroll';
 
 const modules = [
   CommonModule,
+  DragDropModule,
   FormsModule,
   HttpClientModule,
   LayoutModule,

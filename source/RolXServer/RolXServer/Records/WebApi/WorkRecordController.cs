@@ -104,4 +104,46 @@ public sealed class WorkRecordController : ControllerBase
 
         return this.NoContent();
     }
+
+    /// <summary>
+    /// Update several records at once.
+    /// </summary>
+    /// <param name="userId">The user identifier.</param>
+    /// <param name="records">The records to update.</param>
+    /// <returns>
+    /// No content.
+    /// </returns>
+    [HttpPut("{userId}/bulkupdate")]
+    public async Task<IActionResult> BulkUpdate(Guid userId, IEnumerable<Record> records)
+    {
+        if (userId != this.User.GetUserId() && this.User.GetRole() < Users.Role.Supervisor)
+        {
+            return this.Forbid();
+        }
+
+        if (userId == this.User.GetUserId())
+        {
+            foreach (Record r in records)
+            {
+                if (!IsoDate.TryParse(r.Date, out var date))
+                {
+                    return this.BadRequest("bad date");
+                }
+
+                if (!this.User.IsActiveAt(date))
+                {
+                    return this.Forbid();
+                }
+
+                if (r.UserId != userId)
+                {
+                    return this.BadRequest("non-matching user id");
+                }
+            }
+        }
+
+        await this.recordService.BulkUpdate(records.Select(r => r.ToDomain()));
+
+        return this.NoContent();
+    }
 }

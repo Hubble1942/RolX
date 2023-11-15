@@ -4,7 +4,7 @@
   [disabled]="isLocked"
   [placeholder]="record.totalDuration.toString()"
   [matTooltip]="record.tooltip"
-  matTooltipPosition="above">
+  matTooltipPosition="below">
   <mat-select-trigger *ngIf="type !== undefined">
     <mat-icon>{{iconForPaidLeaveType(type)}}</mat-icon>
   </mat-select-trigger>

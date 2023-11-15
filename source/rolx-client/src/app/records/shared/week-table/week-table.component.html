@@ -52,7 +52,7 @@
             *ngIf="isToggleShownFor(item) && todaysRecord"
             [activity]="item"
             [record]="todaysRecord"
-            (changed)="submitToggleRecord($event)">
+            (changed)="submit($event)">
           </rolx-stop-toggle>
         </div>
       </td>
@@ -60,76 +60,107 @@
       <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
 
-    <ng-container *ngFor="let weekday of weekdays; let i = index" [matColumnDef]="weekday">
-      <th
-        mat-header-cell
-        *matHeaderCellDef
-        class="day-header"
-        [class.non-workday]="!records[i].isWorkday && !records[i].isToday"
-        [class.today]="records[i].isToday"
-        [class.error]="recordIsInvalid[i]">
-        <span>
-          <mat-icon
-            *ngIf="recordIsInvalid[i]"
-            [inline]="true"
-            matTooltip="Dieser Tag enthält ungültige Werte. Bearbeiten ist erst nach Bereinigung möglich">
-            warning
-          </mat-icon>
-          {{records[i].date.toDate() | date: 'mediumDate'}}
-        </span>
-        <ng-container *ngIf="records[i].dayName">
-          <br />
-          <small>{{records[i].dayName}}</small>
-        </ng-container>
-      </th>
-
-      <td
-        mat-cell
-        *matCellDef="let item, let row = index"
-        class="day"
-        [hidden]="!item"
-        [class.non-workday]="!records[i].isWorkday && !records[i].isToday"
-        [class.today]="records[i].isToday && !recordIsInvalid[i]"
-        [class.error]="recordIsInvalid[i]"
-        (click)="recordIsInvalid[i] && openInvalidEntryDialog(records[i], i)">
-        <rolx-week-table-cell
-          *ngIf="isActivity(item); else treeNodeData"
-          [row]="row"
-          [column]="i"
-          [record]="records[i]"
-          [activity]="item"
-          [user]="user"
-          [hideEdit]="recordIsInvalid[i]"
-          (changed)="submit($event, i)">
-        </rolx-week-table-cell>
-
-        <ng-template #treeNodeData>
-          <ng-container *ngIf="isTreeNode(item);">
-            <span class="tree-node">{{item.getRecordSumFormatted(records[i])}}</span>
-          </ng-container>
-        </ng-template>
-      </td>
-
-      <td
-        mat-footer-cell
-        *matFooterCellDef
-        class="day"
-        [class.non-workday]="!records[i].isWorkday && !records[i].isToday"
-        [class.today]="records[i].isToday"
-        [class.error]="recordIsInvalid[i]"
-        (click)="recordIsInvalid[i] && openInvalidEntryDialog(records[i], i)">
-        <rolx-paid-leave-select
-          *ngIf="records[i].mayHavePaidLeave && !recordIsInvalid[i]; else overtime"
-          [record]="records[i]"
-          (changed)="submit($event, i)"></rolx-paid-leave-select>
-
-        <ng-template #overtime>
-          <span [matTooltip]="records[i].tooltip" matTooltipPosition="above">
-            {{records[i].totalDuration}}
+    <div cdkDropListGroup>
+      <ng-container *ngFor="let weekday of weekdays; let i = index" [matColumnDef]="weekday">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="day-header"
+          [class.non-workday]="!records[i].isWorkday && !records[i].isToday"
+          [class.today]="records[i].isToday"
+          [class.error]="recordIsInvalid[i]">
+          <span>
+            <mat-icon
+              *ngIf="recordIsInvalid[i]"
+              [inline]="true"
+              matTooltip="Dieser Tag enthält ungültige Werte. Bearbeiten ist erst nach Bereinigung möglich">
+              warning
+            </mat-icon>
+            {{records[i].date.toDate() | date: 'mediumDate'}}
           </span>
-        </ng-template>
-      </td>
-    </ng-container>
+          <ng-container *ngIf="records[i].dayName">
+            <br />
+            <small>{{records[i].dayName}}</small>
+          </ng-container>
+        </th>
+
+        <td
+          mat-cell
+          *matCellDef="let item, let row = index"
+          class="day"
+          [hidden]="!item"
+          [class.non-workday]="!records[i].isWorkday && !records[i].isToday"
+          [class.today]="records[i].isToday && !recordIsInvalid[i]"
+          [class.error]="recordIsInvalid[i]"
+          (click)="recordIsInvalid[i] && openInvalidEntryDialog(records[i])">
+          <div
+            cdkDropList
+            (cdkDropListDropped)="onDragDropped($event)"
+            (cdkDropListEntered)="onDragEntered($event)"
+            (pointerleave)="onDragExited($event)"
+            [cdkDropListData]="{ record: records[i], activity: item }"
+            [cdkDropListEnterPredicate]="isTargetEntryEmpty"
+            class="drop-list"
+            #dropListRef
+            [class.targetted]="isCurrentDropTarget(dropListRef)"
+            *ngIf="isActivity(item); else treeNodeData">
+            <div
+              cdkDrag
+              (cdkDragMoved)="onDragMoved($event)"
+              [cdkDragData]="records[i].entriesOf(item)"
+              [cdkDragDisabled]="!records[i].hasEntriesOf(item)">
+              <rolx-week-table-cell
+                [row]="row"
+                [column]="i"
+                [record]="records[i]"
+                [activity]="item"
+                [user]="user"
+                [hideEdit]="recordIsInvalid[i]"
+                (changed)="submit($event)">
+              </rolx-week-table-cell>
+              <mat-icon
+                cdkDragHandle
+                inline="true"
+                [cdkDragHandleDisabled]="!records[i].hasEntriesOf(item)">
+                drag_indicator
+              </mat-icon>
+              <div *cdkDragPlaceholder></div>
+              <div *cdkDragPreview #previewRef>
+                <button mat-raised-button>
+                  <mat-icon>more_time</mat-icon>
+                  {{ records[i].getTotalDurationOf(item) || '0:00' }}
+                </button>
+              </div>
+            </div>
+          </div>
+          <ng-template #treeNodeData>
+            <ng-container *ngIf="isTreeNode(item);">
+              <span class="tree-node">{{item.getRecordSumFormatted(records[i])}}</span>
+            </ng-container>
+          </ng-template>
+        </td>
+
+        <td
+          mat-footer-cell
+          *matFooterCellDef
+          class="day"
+          [class.non-workday]="!records[i].isWorkday && !records[i].isToday"
+          [class.today]="records[i].isToday"
+          [class.error]="recordIsInvalid[i]"
+          (click)="recordIsInvalid[i] && openInvalidEntryDialog(records[i])">
+          <rolx-paid-leave-select
+            *ngIf="records[i].mayHavePaidLeave && !recordIsInvalid[i]; else overtime"
+            [record]="records[i]"
+            (changed)="submit($event)"></rolx-paid-leave-select>
+
+          <ng-template #overtime>
+            <span [matTooltip]="records[i].tooltip" matTooltipPosition="above">
+              {{records[i].totalDuration}}
+            </span>
+          </ng-template>
+        </td>
+      </ng-container>
+    </div>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr

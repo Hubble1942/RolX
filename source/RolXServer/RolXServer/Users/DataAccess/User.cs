@@ -77,6 +77,11 @@ public class User
     public List<UserPartTimeSetting> PartTimeSettings { get; set; } = new List<UserPartTimeSetting>();
 
     /// <summary>
+    /// Gets or sets the vacation days settings.
+    /// </summary>
+    public List<UserVacationDaysSetting> VacationDaysSettings { get; set; } = new List<UserVacationDaysSetting>();
+
+    /// <summary>
     /// Gets or sets the records.
     /// </summary>
     public List<Records.DataAccess.Record> Records { get; set; } = new List<Records.DataAccess.Record>();

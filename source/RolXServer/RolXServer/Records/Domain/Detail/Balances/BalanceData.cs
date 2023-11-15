@@ -25,7 +25,7 @@ internal sealed class BalanceData
     /// <summary>
     /// Gets or sets the vacation days per year.
     /// </summary>
-    public int VacationDaysPerYear { get; set; }
+    public int DefaultVacationDaysPerYear { get; set; }
 
     /// <summary>
     /// Gets or sets the by-date.
@@ -83,7 +83,7 @@ internal sealed class BalanceData
         + this.PaidLeaveTime
         - this.NominalWorkTime;
 
-    private TimeSpan VacationBudget => this.User.VacationBudget(this.ByDate.Year, this.VacationDaysPerYear, this.NominalWorkTimePerDay)
+    private TimeSpan VacationBudget => this.User.VacationBudget(this.ByDate.Year, this.DefaultVacationDaysPerYear, this.NominalWorkTimePerDay)
             + this.BalanceCorrections.Sum(c => c.Vacation);
 
     private IEnumerable<UserBalanceCorrection> BalanceCorrections => this.User.BalanceCorrections

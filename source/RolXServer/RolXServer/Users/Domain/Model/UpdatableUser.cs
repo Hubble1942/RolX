@@ -42,4 +42,9 @@ public class UpdatableUser
     /// Gets or sets the part time settings for the user.
     /// </summary>
     public IImmutableList<UserPartTimeSetting> PartTimeSettings { get; set; } = ImmutableList<UserPartTimeSetting>.Empty;
+
+    /// <summary>
+    /// Gets or sets the vacation days settings for the user.
+    /// </summary>
+    public IImmutableList<UserVacationDaysSetting> VacationDaysSettings { get; set; } = ImmutableList<UserVacationDaysSetting>.Empty;
 }

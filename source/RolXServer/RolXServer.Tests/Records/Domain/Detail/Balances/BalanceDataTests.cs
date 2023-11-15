@@ -22,7 +22,7 @@ public sealed class BalanceDataTests
             NominalWorkTimePerDay = TimeSpan.FromHours(8),
             User = new User { EntryDate = new DateOnly(2020, 3, 2) },
             ByDate = new DateOnly(2020, 3, 8),
-            VacationDaysPerYear = 25,
+            DefaultVacationDaysPerYear = 25,
         };
     }
 

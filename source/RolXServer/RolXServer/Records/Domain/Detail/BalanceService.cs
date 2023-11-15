@@ -53,6 +53,7 @@ public sealed class BalanceService : IBalanceService
     {
         var user = await this.dbContext.Users
             .Include(u => u.PartTimeSettings)
+            .Include(u => u.VacationDaysSettings)
             .Include(u => u.BalanceCorrections)
             .SingleAsync(u => u.Id == userId);
 
@@ -99,7 +100,7 @@ public sealed class BalanceService : IBalanceService
         data.User = user;
         data.ByDate = date;
         data.NominalWorkTimePerDay = this.settings.NominalWorkTimePerDay;
-        data.VacationDaysPerYear = this.settings.VacationDaysPerYear;
+        data.DefaultVacationDaysPerYear = this.settings.DefaultVacationDaysPerYear;
 
         return data.ToBalance();
     }

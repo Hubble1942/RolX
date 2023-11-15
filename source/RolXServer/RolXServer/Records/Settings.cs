@@ -21,5 +21,5 @@ public sealed class Settings
     /// <summary>
     /// Gets or sets the vacation days per year.
     /// </summary>
-    public int VacationDaysPerYear { get; set; } = 25;
+    public int DefaultVacationDaysPerYear { get; set; } = 25;
 }

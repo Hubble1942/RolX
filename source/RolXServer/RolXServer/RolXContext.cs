@@ -80,6 +80,11 @@ public sealed class RolXContext : DbContext
     /// </summary>
     public DbSet<UserPartTimeSetting> UserPartTimeSettings { get; set; } = null!;
 
+    /// <summary>
+    /// Gets or sets vacation days settings.
+    /// </summary>
+    public DbSet<UserVacationDaysSetting> UserVacationDaysSettings { get; set; } = null!;
+
     /// <inheritdoc/>
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
@@ -124,6 +129,9 @@ public sealed class RolXContext : DbContext
             .HasIndex(s => new { s.UserId, s.Date }).IsUnique();
 
         modelBuilder.Entity<UserPartTimeSetting>()
+            .HasIndex(s => new { s.UserId, s.StartDate }).IsUnique();
+
+        modelBuilder.Entity<UserVacationDaysSetting>()
             .HasIndex(s => new { s.UserId, s.StartDate }).IsUnique();
 
         SeedBillabilities(modelBuilder);

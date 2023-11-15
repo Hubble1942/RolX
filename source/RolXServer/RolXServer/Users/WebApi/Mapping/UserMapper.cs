@@ -34,6 +34,7 @@ internal static class UserMapper
             LeavingDate = entity.LeftDate?.AddDays(-1).ToIsoDate(),
             IsConfirmed = entity.IsConfirmed,
             PartTimeSettings = entity.PartTimeSettings.Select(s => s.ToResource()).ToImmutableList(),
+            VacationDaysSettings = entity.VacationDaysSettings.Select(s => s.ToResource()).ToImmutableList(),
         };
     }
 
@@ -53,6 +54,7 @@ internal static class UserMapper
             EntryDate = IsoDate.Parse(resource.EntryDate),
             LeftDate = IsoDate.ParseNullable(resource.LeavingDate)?.AddDays(1),
             PartTimeSettings = resource.PartTimeSettings.Select(s => s.ToDomain(resource.Id)).ToImmutableList(),
+            VacationDaysSettings = resource.VacationDaysSettings.Select(s => s.ToDomain(resource.Id)).ToImmutableList(),
         };
     }
 }

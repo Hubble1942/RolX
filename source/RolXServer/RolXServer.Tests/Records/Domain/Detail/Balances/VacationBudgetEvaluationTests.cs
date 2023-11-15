@@ -167,4 +167,123 @@ public sealed class VacationBudgetEvaluationTests
         user.VacationBudget(2020, 24, NominalWorkTimePerDay)
             .Should().Be(20 * NominalWorkTimePerDay);
     }
+
+    [Test]
+    public void VacationBudget_MoreVacation()
+    {
+        int vacationDays = 40;
+
+        var user = new User
+        {
+            EntryDate = new DateOnly(2020, 1, 1),
+        };
+
+        user.VacationDaysSettings.Add(new UserVacationDaysSetting
+        {
+            StartDate = new DateOnly(2020, 1, 1),
+            VacationDaysPerYear = vacationDays,
+        });
+
+        user.VacationBudget(2020, 24, NominalWorkTimePerDay)
+            .Should().Be(vacationDays * NominalWorkTimePerDay);
+    }
+
+    [Test]
+    public void VacationBudget_ChangeToVacationDays()
+    {
+        int defaultVacationDays = 24;
+        int newVacationDays = 40;
+
+        var user = new User
+        {
+            EntryDate = new DateOnly(2019, 1, 1),
+        };
+
+        user.VacationDaysSettings.Add(new UserVacationDaysSetting
+        {
+            StartDate = new DateOnly(2020, 1, 1),
+            VacationDaysPerYear = newVacationDays,
+        });
+
+        user.VacationBudget(2020, defaultVacationDays, NominalWorkTimePerDay)
+            .Should().Be((newVacationDays + defaultVacationDays) * NominalWorkTimePerDay);
+    }
+
+    [Test]
+    public void VacationBudget_OftenChangingVacationDays()
+    {
+        int defaultVacationDays = 24;
+        int halfVacationDays = 12; // Kinda illegal though...
+
+        var user = new User
+        {
+            EntryDate = new DateOnly(2020, 1, 1),
+        };
+
+        user.VacationDaysSettings.Add(new UserVacationDaysSetting
+        {
+            StartDate = new DateOnly(2020, 2, 1),
+            VacationDaysPerYear = halfVacationDays,
+        });
+
+        user.VacationDaysSettings.Add(new UserVacationDaysSetting
+        {
+            StartDate = new DateOnly(2020, 3, 1),
+            VacationDaysPerYear = defaultVacationDays,
+        });
+
+        user.VacationDaysSettings.Add(new UserVacationDaysSetting
+        {
+            StartDate = new DateOnly(2020, 8, 1),
+            VacationDaysPerYear = halfVacationDays,
+        });
+
+        user.VacationDaysSettings.Add(new UserVacationDaysSetting
+        {
+            StartDate = new DateOnly(2020, 11, 1),
+            VacationDaysPerYear = defaultVacationDays,
+        });
+
+        user.VacationBudget(2020, defaultVacationDays, NominalWorkTimePerDay)
+            .Should().Be(20 * NominalWorkTimePerDay);
+    }
+
+    [Test]
+    public void VacationBudget_ChangingPartTimeAndVacationDays()
+    {
+        int defaultVacationDays = 24;
+        int halfVacationDays = 12;
+
+        var user = new User
+        {
+            EntryDate = new DateOnly(2020, 1, 1),
+        };
+
+        user.PartTimeSettings.Add(new UserPartTimeSetting
+        {
+            StartDate = new DateOnly(2020, 2, 1),
+            Factor = 0.5,
+        });
+
+        user.VacationDaysSettings.Add(new UserVacationDaysSetting
+        {
+            StartDate = new DateOnly(2020, 3, 1),
+            VacationDaysPerYear = halfVacationDays,
+        });
+
+        user.PartTimeSettings.Add(new UserPartTimeSetting
+        {
+            StartDate = new DateOnly(2020, 8, 1),
+            Factor = 1,
+        });
+
+        user.VacationDaysSettings.Add(new UserVacationDaysSetting
+        {
+            StartDate = new DateOnly(2020, 11, 1),
+            VacationDaysPerYear = defaultVacationDays,
+        });
+
+        user.VacationBudget(2020, defaultVacationDays, NominalWorkTimePerDay)
+            .Should().Be(12.5 * NominalWorkTimePerDay);
+    }
 }

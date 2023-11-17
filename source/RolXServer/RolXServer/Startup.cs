@@ -48,18 +48,18 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services
-            .AddControllers(o => o.Filters.Add(new NotFoundExceptionFilter()))
+            .AddControllers(o =>
+            {
+                o.Filters.Add<NotFoundExceptionFilter>();
+                o.Filters.Add<TransactionPerRequestFilter>();
+            })
             .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new TimeSpanJsonSecondsConverter()))
             .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
 
         var connectionString = this.Configuration.GetConnectionString("RolXContext");
         services.AddDbContextPool<RolXContext>(options => options.UseMySql(
             connectionString,
-            ServerVersion.AutoDetect(connectionString),
-            options => options.EnableRetryOnFailure(
-                maxRetryCount: 10,
-                maxRetryDelay: TimeSpan.FromSeconds(5),
-                errorNumbersToAdd: Array.Empty<int>())));
+            ServerVersion.AutoDetect(connectionString)));
 
         services.AddProjects();
         services.AddAuth(this.Configuration);

@@ -188,7 +188,7 @@ public sealed class UpdatableUserValidatorTests
 
         this.sut.TestValidate(model)
             .ShouldHaveValidationErrorFor(u => u.PartTimeSettings)
-            .WithErrorMessage("All start dates must be unique");
+            .WithErrorMessage("All part time start dates must be unique");
     }
 
     [Test]
@@ -203,5 +203,85 @@ public sealed class UpdatableUserValidatorTests
         };
 
         this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(u => u.PartTimeSettings);
+    }
+
+    [Test]
+    public void VacationDaysSettings_MayBeEmpty()
+    {
+        var model = new UpdatableUser
+        {
+            VacationDaysSettings = ImmutableList<VacationDaysSetting>.Empty,
+        };
+
+        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(u => u.VacationDaysSettings);
+    }
+
+    [Test]
+    public void VacationDaysSettings_MustNotHaveInvalidEntries()
+    {
+        var model = new UpdatableUser
+        {
+            VacationDaysSettings = ImmutableList.Create(
+                    new VacationDaysSetting("2019-13-14", 25)),
+        };
+
+        this.sut.TestValidate(model).ShouldHaveValidationErrorFor("VacationDaysSettings[0].StartDate");
+    }
+
+    [Test]
+    public void VacationDaysSettings_MustNotHaveEntriesBeforeEntryDate()
+    {
+        var model = new UpdatableUser
+        {
+            EntryDate = "2019-12-14",
+            VacationDaysSettings = ImmutableList.Create(
+                    new VacationDaysSetting("2019-11-14", 25),
+                    new VacationDaysSetting("2020-12-14", 25)),
+        };
+
+        this.sut.TestValidate(model).ShouldHaveValidationErrorFor("VacationDaysSettings[0]");
+    }
+
+    [Test]
+    public void VacationDaysSettings_MustNotHaveEntriesAfterLeavingDate()
+    {
+        var model = new UpdatableUser
+        {
+            LeavingDate = "2020-11-14",
+            VacationDaysSettings = ImmutableList.Create(
+                    new VacationDaysSetting("2019-11-14", 25),
+                    new VacationDaysSetting("2020-12-14", 25)),
+        };
+
+        this.sut.TestValidate(model).ShouldHaveValidationErrorFor("VacationDaysSettings[1]");
+    }
+
+    [Test]
+    public void VacationDaysSettings_MustNotContainMultipleEntriesWithSameStartDate()
+    {
+        var model = new UpdatableUser
+        {
+            VacationDaysSettings = ImmutableList.Create(
+                new VacationDaysSetting("2019-12-14", 25),
+                new VacationDaysSetting("2019-12-14", 26)),
+        };
+
+        this.sut.TestValidate(model)
+            .ShouldHaveValidationErrorFor(u => u.VacationDaysSettings)
+            .WithErrorMessage("All vacation days start dates must be unique");
+    }
+
+    [Test]
+    public void VacationDaysSettings_MustSucceedWithValidEntries()
+    {
+        var model = new UpdatableUser
+        {
+            EntryDate = "2019-11-14",
+            VacationDaysSettings = ImmutableList.Create(
+                new VacationDaysSetting("2019-12-14", 25),
+                new VacationDaysSetting("2020-12-14", 30)),
+        };
+
+        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(u => u.VacationDaysSettings);
     }
 }

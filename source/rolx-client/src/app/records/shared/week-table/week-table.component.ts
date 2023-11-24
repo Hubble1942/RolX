@@ -210,8 +210,7 @@ export class WeekTableComponent implements OnInit, OnChanges {
     if(toRecord.date === fromRecord.date) {
       payload = [
         fromRecord
-        .replaceEntriesOfActivity(toActivity, fromRecord.entriesOf(fromActivity).map((e) => e.clone()))
-        .removeEntriesOfActivity(fromActivity),
+        .moveEntriesOfActivity(fromActivity, toActivity),
       ];
     } else {
       payload = [

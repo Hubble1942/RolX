@@ -79,6 +79,14 @@ export class Record {
     return this.sortByBegin(this.entries.filter((e) => e.activityId === activity.id));
   }
 
+  moveEntriesOfActivity(fromActivity: Activity, toActivity: Activity): Record {
+    const entries = this.entriesOf(fromActivity).map((e) => e.clone());
+
+    // Need to remove first so as not to trip mayHavePaidLeave
+    return this.removeEntriesOfActivity(fromActivity)
+                .replaceEntriesOfActivity(toActivity, entries);
+  }
+
   replaceEntriesOfActivity(activity: Activity, entries: RecordEntry[]): Record {
     const clone = this.removeEntriesOfActivity(activity);
 

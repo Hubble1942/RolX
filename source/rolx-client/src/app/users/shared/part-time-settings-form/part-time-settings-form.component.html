@@ -24,7 +24,7 @@
 
   <ng-container matColumnDef="factor">
     <th mat-header-cell *matHeaderCellDef>Pensum</th>
-    <td mat-cell *matCellDef="let settingForm" class="factor" [formGroup]="settingForm">
+    <td mat-cell *matCellDef="let settingForm" [formGroup]="settingForm">
       <mat-form-field>
         <input matInput type="number" formControlName="factor" />
         <span matSuffix>&nbsp;%</span>

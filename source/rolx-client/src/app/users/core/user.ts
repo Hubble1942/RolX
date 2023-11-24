@@ -5,6 +5,7 @@ import * as moment from 'moment';
 
 import { PartTimeSetting } from './part-time-setting';
 import { Role } from './role';
+import { VacationDaysSetting } from './vacation-days-setting';
 
 export class User {
   id!: string;
@@ -25,6 +26,9 @@ export class User {
   @Type(() => PartTimeSetting)
   partTimeSettings!: PartTimeSetting[];
 
+  @Type(() => VacationDaysSetting)
+  vacationDaysSettings!: VacationDaysSetting[];
+
   validateModel(): void {
     assertDefined(this, 'id');
     assertDefined(this, 'firstName');
@@ -37,6 +41,7 @@ export class User {
     assertDefined(this, 'partTimeSettings');
 
     this.partTimeSettings.forEach((e) => e.validateModel());
+    this.vacationDaysSettings.forEach((e) => e.validateModel());
   }
 
   @Exclude()

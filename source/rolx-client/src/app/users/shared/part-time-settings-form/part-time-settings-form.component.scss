@@ -26,7 +26,11 @@ th {
     }
   }
 
-  &.factor input {
+  &.mat-column-startDate {
+    padding-right: 16px;
+  }
+
+  &.mat-column-factor input {
     text-align: right;
   }
 }

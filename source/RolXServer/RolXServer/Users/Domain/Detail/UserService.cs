@@ -47,7 +47,9 @@ internal sealed class UserService : IUserService
     /// <returns>The user or <c>null</c> if none has been found.</returns>
     public async Task<User?> GetById(Guid id)
     {
-        return await this.context.Users.Include(u => u.PartTimeSettings)
+        return await this.context.Users
+            .Include(u => u.PartTimeSettings.OrderBy(s => s.StartDate))
+            .Include(u => u.VacationDaysSettings.OrderBy(s => s.StartDate))
             .FirstOrDefaultAsync(p => p.Id == id);
     }
 
@@ -73,21 +75,8 @@ internal sealed class UserService : IUserService
         entry.Property(e => e.LeftDate).IsModified = true;
         entry.Property(e => e.IsConfirmed).IsModified = true;
 
-        var startDates = user.PartTimeSettings.Select(s => s.StartDate).ToHashSet();
-        var oldSettings = await this.context.UserPartTimeSettings
-                    .AsNoTracking()
-                    .Where(s => s.UserId == user.Id)
-                    .ToListAsync();
-        var orphanSettings = oldSettings.Where(s => !startDates.Contains(s.StartDate));
-
-        this.context.UserPartTimeSettings.UpdateRange(
-            user.PartTimeSettings.Select(
-                s =>
-                {
-                    s.Id = oldSettings.FirstOrDefault(os => os.StartDate == s.StartDate)?.Id ?? 0;
-                    return s;
-                }));
-        this.context.RemoveRange(orphanSettings);
+        await this.MergePartTimeSettings(user);
+        await this.MergeVacationDaysSettings(user);
 
         try
         {
@@ -97,5 +86,45 @@ internal sealed class UserService : IUserService
         {
             throw new ItemNotFoundException($"No user with id '{user.Id}' found.", e);
         }
+    }
+
+    private async Task MergePartTimeSettings(UpdatableUser user)
+    {
+        var partTimeStartDates = user.PartTimeSettings.Select(s => s.StartDate).ToHashSet();
+        var partTimeOldSettings = await this.context.UserPartTimeSettings
+            .AsNoTracking()
+            .Where(s => s.UserId == user.Id)
+            .ToListAsync();
+
+        var partTimeOrphanSettings = partTimeOldSettings.Where(s => !partTimeStartDates.Contains(s.StartDate));
+
+        this.context.UserPartTimeSettings.UpdateRange(
+            user.PartTimeSettings.Select(s =>
+            {
+                s.Id = partTimeOldSettings.FirstOrDefault(os => os.StartDate == s.StartDate)?.Id ?? 0;
+                return s;
+            }));
+
+        this.context.UserPartTimeSettings.RemoveRange(partTimeOrphanSettings);
+    }
+
+    private async Task MergeVacationDaysSettings(UpdatableUser user)
+    {
+        var vacationDaysStartDates = user.VacationDaysSettings.Select(s => s.StartDate).ToHashSet();
+        var vacationDaysOldSettings = await this.context.UserVacationDaysSettings
+            .AsNoTracking()
+            .Where(s => s.UserId == user.Id)
+            .ToListAsync();
+
+        var vacationDaysOrphanSettings = vacationDaysOldSettings.Where(s => !vacationDaysStartDates.Contains(s.StartDate));
+
+        this.context.UserVacationDaysSettings.UpdateRange(
+            user.VacationDaysSettings.Select(s =>
+            {
+                s.Id = vacationDaysOldSettings.FirstOrDefault(os => os.StartDate == s.StartDate)?.Id ?? 0;
+                return s;
+            }));
+
+        this.context.UserVacationDaysSettings.RemoveRange(vacationDaysOrphanSettings);
     }
 }

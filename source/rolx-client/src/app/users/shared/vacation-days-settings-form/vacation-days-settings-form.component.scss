@@ -1,0 +1,41 @@
+mat-form-field {
+  width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+td,
+th {
+  // This does not work properly when the page is reloaded with this table active as angular material css will be loaded after this
+  // overwriting these settings. However if this component is loaded after the page has been loaded it works fine.
+  // To force it to work everytime use !important
+  padding: 0 8px;
+  &.mat-column-tools {
+    padding: 0;
+    text-align: right;
+    a {
+      opacity: 0.1;
+      transition: opacity 0.3s ease-out;
+
+      &:hover {
+        opacity: 1;
+        transition: opacity 0.3s ease-in;
+      }
+    }
+  }
+
+  &.mat-column-startDate {
+    padding-right: 16px;
+  }
+
+  &.mat-column-vacationDays input {
+    text-align: right;
+  }
+}
+
+// https://stackoverflow.com/questions/56302795/how-to-use-angular-material-form-field-and-flex-layout
+:host ::ng-deep .mat-form-field-infix {
+  width: unset !important;
+}

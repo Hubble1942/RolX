@@ -8,6 +8,7 @@ import { PartTimeSetting } from '@app/users/core/part-time-setting';
 import { Role } from '@app/users/core/role';
 import { User } from '@app/users/core/user';
 import { UserService } from '@app/users/core/user.service';
+import { VacationDaysSetting } from '@app/users/core/vacation-days-setting';
 
 @Component({
   selector: 'rolx-user-form',
@@ -21,11 +22,13 @@ export class UserFormComponent implements OnInit {
   readonly entryDateControl = new FormControl(null, Validators.required);
   readonly leavingDateControl = new FormControl({ value: null });
   readonly partTimeSettings = new FormArray([]);
+  readonly vacationDaysSettings = new FormArray([]);
   readonly form = new FormGroup({
     role: this.roleControl,
     entryDate: this.entryDateControl,
     leavingDate: this.leavingDateControl,
     partTimeSettings: this.partTimeSettings,
+    vacationDaysSettings: this.vacationDaysSettings,
   });
 
   @Input()
@@ -40,17 +43,25 @@ export class UserFormComponent implements OnInit {
   ngOnInit() {
     assertDefined(this, 'user');
 
-    const sortedSettings = this.user.partTimeSettings.sort((a, b) => a.startDate.diff(b.startDate));
+    const { partTimeSettings, vacationDaysSettings } = this.user;
     if (
-      !(sortedSettings.length > 0 && sortedSettings[0].startDate.isSame(this.user.entryDate, 'day'))
+      !(partTimeSettings.length > 0 && partTimeSettings[0].startDate.isSame(this.user.entryDate, 'day'))
     ) {
       // If there is no entry defining the beginning add one in front to keep array sorted
       const defaultEntry = new PartTimeSetting();
       defaultEntry.startDate = this.user.entryDate;
       defaultEntry.factor = 1;
-      sortedSettings.unshift(defaultEntry);
+      partTimeSettings.unshift(defaultEntry);
     }
-    sortedSettings.forEach((s) => (s.factor = Math.round(s.factor * 100)));
+    partTimeSettings.forEach((s) => (s.factor = Math.round(s.factor * 100)));
+
+    if (!(vacationDaysSettings.length > 0 && vacationDaysSettings[0].startDate.isSame(this.user.entryDate, 'day')))
+    {
+      const defaultVacation = new VacationDaysSetting();
+      defaultVacation.startDate = this.user.entryDate;
+      defaultVacation.vacationDays = 25;
+      vacationDaysSettings.unshift(defaultVacation);
+    }
 
     this.form.controls['entryDate'].valueChanges.subscribe((v) =>
       (this.partTimeSettings.controls[0] as FormGroup)?.controls['startDate'].setValue(v),
@@ -69,6 +80,12 @@ export class UserFormComponent implements OnInit {
     // If the factor for entryDate is the default case of 1, remove it
     if (this.user.partTimeSettings[0].factor === 1) {
       this.user.partTimeSettings.shift();
+    }
+
+    this.user.vacationDaysSettings = this.user.vacationDaysSettings.map((s) => Object.assign(new VacationDaysSetting(), s));
+
+    if (this.user.vacationDaysSettings[0].vacationDays === 25) {
+      this.user.vacationDaysSettings.shift();
     }
 
     this.userService.update(this.user).subscribe({

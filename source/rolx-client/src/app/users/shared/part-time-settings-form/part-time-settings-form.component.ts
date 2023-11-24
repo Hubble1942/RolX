@@ -5,9 +5,9 @@ import { PartTimeSetting } from '@app/users/core/part-time-setting';
 import { Moment } from 'moment';
 
 @Component({
-  selector: 'rolx-parttime-form',
-  templateUrl: './parttime-form.component.html',
-  styleUrls: ['./parttime-form.component.scss'],
+  selector: 'rolx-part-time-settings-form',
+  templateUrl: './part-time-settings-form.component.html',
+  styleUrls: ['./part-time-settings-form.component.scss'],
 })
 export class PartTimeSettingsFormComponent implements OnInit {
   readonly displayedColumns = ['startDate', 'factor', 'tools'];

@@ -133,4 +133,35 @@ public sealed class UserServiceTests
                 && s.StartDate == date
                 && s.UserId == this.userId);
     }
+
+    [Test]
+    public async Task Update_VacationDaysSettings()
+    {
+        var date = DateOnly.FromDateTime(DateTime.Now);
+        var expectedVacationDays = 30;
+
+        var user = new UpdatableUser
+        {
+            Id = this.userId,
+            VacationDaysSettings = ImmutableList.Create(
+                new UserVacationDaysSetting()
+                {
+                    UserId = this.userId,
+                    VacationDaysPerYear = expectedVacationDays,
+                    StartDate = date,
+                }),
+        };
+        await this.sut.Update(user);
+
+        (await this.sut.GetById(this.userId))
+            !.VacationDaysSettings
+            .Should()
+            .ContainSingle()
+            .Which
+            .Should()
+            .Match<UserVacationDaysSetting>(s =>
+                s.VacationDaysPerYear == expectedVacationDays
+                && s.StartDate == date
+                && s.UserId == this.userId);
+    }
 }

@@ -47,14 +47,23 @@
         <mat-datepicker #leavingDatePicker></mat-datepicker>
       </mat-form-field>
 
-      <h4 class="part-time-title">Teilzeitpensum:</h4>
+      <h4 class="employment-setting-title">Teilzeitpensum:</h4>
 
-      <rolx-parttime-form
+      <rolx-part-time-settings-form
         formArrayName="partTimeSettings"
         [formArray]="partTimeSettings"
         [initialPartTimeSettings]="user.partTimeSettings"
         [entryDate]="form.controls['entryDate'].value"
-        [leaveDate]="form.controls['leavingDate'].value"></rolx-parttime-form>
+        [leaveDate]="form.controls['leavingDate'].value"></rolx-part-time-settings-form>
+
+      <h4 class="employment-setting-title">Ferientage:</h4>
+
+      <rolx-vacation-days-settings-form
+        formArrayName="vacationDaysSettings"
+        [formArray]="vacationDaysSettings"
+        [initialVacationDaysSettings]="user.vacationDaysSettings"
+        [entryDate]="form.controls['entryDate'].value"
+        [leaveDate]="form.controls['leavingDate'].value"></rolx-vacation-days-settings-form>
     </form>
   </mat-card-content>
 

@@ -15,7 +15,9 @@ export class TreeNode {
       if (child instanceof TreeNode) {
         duration = duration.add(child.getRecordSum(record));
       } else if (child instanceof Activity) {
-        duration = duration.add(new Duration(record.entriesOf(child).reduce((sum, e) => sum + e.duration.seconds, 0)));
+        duration = duration.add(
+          new Duration(record.entriesOf(child).reduce((sum, e) => sum + e.duration.seconds, 0)),
+        );
       }
     }
     return duration;

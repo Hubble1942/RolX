@@ -70,8 +70,7 @@ export class Record {
     this.entries = this.sortByBegin(this.entries);
   }
 
-  hasEntriesOf(activity: Activity): boolean
-  {
+  hasEntriesOf(activity: Activity): boolean {
     return this.entries.some((e) => e.activityId === activity.id);
   }
 
@@ -83,8 +82,7 @@ export class Record {
     const entries = this.entriesOf(fromActivity).map((e) => e.clone());
 
     // Need to remove first so as not to trip mayHavePaidLeave
-    return this.removeEntriesOfActivity(fromActivity)
-                .replaceEntriesOfActivity(toActivity, entries);
+    return this.removeEntriesOfActivity(fromActivity).replaceEntriesOfActivity(toActivity, entries);
   }
 
   replaceEntriesOfActivity(activity: Activity, entries: RecordEntry[]): Record {
@@ -93,9 +91,7 @@ export class Record {
     entries = entries.filter((e) => !e.duration.isZero);
     entries.forEach((e) => (e.activityId = activity.id));
 
-    clone.entries = clone.sortByBegin(
-      clone.entries.concat(...entries),
-    );
+    clone.entries = clone.sortByBegin(clone.entries.concat(...entries));
 
     if (!clone.mayHavePaidLeave) {
       clone.paidLeaveType = undefined;
@@ -125,8 +121,7 @@ export class Record {
     return clone;
   }
 
-  getTotalDurationOf(activity: Activity): Duration
-  {
+  getTotalDurationOf(activity: Activity): Duration {
     return new Duration(this.entriesOf(activity).reduce((sum, e) => sum + e.duration.seconds, 0));
   }
 

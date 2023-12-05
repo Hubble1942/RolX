@@ -12,4 +12,9 @@ export class ErrorService {
       duration: 5000,
     });
   }
+  notifyError(message: string) {
+    this.snackBar.open(message, undefined, {
+      duration: 5000,
+    });
+  }
 }

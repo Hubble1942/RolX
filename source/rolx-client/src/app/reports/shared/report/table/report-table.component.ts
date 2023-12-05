@@ -32,7 +32,7 @@ export class ReportTableComponent implements OnInit {
   constructor(
     private readonly sortService: SortService,
     public readonly filterService: SubprojectFilterService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     assertDefined(this, 'sort');
@@ -73,5 +73,4 @@ export class ReportTableComponent implements OnInit {
     yield 'duration';
     yield 'comment';
   }
-
 }

@@ -39,15 +39,21 @@ export class RecordEntryParser {
   }
 
   static parseFromTo(text: string, entry: RecordEntry): boolean {
-    const fromTimePart = RecordEntryParserUtils.getStringBeforeFirstWordOfList(text, this.language.until);
+    const fromTimePart = RecordEntryParserUtils.getStringBeforeFirstWordOfList(
+      text,
+      this.language.until,
+    );
     const hour1 = RecordEntryParserUtils.findNthNumber(fromTimePart, 0);
     let minute1 = RecordEntryParserUtils.findNthNumber(fromTimePart, 1);
-    minute1 ??=0;
+    minute1 ??= 0;
 
-    const untilTimePart = RecordEntryParserUtils.getStringAfterFirstWordOfList(text, this.language.until);
+    const untilTimePart = RecordEntryParserUtils.getStringAfterFirstWordOfList(
+      text,
+      this.language.until,
+    );
     const hour2 = RecordEntryParserUtils.findNthNumber(untilTimePart, 0);
     let minute2 = RecordEntryParserUtils.findNthNumber(untilTimePart, 1);
-    minute2 ??=0;
+    minute2 ??= 0;
 
     if (hour1 === undefined || hour2 === undefined) {
       return false;

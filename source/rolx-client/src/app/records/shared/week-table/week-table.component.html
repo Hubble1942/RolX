@@ -49,9 +49,9 @@
           </ng-template>
 
           <rolx-stop-toggle
-            *ngIf="isToggleShownFor(item) && todaysRecord"
+            *ngIf="isToggleShownFor(item)"
             [activity]="item"
-            [record]="todaysRecord"
+            [records]="records"
             (changed)="submit($event)">
           </rolx-stop-toggle>
         </div>

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ErrorService } from '@app/core/error/error.service';
 import { ToggleService } from '@app/core/persistence/toggle.service';
 import { Duration } from '@app/core/util/duration';
 import { TimeOfDay } from '@app/core/util/time-of-day';
@@ -23,12 +24,16 @@ export class StopToggleComponent implements OnInit {
   activity!: Activity;
 
   @Input()
-  record!: Record;
+  records!: Record[];
 
   @Output()
   changed = new EventEmitter<Record>();
 
-  constructor(private toggleService: ToggleService, private dialog: MatDialog) {}
+  constructor(
+    private toggleService: ToggleService,
+    private dialog: MatDialog,
+    private readonly errorService: ErrorService,
+  ) {}
 
   get toggleInactive(): boolean {
     return !this.toggleService.active;
@@ -36,17 +41,25 @@ export class StopToggleComponent implements OnInit {
 
   ngOnInit(): void {
     assertDefined(this, 'activity');
-    assertDefined(this, 'record');
+    assertDefined(this, 'records');
   }
 
   stopToggle() {
+    const oldrecord = this.records.find((r) => r.isToday);
+    if (!oldrecord) {
+      this.errorService.notifyError(
+        'Could not find todays data. Please reload the page, to fetch them form the server.',
+      );
+      return;
+    }
+
     const newEntry = this.createEntryFromToggle();
     if (!newEntry) {
       return;
     }
 
-    const entries = this.record.entriesOf(this.activity).concat([newEntry]);
-    const recordCopy = this.record.replaceEntriesOfActivity(this.activity, entries);
+    const entries = oldrecord.entriesOf(this.activity).concat([newEntry]);
+    const recordCopy = oldrecord.replaceEntriesOfActivity(this.activity, entries);
 
     const data: MultiEntriesDialogData = {
       activity: this.activity,

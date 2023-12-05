@@ -17,5 +17,4 @@ export const MONTH_FORMAT = {
   selector: '[rolxMonthFormat]',
   providers: [{ provide: MAT_DATE_FORMATS, useValue: MONTH_FORMAT }],
 })
-export class MonthFormatDirective {
-}
+export class MonthFormatDirective {}

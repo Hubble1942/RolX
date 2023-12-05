@@ -9,7 +9,6 @@
   $warn-palette: map.get($color-config, 'warn');
 
   rolx-activity-table {
-
     .over-budget {
       color: mat.get-color-from-palette($warn-palette, 500);
     }

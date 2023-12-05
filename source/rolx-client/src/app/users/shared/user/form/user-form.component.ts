@@ -45,7 +45,10 @@ export class UserFormComponent implements OnInit {
 
     const { partTimeSettings, vacationDaysSettings } = this.user;
     if (
-      !(partTimeSettings.length > 0 && partTimeSettings[0].startDate.isSame(this.user.entryDate, 'day'))
+      !(
+        partTimeSettings.length > 0 &&
+        partTimeSettings[0].startDate.isSame(this.user.entryDate, 'day')
+      )
     ) {
       // If there is no entry defining the beginning add one in front to keep array sorted
       const defaultEntry = new PartTimeSetting();
@@ -55,8 +58,12 @@ export class UserFormComponent implements OnInit {
     }
     partTimeSettings.forEach((s) => (s.factor = Math.round(s.factor * 100)));
 
-    if (!(vacationDaysSettings.length > 0 && vacationDaysSettings[0].startDate.isSame(this.user.entryDate, 'day')))
-    {
+    if (
+      !(
+        vacationDaysSettings.length > 0 &&
+        vacationDaysSettings[0].startDate.isSame(this.user.entryDate, 'day')
+      )
+    ) {
       const defaultVacation = new VacationDaysSetting();
       defaultVacation.startDate = this.user.entryDate;
       defaultVacation.vacationDays = 25;
@@ -82,7 +89,9 @@ export class UserFormComponent implements OnInit {
       this.user.partTimeSettings.shift();
     }
 
-    this.user.vacationDaysSettings = this.user.vacationDaysSettings.map((s) => Object.assign(new VacationDaysSetting(), s));
+    this.user.vacationDaysSettings = this.user.vacationDaysSettings.map((s) =>
+      Object.assign(new VacationDaysSetting(), s),
+    );
 
     if (this.user.vacationDaysSettings[0].vacationDays === 25) {
       this.user.vacationDaysSettings.shift();

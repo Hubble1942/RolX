@@ -52,7 +52,10 @@ export class WeekPageComponent {
     }),
   );
 
-  readonly recordsAndSuitable$ = combineLatest([this.routeParams$, this.recordsChangedSubject]).pipe(
+  readonly recordsAndSuitable$ = combineLatest([
+    this.routeParams$,
+    this.recordsChangedSubject,
+  ]).pipe(
     switchMap(([params]) =>
       forkJoin([
         this.workRecordService.getRange(params.userId, params.monday, params.nextMonday),

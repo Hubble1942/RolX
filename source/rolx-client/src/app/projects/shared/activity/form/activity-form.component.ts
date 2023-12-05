@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Inject, Input, LOCALE_ID, OnChanges, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  LOCALE_ID,
+  OnChanges,
+  Output,
+} from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ErrorResponse } from '@app/core/error/error-response';
 import { ErrorService } from '@app/core/error/error.service';
@@ -19,8 +27,10 @@ export class ActivityFormComponent implements OnChanges {
   @Input() activity!: Activity;
   @Input() error?: ErrorResponse;
   @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
-  @Output() save: EventEmitter<{activity: Activity; addAnother: boolean}> =
-    new EventEmitter<{activity: Activity; addAnother: boolean}>();
+  @Output() save: EventEmitter<{ activity: Activity; addAnother: boolean }> = new EventEmitter<{
+    activity: Activity;
+    addAnother: boolean;
+  }>();
 
   form = this.fb.group({
     number: ['', [Validators.required, Validators.min(1), Validators.max(99)]],
@@ -49,7 +59,7 @@ export class ActivityFormComponent implements OnChanges {
     assertDefined(this, 'subproject');
     assertDefined(this, 'activity');
 
-    if(this.error != null){
+    if (this.error != null) {
       // Force validators to show error message
       this.form.markAllAsTouched();
       this.handleError(this.error);
@@ -91,11 +101,11 @@ export class ActivityFormComponent implements OnChanges {
     return this.form.controls[controlName].hasError(errorName);
   }
 
-  submit(addNew=false) {
+  submit(addNew = false) {
     Object.assign(this.activity, this.form.value);
     this.activity.budget = this.formBudget;
     this.activity.planned = this.formPlanned;
-    this.save.emit({activity: this.activity, addAnother: addNew});
+    this.save.emit({ activity: this.activity, addAnother: addNew });
   }
 
   private getFormDuration(durationName: string): Duration {
@@ -105,13 +115,13 @@ export class ActivityFormComponent implements OnChanges {
 
   private setFormDuration(durationName: string, value: Duration) {
     const formValue =
-    value && !value.isZero
-      ? value.personDays.toLocaleString(this.locale, {
-          maximumFractionDigits: 1,
-          useGrouping: false,
-        })
-      : null;
-  this.form.controls[durationName].setValue(formValue);
+      value && !value.isZero
+        ? value.personDays.toLocaleString(this.locale, {
+            maximumFractionDigits: 1,
+            useGrouping: false,
+          })
+        : null;
+    this.form.controls[durationName].setValue(formValue);
   }
 
   private handleError(errorResponse: ErrorResponse) {

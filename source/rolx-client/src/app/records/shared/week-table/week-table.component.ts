@@ -1,5 +1,20 @@
-import { CdkDrag, CdkDragDrop, CdkDragEnter, CdkDragMove, CdkDropList } from '@angular/cdk/drag-drop';
-import { Component, Input, OnInit, OnChanges, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDragEnter,
+  CdkDragMove,
+  CdkDropList,
+} from '@angular/cdk/drag-drop';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnChanges,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ErrorService } from '@app/core/error/error.service';
 import { ListService } from '@app/core/persistence/list-service';
@@ -41,19 +56,12 @@ export class WeekTableComponent implements OnInit, OnChanges {
 
   private _showWeekends = false;
   private _activities: Activity[] = [];
-  private _records: Record[] = [];
 
   weekdays: string[] = [];
   displayedColumns: string[] = [];
 
   @Input()
-  get records() {
-    return this._records;
-  }
-  set records(value) {
-    this._records = value;
-    this.todaysRecord = this.records.find((r) => r.isToday);
-  }
+  records: Record[] = [];
 
   @Input()
   user!: User;
@@ -98,7 +106,6 @@ export class WeekTableComponent implements OnInit, OnChanges {
 
   readonly dataSource = new TableVirtualScrollDataSource<TreeNode | Activity>();
 
-  todaysRecord?: Record;
   recordIsInvalid: boolean[] = [];
   currentDropTarget?: HTMLElement;
 
@@ -150,17 +157,20 @@ export class WeekTableComponent implements OnInit, OnChanges {
   }
 
   isToggleShownFor(node: TreeNode | Activity | null) {
-    return this.showToggle && this.isActivity(node) && (node as Activity).isOpenAt(moment());
+    return (
+      this.showToggle &&
+      this.isActivity(node) &&
+      (node as Activity).isOpenAt(moment()) &&
+      this.records.some((r) => r.isToday)
+    );
   }
 
   submit(record: Record) {
     this.submitRecords([record]);
   }
 
-  submitRecords(records: Record[]): void
-  {
-    this.workRecordService.bulkUpdate(this.user.id, records)
-    .subscribe({
+  submitRecords(records: Record[]): void {
+    this.workRecordService.bulkUpdate(this.user.id, records).subscribe({
       next: (returnedRecords) => {
         returnedRecords.forEach((r) => this.setRecordAndMarkAsGood(r));
         this.recordsChanged.emit();
@@ -169,22 +179,18 @@ export class WeekTableComponent implements OnInit, OnChanges {
     });
   }
 
-  apiError(err: any): void
-  {
+  apiError(err: any): void {
     console.error(err);
     this.errorService.notifyGeneralError();
   }
 
-  setRecordAndMarkAsGood(record: Record): void
-  {
-    if (record.userId !== this.user.id)
-    {
+  setRecordAndMarkAsGood(record: Record): void {
+    if (record.userId !== this.user.id) {
       return;
     }
 
     const index = this.records.findIndex((r) => r.date === record.date);
-    if (index >= 0)
-    {
+    if (index >= 0) {
       this.recordIsInvalid[index] = false;
       this.records[index] = record;
     }
@@ -193,13 +199,11 @@ export class WeekTableComponent implements OnInit, OnChanges {
   onDragDropped(event: CdkDragDrop<{ record: Record; activity: Activity }>): void {
     this.currentDropTarget = undefined;
 
-    if (event.container.id === event.previousContainer.id)
-    {
+    if (event.container.id === event.previousContainer.id) {
       return;
     }
 
-    if (!event.isPointerOverContainer)
-    {
+    if (!event.isPointerOverContainer) {
       return;
     }
 
@@ -207,15 +211,14 @@ export class WeekTableComponent implements OnInit, OnChanges {
     const { record: toRecord, activity: toActivity } = event.container.data;
 
     let payload = [];
-    if(toRecord.date === fromRecord.date) {
-      payload = [
-        fromRecord
-        .moveEntriesOfActivity(fromActivity, toActivity),
-      ];
+    if (toRecord.date === fromRecord.date) {
+      payload = [fromRecord.moveEntriesOfActivity(fromActivity, toActivity)];
     } else {
       payload = [
-        toRecord
-        .replaceEntriesOfActivity(toActivity, fromRecord.entriesOf(fromActivity).map((e) => e.clone())),
+        toRecord.replaceEntriesOfActivity(
+          toActivity,
+          fromRecord.entriesOf(fromActivity).map((e) => e.clone()),
+        ),
         fromRecord.removeEntriesOfActivity(fromActivity),
       ];
     }
@@ -226,36 +229,30 @@ export class WeekTableComponent implements OnInit, OnChanges {
   isTargetEntryEmpty(
     drag: CdkDrag,
     drop: CdkDropList<{ record: Record; activity: Activity }>,
-  ): boolean
-  {
+  ): boolean {
     return !drop.data.record.hasEntriesOf(drop.data.activity);
   }
 
-  onDragEntered(event: CdkDragEnter): void
-  {
+  onDragEntered(event: CdkDragEnter): void {
     this.currentDropTarget = event.container.element.nativeElement;
   }
 
-  onDragExited(event: any): void
-  {
-    if (this.currentDropTarget?.id === event.target?.id)
-    {
+  onDragExited(event: any): void {
+    if (this.currentDropTarget?.id === event.target?.id) {
       this.currentDropTarget = undefined;
     }
   }
 
-  onDragMoved(event: CdkDragMove): void
-  {
+  onDragMoved(event: CdkDragMove): void {
     const pointerX = event.pointerPosition.x;
     const pointerY = event.pointerPosition.y;
-    const previewWidth = (this.previewRef?.nativeElement.getBoundingClientRect().width || 0);
+    const previewWidth = this.previewRef?.nativeElement.getBoundingClientRect().width || 0;
     const xPos = pointerX - 0.5 * previewWidth;
 
-    if (this.previewRef?.nativeElement)
-    {
-        this.previewRef.nativeElement.style.transform = `translate(${xPos}px, ${pointerY}px)`;
+    if (this.previewRef?.nativeElement) {
+      this.previewRef.nativeElement.style.transform = `translate(${xPos}px, ${pointerY}px)`;
     }
-}
+  }
 
   isCurrentDropTarget(x: HTMLElement): boolean {
     return this.currentDropTarget?.id === x.id;

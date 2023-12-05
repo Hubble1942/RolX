@@ -82,7 +82,18 @@ const legalTimes = [
   ['24,00', '24:00'],
 ];
 
-const illegalTimes = ['24:01', '24:06', '24:11', '24:16', '24:56', '24:1', '24:6', '32:00', '24.03', '24,03'];
+const illegalTimes = [
+  '24:01',
+  '24:06',
+  '24:11',
+  '24:16',
+  '24:56',
+  '24:1',
+  '24:6',
+  '32:00',
+  '24.03',
+  '24,03',
+];
 
 const testParseValid = (time: string, expected: string) => {
   it(`${time} is parsed to ${expected}`, () => {

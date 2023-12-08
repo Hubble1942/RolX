@@ -42,4 +42,9 @@ public class UpdatableUser
     /// Gets or sets the vacation days settings for the user.
     /// </summary>
     public IImmutableList<VacationDaysSetting> VacationDaysSettings { get; set; } = ImmutableList<VacationDaysSetting>.Empty;
+
+    /// <summary>
+    /// Gets or sets the vacation days settings for the user.
+    /// </summary>
+    public IImmutableList<BalanceCorrection> BalanceCorrections { get; set; } = ImmutableList<BalanceCorrection>.Empty;
 }

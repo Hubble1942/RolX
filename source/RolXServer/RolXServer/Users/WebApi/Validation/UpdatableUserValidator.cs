@@ -49,5 +49,13 @@ public sealed class UpdatableUserValidator : AbstractValidator<UpdatableUser>
         this.Transform(from: l => l.VacationDaysSettings, to: l => l!.Select(s => s.StartDate))
             .Must(s => s.Distinct().Count() == s.Count())
             .WithMessage("All vacation days start dates must be unique");
+
+        this.RuleForEach(u => u.BalanceCorrections)
+            .SetValidator(u => new BalanceCorrectionValidator())
+            .Must((u, c) => c.Date.CompareTo(u.EntryDate) >= 0 && c.Date.CompareTo(u.LeavingDate ?? "2999-12-31") <= 0);
+
+        this.Transform(from: u => u.BalanceCorrections, to: u => u.Select(c => c.Date))
+            .Must(c => c.Distinct().Count() == c.Count())
+            .WithMessage("All vacation days start dates must be unique");
     }
 }

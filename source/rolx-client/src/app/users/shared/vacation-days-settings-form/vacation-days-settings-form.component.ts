@@ -71,7 +71,9 @@ export class VacationDaysSettingsFormComponent implements OnInit {
           ));
       arrayContainsErrors ||= hasError;
       // Set errors manually so they get reset if another conflicting form resolves the error
-      (c1 as FormGroup).controls['startDate'].setErrors(hasError ? { hasError: true } : null);
+      if (hasError) {
+        (c1 as FormGroup).controls['startDate'].setErrors({ hasError: true });
+      }
     });
     return arrayContainsErrors ? { containsErrors: true } : null;
   }

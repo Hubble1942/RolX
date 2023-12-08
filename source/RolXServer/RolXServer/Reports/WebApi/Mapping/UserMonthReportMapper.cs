@@ -35,7 +35,4 @@ internal static class UserMonthReportMapper
             domain.VacationDelta,
             domain.VacationDeltaDays,
             domain.WorkItemGroups);
-
-    private static BalanceCorrection ToResource(this Users.DataAccess.UserBalanceCorrection domain)
-        => new(domain.Date.ToIsoDate(), domain.Overtime, domain.Vacation);
 }

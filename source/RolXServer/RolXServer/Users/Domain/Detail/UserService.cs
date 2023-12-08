@@ -50,6 +50,7 @@ internal sealed class UserService : IUserService
         return await this.context.Users
             .Include(u => u.PartTimeSettings.OrderBy(s => s.StartDate))
             .Include(u => u.VacationDaysSettings.OrderBy(s => s.StartDate))
+            .Include(u => u.BalanceCorrections.OrderBy(c => c.Date))
             .FirstOrDefaultAsync(p => p.Id == id);
     }
 
@@ -77,6 +78,7 @@ internal sealed class UserService : IUserService
 
         await this.MergePartTimeSettings(user);
         await this.MergeVacationDaysSettings(user);
+        await this.MergeBalanceCorrections(user);
 
         try
         {
@@ -86,6 +88,26 @@ internal sealed class UserService : IUserService
         {
             throw new ItemNotFoundException($"No user with id '{user.Id}' found.", e);
         }
+    }
+
+    private async Task MergeBalanceCorrections(UpdatableUser user)
+    {
+        var balanceCorrectionsDates = user.BalanceCorrections.Select(s => s.Date).ToHashSet();
+        var oldBalanceCorrections = await this.context.UserBalanceCorrections
+            .AsNoTracking()
+            .Where(c => c.UserId == user.Id)
+            .ToListAsync();
+
+        var orphanBalanceCorrections = oldBalanceCorrections.Where(c => !balanceCorrectionsDates.Contains(c.Date));
+
+        this.context.UserBalanceCorrections.UpdateRange(
+            user.BalanceCorrections.Select(s =>
+            {
+                s.Id = oldBalanceCorrections.FirstOrDefault(os => os.Date == s.Date)?.Id ?? 0;
+                return s;
+            }));
+
+        this.context.UserBalanceCorrections.RemoveRange(orphanBalanceCorrections);
     }
 
     private async Task MergePartTimeSettings(UpdatableUser user)

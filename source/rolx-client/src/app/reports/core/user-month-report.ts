@@ -1,8 +1,8 @@
 import { Duration, TransformAsDuration } from '@app/core/util/duration';
 import { TransformAsIsoDate } from '@app/core/util/iso-date';
 import { assertDefined } from '@app/core/util/utils';
-import { BalanceCorrection } from '@app/reports/core/balance-correction';
 import { WorkItemGroup } from '@app/reports/core/work-item-group';
+import { BalanceCorrection } from '@app/users/core/balance-correction';
 import { PartTimeSetting } from '@app/users/core/part-time-setting';
 import { User } from '@app/users/core/user';
 import { Type } from 'class-transformer';

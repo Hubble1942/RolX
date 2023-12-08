@@ -284,4 +284,72 @@ public sealed class UpdatableUserValidatorTests
 
         this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(u => u.VacationDaysSettings);
     }
+
+    [Test]
+    public void BalanceCorrections_MayBeEmpty()
+    {
+        var model = new UpdatableUser
+        {
+            BalanceCorrections = ImmutableList<BalanceCorrection>.Empty,
+        };
+
+        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(u => u.BalanceCorrections);
+    }
+
+    [Test]
+    public void BalanceCorrections_MustNotHaveEntriesBeforeEntryDate()
+    {
+        var model = new UpdatableUser
+        {
+            EntryDate = "2019-12-14",
+            BalanceCorrections = ImmutableList.Create(
+                    new BalanceCorrection("2019-11-14", TimeSpan.Zero, TimeSpan.Zero),
+                    new BalanceCorrection("2020-12-14", TimeSpan.Zero, TimeSpan.Zero)),
+        };
+
+        this.sut.TestValidate(model).ShouldHaveValidationErrorFor("BalanceCorrections[0]");
+    }
+
+    [Test]
+    public void BalanceCorrections_MustNotHaveEntriesAfterLeavingDate()
+    {
+        var model = new UpdatableUser
+        {
+            LeavingDate = "2020-11-14",
+            BalanceCorrections = ImmutableList.Create(
+            new BalanceCorrection("2019-11-14", TimeSpan.Zero, TimeSpan.Zero),
+            new BalanceCorrection("2020-12-14", TimeSpan.Zero, TimeSpan.Zero)),
+        };
+
+        this.sut.TestValidate(model).ShouldHaveValidationErrorFor("BalanceCorrections[1]");
+    }
+
+    [Test]
+    public void BalanceCorrections_MustNotContainMultipleEntriesWithSameDate()
+    {
+        var model = new UpdatableUser
+        {
+            BalanceCorrections = ImmutableList.Create(
+            new BalanceCorrection("2019-11-14", TimeSpan.Zero, TimeSpan.Zero),
+            new BalanceCorrection("2019-11-14", TimeSpan.Zero, TimeSpan.Zero)),
+        };
+
+        this.sut.TestValidate(model)
+            .ShouldHaveValidationErrorFor(u => u.BalanceCorrections)
+            .WithErrorMessage("All vacation days start dates must be unique");
+    }
+
+    [Test]
+    public void BalanceCorrections_MustSucceedWithValidEntries()
+    {
+        var model = new UpdatableUser
+        {
+            EntryDate = "2019-11-14",
+            BalanceCorrections = ImmutableList.Create(
+            new BalanceCorrection("2019-11-14", TimeSpan.Zero, TimeSpan.Zero),
+            new BalanceCorrection("2020-12-14", TimeSpan.Zero, TimeSpan.Zero)),
+        };
+
+        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(u => u.VacationDaysSettings);
+    }
 }

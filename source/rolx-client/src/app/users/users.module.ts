@@ -8,12 +8,15 @@ import { UserAvatarComponent } from '@app/users/shared/user/avatar/user-avatar.c
 import { UserFormComponent } from '@app/users/shared/user/form/user-form.component';
 import { UserMenuComponent } from '@app/users/shared/user/menu/user-menu.component';
 import { UserTableComponent } from '@app/users/shared/user/table/user-table.component';
-import { VacationDaysSettingsFormComponent } from '@app/users/shared/vacation-days-settings-form/vacation-days-settings-form.component';
+
+import { BalanceCorrectionsFormComponent } from './shared/balance-corrections-form/balance-corrections-form.component';
+import { VacationDaysSettingsFormComponent } from './shared/vacation-days-settings-form/vacation-days-settings-form.component';
 
 @NgModule({
   imports: [AppImportModule, CommonModule],
   exports: [UserAvatarComponent, UserMenuComponent],
   declarations: [
+    BalanceCorrectionsFormComponent,
     PartTimeSettingsFormComponent,
     UserAvatarComponent,
     UserEditPageComponent,

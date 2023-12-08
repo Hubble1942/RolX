@@ -6,6 +6,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace RolXServer.Reports.WebApi.Resource;
+namespace RolXServer.Users.WebApi.Resource;
 
 public sealed record BalanceCorrection(string Date, TimeSpan Overtime, TimeSpan Vacation);

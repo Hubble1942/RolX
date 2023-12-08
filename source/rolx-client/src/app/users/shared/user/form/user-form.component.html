@@ -64,6 +64,15 @@
         [initialVacationDaysSettings]="user.vacationDaysSettings"
         [entryDate]="form.controls['entryDate'].value"
         [leaveDate]="form.controls['leavingDate'].value"></rolx-vacation-days-settings-form>
+
+      <h4 class="employment-setting-title">Korrekturen:</h4>
+
+      <rolx-balance-corrections-form
+        formArrayName="balanceCorrections"
+        [formArray]="balanceCorrections"
+        [initialBalanceCorrection]="user.balanceCorrections"
+        [entryDate]="form.controls['entryDate'].value"
+        [leaveDate]="form.controls['leavingDate'].value"></rolx-balance-corrections-form>
     </form>
   </mat-card-content>
 

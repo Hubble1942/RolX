@@ -64,6 +64,11 @@ public class User
     public IImmutableList<PartTimeSetting> PartTimeSettings { get; set; } = ImmutableList<PartTimeSetting>.Empty;
 
     /// <summary>
+    /// Gets or sets the list of balance corrections.
+    /// </summary>
+    public IImmutableList<BalanceCorrection> BalanceCorrections { get; set; } = ImmutableList<BalanceCorrection>.Empty;
+
+    /// <summary>
     /// Gets or sets the list of vacation days settings for the user.
     /// </summary>
     public IImmutableList<VacationDaysSetting> VacationDaysSettings { get; set; } = ImmutableList<VacationDaysSetting>.Empty;

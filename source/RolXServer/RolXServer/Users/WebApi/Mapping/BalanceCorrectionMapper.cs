@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------
-// <copyright file="VacationDaysMapper.cs" company="Christian Ewald">
+// <copyright file="BalanceCorrectionMapper.cs" company="Christian Ewald">
 // Copyright (c) Christian Ewald. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE.md in the project root for full license information.
@@ -7,23 +7,21 @@
 // -----------------------------------------------------------------------
 
 using RolXServer.Common.Util;
-using RolXServer.Users.DataAccess;
-using RolXServer.Users.WebApi.Resource;
 
 namespace RolXServer.Users.WebApi.Mapping;
 
 /// <summary>
 /// Maps users from / to resource.
 /// </summary>
-internal static class VacationDaysMapper
+internal static class BalanceCorrectionMapper
 {
     /// <summary>
     /// Maps the specified domain to resource.
     /// </summary>
     /// <param name="domain">The domain.</param>
     /// <returns>The mapped resource.</returns>
-    public static VacationDaysSetting ToResource(this UserVacationDaysSetting domain)
-        => new(domain.StartDate.ToIsoDate(), domain.VacationDaysPerYear);
+    public static Resource.BalanceCorrection ToResource(this DataAccess.UserBalanceCorrection domain)
+        => new(domain.Date.ToIsoDate(), domain.Overtime, domain.Vacation);
 
     /// <summary>
     /// Converts the specified resource to domain.
@@ -33,6 +31,6 @@ internal static class VacationDaysMapper
     /// <returns>
     /// The domain.
     /// </returns>
-    public static UserVacationDaysSetting ToDomain(this VacationDaysSetting resource, Guid userId)
-        => new() { StartDate = IsoDate.Parse(resource.StartDate), VacationDaysPerYear = resource.VacationDays, UserId = userId };
+    public static DataAccess.UserBalanceCorrection ToDomain(this Resource.BalanceCorrection resource, Guid userId)
+        => new() { Date = IsoDate.Parse(resource.Date), Vacation = resource.Vacation, Overtime = resource.Overtime, UserId = userId };
 }

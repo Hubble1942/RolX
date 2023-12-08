@@ -23,12 +23,14 @@ export class UserFormComponent implements OnInit {
   readonly leavingDateControl = new FormControl({ value: null });
   readonly partTimeSettings = new FormArray([]);
   readonly vacationDaysSettings = new FormArray([]);
+  readonly balanceCorrections = new FormArray([]);
   readonly form = new FormGroup({
     role: this.roleControl,
     entryDate: this.entryDateControl,
     leavingDate: this.leavingDateControl,
     partTimeSettings: this.partTimeSettings,
     vacationDaysSettings: this.vacationDaysSettings,
+    balanceCorrections: this.balanceCorrections,
   });
 
   @Input()

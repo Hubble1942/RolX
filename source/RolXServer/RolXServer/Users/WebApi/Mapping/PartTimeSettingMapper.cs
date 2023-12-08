@@ -20,7 +20,7 @@ internal static class PartTimeSettingMapper
     /// </summary>
     /// <param name="domain">The domain.</param>
     /// <returns>The mapped resource.</returns>
-    public static Users.WebApi.Resource.PartTimeSetting ToResource(this Users.DataAccess.UserPartTimeSetting domain)
+    public static Resource.PartTimeSetting ToResource(this DataAccess.UserPartTimeSetting domain)
         => new(domain.StartDate.ToIsoDate(), domain.Factor);
 
     /// <summary>
@@ -31,6 +31,6 @@ internal static class PartTimeSettingMapper
     /// <returns>
     /// The domain.
     /// </returns>
-    public static Users.DataAccess.UserPartTimeSetting ToDomain(this Users.WebApi.Resource.PartTimeSetting resource, Guid userId)
-        => new RolXServer.Users.DataAccess.UserPartTimeSetting { StartDate = IsoDate.Parse(resource.StartDate), Factor = resource.Factor, UserId = userId };
+    public static DataAccess.UserPartTimeSetting ToDomain(this Resource.PartTimeSetting resource, Guid userId)
+        => new() { StartDate = IsoDate.Parse(resource.StartDate), Factor = resource.Factor, UserId = userId };
 }

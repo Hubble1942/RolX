@@ -1,0 +1,64 @@
+<table mat-table [dataSource]="formArrayAsArray">
+  <ng-container matColumnDef="date">
+    <th mat-header-cell *matHeaderCellDef>Datum</th>
+    <td mat-cell *matCellDef="let settingForm; index as i" [formGroup]="settingForm">
+      <mat-form-field>
+        <input
+          matInput
+          formControlName="date"
+          [matDatepicker]="balanceCorrectionDatePicker"
+          [min]="entryDate"
+          [max]="leaveDate"
+          (focus)="balanceCorrectionDatePicker.open()" />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="balanceCorrectionDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #balanceCorrectionDatePicker></mat-datepicker>
+      </mat-form-field>
+    </td>
+    <td mat-footer-cell *matFooterCellDef>
+      <a mat-icon-button aria-label="Neuer Eintrag" (click)="addRow()">
+        <mat-icon>add</mat-icon>
+      </a>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="overtime">
+    <th mat-header-cell *matHeaderCellDef>Überzeit</th>
+    <td mat-cell *matCellDef="let settingForm" [formGroup]="settingForm">
+      <mat-form-field>
+        <input
+          matInput
+          formControlName="overtime"
+          (blur)="settingForm.get('overtime').setValueIfBasicallyValid()" />
+      </mat-form-field>
+    </td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
+
+  <ng-container matColumnDef="vacation">
+    <th mat-header-cell *matHeaderCellDef>Ferien</th>
+    <td mat-cell *matCellDef="let settingForm" [formGroup]="settingForm">
+      <mat-form-field>
+        <input
+          matInput
+          formControlName="vacation"
+          (blur)="settingForm.get('vacation').setValueIfBasicallyValid()" />
+      </mat-form-field>
+    </td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
+
+  <ng-container matColumnDef="tools">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell class="tools" *matCellDef="let settingForm; index as i">
+      <a mat-icon-button matTooltip="Löschen" (click)="deleteRow(i)">
+        <mat-icon>delete</mat-icon>
+      </a>
+    </td>
+    <td mat-footer-cell *matFooterCellDef></td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let settingForm; columns: displayedColumns"></tr>
+  <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+</table>

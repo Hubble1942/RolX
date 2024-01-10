@@ -57,12 +57,19 @@ public sealed class TransactionPerRequestFilter : IAsyncActionFilter
 
     private static bool WasSuccessfulExecution(ActionExecutedContext executedContext)
     {
+        if (executedContext.Exception != null)
+        {
+            return false;
+        }
+
         var statusCode = (executedContext.Result as IStatusCodeActionResult)?.StatusCode
             ?? (executedContext.Result as ObjectResult)?.StatusCode
             ?? (int)HttpStatusCode.OK;
 
-        return executedContext.Exception == null
-            && !executedContext.ExceptionHandled
-            && statusCode < (int)HttpStatusCode.BadRequest;
+        var explicitlyAllowedCodes = executedContext.ActionDescriptor.EndpointMetadata
+            .OfType<NonFailureHttpCodeAttribute>()
+            .Select(a => a.StatusCode);
+
+        return statusCode < (int)HttpStatusCode.BadRequest || explicitlyAllowedCodes.Contains(statusCode);
     }
 }

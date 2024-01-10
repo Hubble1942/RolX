@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using RolXServer.Auth.Domain;
 using RolXServer.Auth.WebApi.Mapping;
 using RolXServer.Auth.WebApi.Resource;
+using RolXServer.Common.WebApi;
 
 namespace RolXServer.Auth.WebApi;
 
@@ -53,6 +54,7 @@ public sealed class SignInController : ControllerBase
     /// The approval.
     /// </returns>
     [HttpPost]
+    [NonFailureHttpCode(401)]
     public async Task<ActionResult<Approval>> SignIn(Domain.Model.SignInData signInData)
     {
         var user = await this.signInService.Authenticate(signInData);

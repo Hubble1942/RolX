@@ -7,7 +7,7 @@
 // -----------------------------------------------------------------------
 
 using Microsoft.EntityFrameworkCore;
-
+using RolXServer.AuditLogs.Domain;
 using RolXServer.Projects.DataAccess;
 using RolXServer.Projects.Domain.Mapping;
 
@@ -20,16 +20,19 @@ internal sealed class SubprojectService : ISubprojectService
 {
     private readonly RolXContext dbContext;
     private readonly IActivityService activityService;
+    private readonly IAuditLogService auditLogService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SubprojectService" /> class.
     /// </summary>
     /// <param name="dbContext">The database context.</param>
     /// /// <param name="activityService">The activity service.</param>
-    public SubprojectService(RolXContext dbContext, IActivityService activityService)
+    /// <param name="auditLogService">The audit log service.</param>
+    public SubprojectService(RolXContext dbContext, IActivityService activityService, IAuditLogService auditLogService)
     {
         this.dbContext = dbContext;
         this.activityService = activityService;
+        this.auditLogService = auditLogService;
     }
 
     /// <summary>
@@ -77,6 +80,8 @@ internal sealed class SubprojectService : ISubprojectService
     {
         subproject.Activities.Sanitize();
 
+        this.auditLogService.GenerateAuditLog(null, subproject);
+
         var entity = subproject.ToEntity();
         this.dbContext.Subprojects.Add(entity);
         await this.dbContext.SaveChangesAsync();
@@ -91,6 +96,10 @@ internal sealed class SubprojectService : ISubprojectService
     public async Task Update(Model.Subproject subproject)
     {
         subproject.Activities.Sanitize();
+
+        var oldSubproject = await this.GetById(subproject.Id);
+
+        this.auditLogService.GenerateAuditLog(oldSubproject, subproject);
 
         var activityIds = subproject.Activities
             .Select(a => a.Id);

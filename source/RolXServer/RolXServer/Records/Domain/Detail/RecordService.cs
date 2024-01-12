@@ -10,6 +10,7 @@ using System.Data;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using RolXServer.AuditLogs.Domain;
 using RolXServer.Common.Util;
 using RolXServer.Records.Domain.Detail.Balances;
 using RolXServer.Records.Domain.Mapping;
@@ -24,18 +25,22 @@ public sealed class RecordService : IRecordService
 {
     private readonly RolXContext dbContext;
     private readonly Settings settings;
+    private readonly IAuditLogService auditLogService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="RecordService" /> class.
     /// </summary>
     /// <param name="dbContext">The database context.</param>
     /// <param name="settingsAccessor">The settings accessor.</param>
+    /// <param name="auditLogService">The audit log service.</param>
     public RecordService(
         RolXContext dbContext,
-        IOptions<Settings> settingsAccessor)
+        IOptions<Settings> settingsAccessor,
+        IAuditLogService auditLogService)
     {
         this.dbContext = dbContext;
         this.settings = settingsAccessor.Value;
+        this.auditLogService = auditLogService;
     }
 
     /// <summary>
@@ -81,12 +86,15 @@ public sealed class RecordService : IRecordService
         {
             if (entity != null)
             {
+                this.auditLogService.GenerateAuditLog(entity, null);
                 this.dbContext.Records.Remove(entity);
                 await this.dbContext.SaveChangesAsync();
             }
 
             return;
         }
+
+        this.auditLogService.GenerateAuditLog(entity, record.ToEntity());
 
         if (entity != null)
         {

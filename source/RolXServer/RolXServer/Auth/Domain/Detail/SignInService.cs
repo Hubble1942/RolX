@@ -10,7 +10,7 @@ using Google.Apis.Auth;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-
+using RolXServer.AuditLogs.Domain;
 using RolXServer.Auth.Domain.Model;
 using RolXServer.Users;
 using RolXServer.Users.DataAccess;
@@ -26,6 +26,7 @@ internal sealed class SignInService : ISignInService
     private readonly BearerTokenFactory bearerTokenFactory;
     private readonly Settings settings;
     private readonly ILogger logger;
+    private readonly IAuditLogService auditLogService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SignInService" /> class.
@@ -34,16 +35,19 @@ internal sealed class SignInService : ISignInService
     /// <param name="bearerTokenFactory">The bearer token factory.</param>
     /// <param name="settingsAccessor">The settings accessor.</param>
     /// <param name="logger">The logger.</param>
+    /// <param name="auditLogService">The audit log service.</param>
     public SignInService(
         RolXContext dbContext,
         BearerTokenFactory bearerTokenFactory,
         IOptions<Settings> settingsAccessor,
-        ILogger<SignInService> logger)
+        ILogger<SignInService> logger,
+        IAuditLogService auditLogService)
     {
         this.dbContext = dbContext;
         this.bearerTokenFactory = bearerTokenFactory;
         this.settings = settingsAccessor.Value;
         this.logger = logger;
+        this.auditLogService = auditLogService;
     }
 
     /// <summary>
@@ -147,6 +151,7 @@ internal sealed class SignInService : ISignInService
                 IsConfirmed = isFirstUser,
             };
 
+            this.auditLogService.GenerateAuditLog(null, user);
             this.dbContext.Users.Add(user);
         }
 

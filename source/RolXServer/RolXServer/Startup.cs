@@ -10,7 +10,7 @@ using FluentValidation.AspNetCore;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
-
+using RolXServer.AuditLogs;
 using RolXServer.Auth;
 using RolXServer.Common.Errors;
 using RolXServer.Common.Util;
@@ -52,6 +52,7 @@ public class Startup
             {
                 o.Filters.Add<NotFoundExceptionFilter>();
                 o.Filters.Add<TransactionPerRequestFilter>();
+                o.Filters.Add<InjectCurrentUserFilter>();
             })
             .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new TimeSpanJsonSecondsConverter()))
             .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
@@ -66,6 +67,7 @@ public class Startup
         services.AddWorkRecord(this.Configuration);
         services.AddReports();
         services.AddUserManagement();
+        services.AddAuditLogs();
     }
 
     /// <summary>

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 using Moq;
-
+using RolXServer.AuditLogs.Domain;
 using RolXServer.Projects.DataAccess;
 using RolXServer.Users.DataAccess;
 
@@ -74,7 +74,8 @@ public sealed class RecordServiceTests
     {
         using (var context = this.contextFactory())
         {
-            var sut = new RecordService(context, Mock.Of<IOptions<Settings>>());
+            var auditLogService = Mock.Of<IAuditLogService>();
+            var sut = new RecordService(context, Mock.Of<IOptions<Settings>>(), auditLogService);
 
             var record = new Model.Record(new Model.DayInfo { Date = Tomorrow })
             {
@@ -107,7 +108,8 @@ public sealed class RecordServiceTests
     {
         using (var context = this.contextFactory())
         {
-            var sut = new RecordService(context, Mock.Of<IOptions<Settings>>());
+            var auditLogService = Mock.Of<IAuditLogService>();
+            var sut = new RecordService(context, Mock.Of<IOptions<Settings>>(), auditLogService);
 
             var record = new Model.Record(new Model.DayInfo { Date = Today })
             {
@@ -147,7 +149,8 @@ public sealed class RecordServiceTests
     {
         using (var context = this.contextFactory())
         {
-            var sut = new RecordService(context, Mock.Of<IOptions<Settings>>());
+            var auditLogService = Mock.Of<IAuditLogService>();
+            var sut = new RecordService(context, Mock.Of<IOptions<Settings>>(), auditLogService);
 
             var record = new Model.Record(new Model.DayInfo { Date = Today })
             {

@@ -8,6 +8,8 @@
 
 using System.Collections.Immutable;
 
+using Moq;
+using RolXServer.AuditLogs.Domain;
 using RolXServer.Common.Errors;
 using RolXServer.Users.DataAccess;
 using RolXServer.Users.Domain.Model;
@@ -31,7 +33,8 @@ public sealed class UserServiceTests
         };
 
         this.context = InMemory.ContextFactory(user)();
-        this.sut = new UserService(this.context);
+        var auditLogService = Mock.Of<IAuditLogService>();
+        this.sut = new UserService(this.context, auditLogService);
     }
 
     [TearDown]

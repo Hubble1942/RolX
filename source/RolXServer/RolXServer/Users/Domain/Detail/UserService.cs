@@ -7,8 +7,10 @@
 // -----------------------------------------------------------------------
 
 using Microsoft.EntityFrameworkCore;
+using RolXServer.AuditLogs.Domain;
 using RolXServer.Common.Errors;
 using RolXServer.Users.DataAccess;
+using RolXServer.Users.Domain.Mapping;
 using RolXServer.Users.Domain.Model;
 
 namespace RolXServer.Users.Domain.Detail;
@@ -19,14 +21,17 @@ namespace RolXServer.Users.Domain.Detail;
 internal sealed class UserService : IUserService
 {
     private readonly RolXContext context;
+    private readonly IAuditLogService auditLogService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserService"/> class.
     /// </summary>
     /// <param name="context">The context.</param>
-    public UserService(RolXContext context)
+    /// <param name="auditLogService">The audit log service.</param>
+    public UserService(RolXContext context, IAuditLogService auditLogService)
     {
         this.context = context;
+        this.auditLogService = auditLogService;
     }
 
     /// <summary>
@@ -37,7 +42,7 @@ internal sealed class UserService : IUserService
     /// </returns>
     public async Task<IEnumerable<User>> GetAll()
     {
-        return await this.context.Users.Include(u => u.PartTimeSettings).ToListAsync();
+        return await this.context.Users.AsNoTracking().Include(u => u.PartTimeSettings).ToListAsync();
     }
 
     /// <summary>
@@ -48,6 +53,7 @@ internal sealed class UserService : IUserService
     public async Task<User?> GetById(Guid id)
     {
         return await this.context.Users
+            .AsNoTracking()
             .Include(u => u.PartTimeSettings.OrderBy(s => s.StartDate))
             .Include(u => u.VacationDaysSettings.OrderBy(s => s.StartDate))
             .Include(u => u.BalanceCorrections.OrderBy(c => c.Date))
@@ -61,6 +67,8 @@ internal sealed class UserService : IUserService
     /// <returns>The async task.</returns>
     public async Task Update(UpdatableUser user)
     {
+        var oldUser = await this.GetById(user.Id);
+        this.auditLogService.GenerateAuditLog(oldUser?.ToUpdatableUser(), user);
         var entity = new User
         {
             Id = user.Id,

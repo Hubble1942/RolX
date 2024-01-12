@@ -7,7 +7,7 @@
 // -----------------------------------------------------------------------
 
 using Microsoft.EntityFrameworkCore;
-
+using RolXServer.AuditLogs.DataAccess;
 using RolXServer.Projects.DataAccess;
 using RolXServer.Projects.Domain.Mapping;
 using RolXServer.Records.DataAccess;
@@ -29,6 +29,11 @@ public sealed class RolXContext : DbContext
         : base(options)
     {
     }
+
+    /// <summary>
+    /// Gets or sets the audit logs.
+    /// </summary>
+    public DbSet<AuditLog> AuditLogs { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the activities.
@@ -103,6 +108,10 @@ public sealed class RolXContext : DbContext
             .HasOne(e => e.Billability)
             .WithMany()
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<AuditLog>()
+            .Property(l => l.DateTime)
+            .HasPrecision(2);
 
         modelBuilder.Entity<FavouriteActivity>()
             .HasKey(s => new { s.UserId, s.ActivityId });

@@ -18,11 +18,12 @@ internal static class RecordEntryMapper
     /// </summary>
     /// <param name="domain">The domain.</param>
     /// <returns>The resource.</returns>
-    public static Resource.RecordEntry ToResource(this DataAccess.RecordEntry domain)
+    public static Resource.RecordEntry ToResource(this Domain.Model.RecordEntry domain)
     {
         return new Resource.RecordEntry
         {
             ActivityId = domain.ActivityId,
+            FullActivityNumber = domain.Activity!.FullNumber,
             Duration = (long)domain.Duration.TotalSeconds,
             Begin = (int?)domain.Begin?.ToTimeSpan().TotalSeconds,
             Pause = (int?)domain.Pause?.TotalSeconds,
@@ -37,9 +38,9 @@ internal static class RecordEntryMapper
     /// <returns>
     /// The domain.
     /// </returns>
-    public static DataAccess.RecordEntry ToDomain(this Resource.RecordEntry resource)
+    public static Domain.Model.RecordEntry ToDomain(this Resource.RecordEntry resource)
     {
-        return new DataAccess.RecordEntry
+        return new Domain.Model.RecordEntry
         {
             ActivityId = resource.ActivityId,
             Duration = TimeSpan.FromSeconds(resource.Duration),

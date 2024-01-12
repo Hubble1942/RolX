@@ -1,0 +1,18 @@
+.entry-container {
+  box-sizing: border-box;
+  position: absolute;
+  display: block;
+  border-radius: 5px;
+  width: 100%;
+  &:hover {
+    min-height: 3em;
+    z-index: 1;
+  }
+}
+
+div {
+  width: 100%;
+  overflow: hidden;
+  padding: 2px;
+  color: white;
+}

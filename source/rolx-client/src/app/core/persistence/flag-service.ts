@@ -7,7 +7,8 @@ export type Flag =
   | 'showToggle'
   | 'showWeekends'
   | 'voiceInput'
-  | 'formatDurationsAsDecimal';
+  | 'formatDurationsAsDecimal'
+  | 'showDayView';
 
 @Injectable({
   providedIn: 'root',

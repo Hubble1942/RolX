@@ -1,0 +1,48 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.calendar {
+  height: calc(100% - 0.5lh);
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  margin-top: 0.5lh;
+}
+
+.entries {
+  display: inline;
+  position: absolute;
+  height: 100%;
+  width: 100px;
+  right: 2px;
+}
+
+.time {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  position: relative;
+
+  .time-entry {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    gap: 10px;
+
+    .time-line {
+      height: 100%;
+      width: 104px;
+      border-top: solid 1px;
+    }
+
+    .time-label {
+      transform: translateY(-0.5lh);
+    }
+  }
+}

@@ -7,6 +7,8 @@ import { ProjectsModule } from '@app/projects/projects.module';
 import { WeekPageComponent } from './pages/week-page/week-page.component';
 import { YearOverviewPageComponent } from './pages/year-overview-page/year-overview-page.component';
 import { BalanceIndicatorComponent } from './shared/balance-indicator/balance-indicator.component';
+import { DayViewEntryComponent } from './shared/day-view-entry/day-view-entry.component';
+import { DayViewComponent } from './shared/day-view/day-view.component';
 import { DurationEditComponent } from './shared/duration-edit/duration-edit.component';
 import { HolidayTableComponent } from './shared/holiday-table/holiday-table.component';
 import { InvalidEntriesDialogComponent } from './shared/invalid-entries-dialog/invalid-entries-dialog.component';
@@ -32,6 +34,8 @@ const exportedDeclarations = [
   imports: [AppImportModule, CommonModule, CoreModule, ProjectsModule],
   declarations: [
     ...exportedDeclarations,
+    DayViewComponent,
+    DayViewEntryComponent,
     DurationEditComponent,
     HolidayTableComponent,
     InvalidEntriesDialogComponent,

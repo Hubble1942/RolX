@@ -42,17 +42,27 @@
           </button>
         </mat-form-field>
       </div>
-      <rolx-week-table
-        *ngIf="recordsActivitiesUser[2] !== undefined"
-        [records]="recordsActivitiesUser[0]"
-        [activities]="recordsActivitiesUser[1]"
-        [user]="recordsActivitiesUser[2]"
-        [isCurrentUser]="params.isCurrentUser"
-        [showWeekends]="showWeekends"
-        [asTreeView]="asTree"
-        [showToggle]="showToggle"
-        [forceExpandTree]="recordsActivitiesUser[3]"
-        (recordsChanged)="notifyRecordsChanged()"></rolx-week-table>
+      <div class="content">
+        <rolx-week-table
+          *ngIf="recordsActivitiesUser[2] !== undefined"
+          [records]="recordsActivitiesUser[0]"
+          [activities]="recordsActivitiesUser[1]"
+          [user]="recordsActivitiesUser[2]"
+          [isCurrentUser]="params.isCurrentUser"
+          [showWeekends]="showWeekends"
+          [asTreeView]="asTree"
+          [showToggle]="showToggle"
+          [forceExpandTree]="recordsActivitiesUser[3]"
+          (recordsChanged)="notifyRecordsChanged()"
+          (daySelected)="updateSelecetedDay($event)">
+        </rolx-week-table>
+        <ng-container *ngIf="showDayView">
+          <div class="day-view" *ngIf="selectedRecord$ | async as selectedRecord">
+            <mat-divider [vertical]="true"></mat-divider>
+            <rolx-day-view [record]="selectedRecord"></rolx-day-view>
+          </div>
+        </ng-container>
+      </div>
     </mat-card-content>
   </ng-container>
 </mat-card>
@@ -71,6 +81,11 @@
   <button mat-menu-item (click)="toggleFlag('showToggle')">
     <mat-icon>{{checkBoxForFlag('showToggle')}}</mat-icon>
     <span>Toggle</span>
+  </button>
+
+  <button mat-menu-item (click)="toggleFlag('showDayView')">
+    <mat-icon>{{checkBoxForFlag('showDayView')}}</mat-icon>
+    <span>Tagesübersicht</span>
   </button>
 
   <button

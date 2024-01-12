@@ -68,7 +68,8 @@
           class="day-header"
           [class.non-workday]="!records[i].isWorkday && !records[i].isToday"
           [class.today]="records[i].isToday"
-          [class.error]="recordIsInvalid[i]">
+          [class.error]="recordIsInvalid[i]"
+          (click)="triggerSelectedDayUpdate(records[i])">
           <span>
             <mat-icon
               *ngIf="recordIsInvalid[i]"
@@ -92,7 +93,7 @@
           [class.non-workday]="!records[i].isWorkday && !records[i].isToday"
           [class.today]="records[i].isToday && !recordIsInvalid[i]"
           [class.error]="recordIsInvalid[i]"
-          (click)="recordIsInvalid[i] && openInvalidEntryDialog(records[i])">
+          (click)="triggerSelectedDayUpdate(records[i]); recordIsInvalid[i] && openInvalidEntryDialog(records[i])">
           <div
             cdkDropList
             (cdkDropListDropped)="onDragDropped($event)"

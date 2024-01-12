@@ -104,6 +104,9 @@ export class WeekTableComponent implements OnInit, OnChanges {
   @Output()
   readonly recordsChanged = new EventEmitter<null>();
 
+  @Output()
+  readonly daySelected = new EventEmitter<Record>();
+
   readonly dataSource = new TableVirtualScrollDataSource<TreeNode | Activity>();
 
   recordIsInvalid: boolean[] = [];
@@ -285,6 +288,10 @@ export class WeekTableComponent implements OnInit, OnChanges {
       .afterClosed()
       .pipe(filter((r) => r != null))
       .subscribe((r) => this.submit(r));
+  }
+
+  triggerSelectedDayUpdate(record: Record) {
+    this.daySelected.emit(record);
   }
 
   private createTree(value: Activity[]): TreeNode[] {

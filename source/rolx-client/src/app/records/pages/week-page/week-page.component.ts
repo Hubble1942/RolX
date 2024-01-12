@@ -13,6 +13,7 @@ import { WorkRecordService } from '@app/records/core/work-record.service';
 import { WeekPageParams } from '@app/records/pages/week-page/week-page-params';
 import { User } from '@app/users/core/user';
 import { UserService } from '@app/users/core/user.service';
+import * as moment from 'moment';
 import { Moment } from 'moment';
 import {
   BehaviorSubject,
@@ -23,7 +24,15 @@ import {
   of,
   withLatestFrom,
 } from 'rxjs';
-import { catchError, debounceTime, map, startWith, switchMap, tap } from 'rxjs/operators';
+import {
+  catchError,
+  debounceTime,
+  map,
+  shareReplay,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 
 @Component({
   selector: 'rolx-week-page',
@@ -32,6 +41,7 @@ import { catchError, debounceTime, map, startWith, switchMap, tap } from 'rxjs/o
 })
 export class WeekPageComponent {
   private readonly recordsChangedSubject = new BehaviorSubject<void>(undefined);
+  private readonly selectedDateSubject = new BehaviorSubject<moment.Moment>(moment());
 
   readonly filterControl = new FormControl();
   readonly filterText$ = this.filterControl.valueChanges.pipe(debounceTime(200), startWith(''));
@@ -45,6 +55,7 @@ export class WeekPageComponent {
         this.authService.currentApprovalOrError.user.id,
       ),
     ),
+    tap((weekPageParams) => this.selectedDateSubject.next(this.getSelectedDay(weekPageParams))),
     catchError(() => {
       // noinspection JSIgnoredPromiseFromCall
       this.router.navigate(['four-oh-four']);
@@ -62,6 +73,7 @@ export class WeekPageComponent {
         this.activityService.getSuitable(params.userId, params.monday),
       ]),
     ),
+    shareReplay(1),
   );
 
   readonly userAllActivitiesParams$ = this.routeParams$.pipe(
@@ -102,6 +114,20 @@ export class WeekPageComponent {
       }),
     );
 
+  readonly selectedRecord$ = combineLatest([
+    this.recordsAndSuitable$,
+    this.selectedDateSubject,
+  ]).pipe(
+    switchMap(([[records, _], date]) => {
+      const record = records.find((r) => r.date.isSame(date, 'day'));
+      if (record) {
+        return of(record);
+      } else {
+        return NEVER;
+      }
+    }),
+  );
+
   get showWeekends() {
     return this.flagService.get('showWeekends', false);
   }
@@ -112,6 +138,10 @@ export class WeekPageComponent {
 
   get showToggle() {
     return this.flagService.get('showToggle', false);
+  }
+
+  get showDayView() {
+    return this.flagService.get('showDayView', false);
   }
 
   constructor(
@@ -166,5 +196,21 @@ export class WeekPageComponent {
 
   notifyRecordsChanged() {
     this.recordsChangedSubject.next();
+  }
+
+  updateSelecetedDay(record: Record) {
+    this.selectedDateSubject.next(record.date);
+  }
+
+  private getSelectedDay(params: WeekPageParams): Moment {
+    let selectedDay = params.monday;
+    const today = moment();
+
+    const isWeekEnd = today.isoWeekday() > 5;
+
+    if (selectedDay.isSame(today, 'week') && !isWeekEnd) {
+      selectedDay = today;
+    }
+    return selectedDay;
   }
 }

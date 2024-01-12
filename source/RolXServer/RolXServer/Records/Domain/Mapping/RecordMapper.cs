@@ -43,7 +43,7 @@ internal static class RecordMapper
             UserId = domain.UserId,
             PaidLeaveType = domain.PaidLeaveType,
             PaidLeaveReason = domain.PaidLeaveReason,
-            Entries = domain.Entries,
+            Entries = domain.Entries.Select(e => e.ToEntity()).ToList(),
         };
     }
 
@@ -58,7 +58,7 @@ internal static class RecordMapper
         entity.PaidLeaveReason = domain.PaidLeaveReason;
 
         entity.Entries.Clear();
-        entity.Entries = domain.Entries;
+        entity.Entries = domain.Entries.Select(e => e.ToEntity()).ToList();
     }
 
     private static Model.Record ToRecord(this Model.DayInfo dayInfo, Guid userId, DataAccess.Record? entity)
@@ -72,7 +72,7 @@ internal static class RecordMapper
         {
             record.PaidLeaveType = entity.PaidLeaveType;
             record.PaidLeaveReason = entity.PaidLeaveReason;
-            record.Entries = entity.Entries;
+            record.Entries = entity.Entries.Select(e => e.ToDomain()).ToList();
         }
 
         return record;

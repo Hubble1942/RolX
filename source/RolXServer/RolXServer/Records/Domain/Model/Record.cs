@@ -47,7 +47,7 @@ public sealed class Record
     /// <summary>
     /// Gets or sets the entries.
     /// </summary>
-    public List<DataAccess.RecordEntry> Entries { get; set; } = new List<DataAccess.RecordEntry>();
+    public List<RecordEntry> Entries { get; set; } = new List<RecordEntry>();
 
     /// <summary>
     /// Gets a value indicating whether this instance is empty.

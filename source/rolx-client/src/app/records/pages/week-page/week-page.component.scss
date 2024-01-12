@@ -18,6 +18,13 @@ mat-card-content {
 
 rolx-week-table {
   flex-grow: 1;
+  height: 100%;
+}
+
+.day-view {
+  height: 100%;
+  gap: 5px;
+  display: flex;
 }
 
 .filters {
@@ -28,4 +35,10 @@ rolx-week-table {
   *:first-child {
     flex-grow: 1;
   }
+}
+
+.content {
+  flex-grow: 1;
+  display: flex;
+  gap: 16px;
 }

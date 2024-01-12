@@ -16,8 +16,11 @@ export class RecordEntry {
 
   comment?: string;
 
+  fullActivityNumber!: string;
+
   validateModel(): void {
     assertDefined(this, 'activityId');
+    assertDefined(this, 'fullActivityNumber');
   }
 
   get end(): TimeOfDay | null {

@@ -6,7 +6,9 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace RolXServer.Records.WebApi.Resource;
+using RolXServer.Projects.Domain.Model;
+
+namespace RolXServer.Records.Domain.Model;
 
 /// <summary>
 /// An entry in a <see cref="Record"/>.
@@ -21,25 +23,25 @@ public sealed class RecordEntry
     /// <summary>
     /// Gets or sets the full number of the activity.
     /// </summary>
-    public string FullActivityNumber { get; set; } = string.Empty;
+    public Activity? Activity { get; set; }
 
     /// <summary>
-    /// Gets or sets the duration in seconds.
+    /// Gets or sets the duration.
     /// </summary>
-    public long Duration { get; set; }
+    public TimeSpan Duration { get; set; }
 
     /// <summary>
-    /// Gets or sets the begin time in seconds since midnight.
+    /// Gets or sets the begin time.
     /// </summary>
-    public int? Begin { get; set; }
+    public TimeOnly? Begin { get; set; }
 
     /// <summary>
-    /// Gets or sets the pause duration in seconds.
+    /// Gets or sets the pause duration.
     /// </summary>
-    public int? Pause { get; set; }
+    public TimeSpan? Pause { get; set; }
 
     /// <summary>
     /// Gets or sets the comment.
     /// </summary>
-    public string? Comment { get; set; }
+    public string Comment { get; set; } = string.Empty;
 }

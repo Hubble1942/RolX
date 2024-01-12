@@ -1,0 +1,21 @@
+{{date?.toDate() | date: 'mediumDate'}}
+<div class="calendar">
+  <div class="time">
+    <div
+      *ngFor="let timeLabel of timeLabels; let last = last"
+      class="time-entry"
+      [style.height.%]="last? 0 : 100/workDayLength.hours">
+      <div class="time-label">{{timeLabel}}</div>
+      <div class="time-line"></div>
+    </div>
+  </div>
+
+  <div class="entries">
+    <rolx-day-view-entry
+      *ngFor="let activity of recordEntries"
+      [activity]="activity"
+      [workDayStart]="workDayStart"
+      [workDayLength]="workDayLength">
+    </rolx-day-view-entry>
+  </div>
+</div>

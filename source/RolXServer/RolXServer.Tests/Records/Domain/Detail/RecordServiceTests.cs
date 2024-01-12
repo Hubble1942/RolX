@@ -80,9 +80,9 @@ public sealed class RecordServiceTests
             var record = new Model.Record(new Model.DayInfo { Date = Tomorrow })
             {
                 UserId = this.user.Id,
-                Entries = new List<DataAccess.RecordEntry>
+                Entries = new List<Model.RecordEntry>
                     {
-                        new DataAccess.RecordEntry
+                        new Model.RecordEntry
                         {
                             ActivityId = this.activity.Id,
                             Duration = TimeSpan.FromHours(8.4),
@@ -114,14 +114,14 @@ public sealed class RecordServiceTests
             var record = new Model.Record(new Model.DayInfo { Date = Today })
             {
                 UserId = this.user.Id,
-                Entries = new List<DataAccess.RecordEntry>
+                Entries = new List<Model.RecordEntry>
                     {
-                        new DataAccess.RecordEntry
+                        new Model.RecordEntry
                         {
                             ActivityId = this.activity.Id,
                             Duration = TimeSpan.FromHours(3),
                         },
-                        new DataAccess.RecordEntry
+                        new Model.RecordEntry
                         {
                             ActivityId = this.activity.Id,
                             Duration = TimeSpan.FromHours(1),

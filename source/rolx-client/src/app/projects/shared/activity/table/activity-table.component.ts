@@ -94,14 +94,12 @@ export class ActivityTableComponent implements OnInit {
   }
 
   checkBoxForFlag(column: string): string {
-    return this.flagService.get(this.columnFlag(column), true)
-      ? 'check_box'
-      : 'check_box_outline_blank';
+    return this.flagService.get(this.columnFlag(column)) ? 'check_box' : 'check_box_outline_blank';
   }
 
   toggleFlag(column: string) {
     const flag = this.columnFlag(column);
-    this.flagService.set(flag, !this.flagService.get(flag, true));
+    this.flagService.set(flag, !this.flagService.get(flag));
     this.updateColumns();
   }
 
@@ -110,7 +108,7 @@ export class ActivityTableComponent implements OnInit {
   }
 
   private columnFlag(column: string) {
-    return ('showColumn-' + column) as Flag;
+    return ('showColumn_' + column) as Flag;
   }
 
   private getDisplayedColumns() {
@@ -122,7 +120,7 @@ export class ActivityTableComponent implements OnInit {
         if (x.isHidden !== undefined && x.isHidden()) {
           return false;
         }
-        return this.flagService.get(this.columnFlag(x.id), true);
+        return this.flagService.get(this.columnFlag(x.id));
       })
       .map((x) => x.id);
   }

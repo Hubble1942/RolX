@@ -129,19 +129,19 @@ export class WeekPageComponent {
   );
 
   get showWeekends() {
-    return this.flagService.get('showWeekends', false);
+    return this.flagService.get('showWeekends');
   }
 
   get asTree() {
-    return this.flagService.get('asTree', false);
+    return this.flagService.get('asTree');
   }
 
   get showToggle() {
-    return this.flagService.get('showToggle', false);
+    return this.flagService.get('showToggle');
   }
 
   get showDayView() {
-    return this.flagService.get('showDayView', false);
+    return this.flagService.get('showDayView');
   }
 
   constructor(
@@ -187,11 +187,11 @@ export class WeekPageComponent {
   }
 
   checkBoxForFlag(flag: Flag): string {
-    return this.flagService.get(flag, false) ? 'check_box' : 'check_box_outline_blank';
+    return this.flagService.get(flag) ? 'check_box' : 'check_box_outline_blank';
   }
 
   toggleFlag(flag: Flag) {
-    this.flagService.set(flag, !this.flagService.get(flag, false));
+    this.flagService.set(flag, !this.flagService.get(flag));
   }
 
   notifyRecordsChanged() {

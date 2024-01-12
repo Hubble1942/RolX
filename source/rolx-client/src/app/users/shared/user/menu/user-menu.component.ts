@@ -42,11 +42,11 @@ export class UserMenuComponent {
   }
 
   toggleDurationFormat() {
-    const state = this.flagService.get('formatDurationsAsDecimal', false);
+    const state = this.flagService.get('formatDurationsAsDecimal');
     this.flagService.set('formatDurationsAsDecimal', !state);
   }
 
   checkBoxForFlag(flag: Flag): string {
-    return this.flagService.get(flag, false) ? 'check_box' : 'check_box_outline_blank';
+    return this.flagService.get(flag) ? 'check_box' : 'check_box_outline_blank';
   }
 }

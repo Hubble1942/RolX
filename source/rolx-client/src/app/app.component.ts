@@ -47,7 +47,7 @@ export class AppComponent implements OnInit, OnDestroy {
       ),
     );
 
-    Duration.formatAsDecimal = this.flagService.get('formatDurationsAsDecimal', false);
+    Duration.formatAsDecimal = this.flagService.get('formatDurationsAsDecimal');
     this.subscriptions.add(
       this.flagService.flagChanged$
         .pipe(filter((change) => change.flag === 'formatDurationsAsDecimal'))

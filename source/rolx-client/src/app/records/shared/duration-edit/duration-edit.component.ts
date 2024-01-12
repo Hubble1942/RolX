@@ -58,7 +58,7 @@ export class DurationEditComponent implements OnInit, OnDestroy {
   });
 
   get hasVoice() {
-    return this.value.isZero && this.flagService.get('voiceInput', false);
+    return this.value.isZero && this.flagService.get('voiceInput');
   }
 
   constructor(private readonly flagService: FlagService) {

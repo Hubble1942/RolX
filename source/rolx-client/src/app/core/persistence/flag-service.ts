@@ -20,9 +20,8 @@ export class FlagService {
 
   readonly flagChanged$ = this.flagChangedSubject.asObservable();
 
-  get(flag: Flag, defaultState: boolean): boolean {
-    const state = this.data[flag];
-    return state ?? defaultState;
+  get(flag: Flag): boolean {
+    return this.data[flag] ?? false;
   }
 
   set(flag: Flag, state: boolean) {
@@ -34,7 +33,19 @@ export class FlagService {
 
   private static Load(): { [flag: string]: boolean } {
     const text = localStorage.getItem(FlagService.Key);
-    return text ? JSON.parse(text) : {};
+    const data = text ? JSON.parse(text) : {};
+
+    data.showColumn_startDate ??= true;
+    data.showColumn_endDate ??= true;
+    data.showColumn_budgetTime ??= true;
+    data.showColumn_plannedTime ??= true;
+    data.showColumn_actualTime ??= true;
+    data.showColumn_isBillable ??= true;
+    data.showColumn_budgetConsumed ??= true;
+    data.showColumn_plannedConsumed ??= true;
+    data.showDayView ??= true;
+
+    return data;
   }
 
   private save() {

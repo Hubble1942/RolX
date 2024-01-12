@@ -24,7 +24,19 @@ public static class ClaimsPrincipalExtensions
     /// <param name="principal">The principal.</param>
     /// <returns>The user identifier.</returns>
     public static Guid GetUserId(this ClaimsPrincipal principal)
-        => Guid.Parse(principal.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty);
+        => principal.TryGetUserId()
+        ?? throw new InvalidOperationException("The principal has no valid user identifier specified.");
+
+    /// <summary>
+    /// Tries to get the user identifier of the specified principal.
+    /// </summary>
+    /// <param name="principal">The principal.</param>
+    /// <returns>The user identifier or <c>null</c> if the principal has no user identifier specified.</returns>
+    public static Guid? TryGetUserId(this ClaimsPrincipal principal)
+    {
+        var identifier = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+        return Guid.TryParse(identifier, out var result) ? result : default(Guid?);
+    }
 
     /// <summary>
     /// Gets the user identifier of the specified principal.

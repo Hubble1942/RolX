@@ -31,7 +31,7 @@ public sealed class InjectCurrentUserFilter : IAsyncActionFilter
     /// <inheritdoc/>
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        this.auditLogService.CurrentUser = context.HttpContext.User.GetUserId();
+        this.auditLogService.CurrentUser = context.HttpContext.User.TryGetUserId();
 
         await next();
     }

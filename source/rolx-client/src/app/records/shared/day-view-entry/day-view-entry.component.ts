@@ -13,7 +13,7 @@ export class DayViewEntryComponent {
   private colorHash = new ColorHash();
 
   @Input()
-  activity!: RecordEntry;
+  recordEntry!: RecordEntry;
 
   @Input()
   workDayLength: Duration = Duration.fromHours(8.4);
@@ -22,20 +22,20 @@ export class DayViewEntryComponent {
   workDayStart: TimeOfDay = TimeOfDay.fromHours(8);
 
   get height() {
-    const fractionOfTheDay = this.activity.duration.hours / this.workDayLength.hours;
+    const fractionOfTheDay = this.recordEntry.grossDuration.hours / this.workDayLength.hours;
     const test = fractionOfTheDay * 100 + '%';
 
     return test;
   }
 
   get top() {
-    const offsetHours = this.activity.begin?.sub(this.workDayStart)?.hours ?? 0;
+    const offsetHours = this.recordEntry.begin?.sub(this.workDayStart)?.hours ?? 0;
     const offsetFraction = offsetHours / this.workDayLength.hours;
     const test = offsetFraction * 100 + '%';
     return test;
   }
 
   get backgroundColor() {
-    return this.colorHash.hex(this.activity.fullActivityNumber);
+    return this.colorHash.hex(this.recordEntry.fullActivityNumber);
   }
 }

@@ -40,8 +40,8 @@ export class DayViewComponent {
       let workStart = this.recordEntries[0].begin ?? this.defaultStatTime;
       workStart = TimeOfDay.fromHours(Math.floor(workStart.hours));
 
-      const lastActivity = this.recordEntries[this.recordEntries.length - 1];
-      let workLength = lastActivity.begin?.sub(workStart).add(lastActivity.duration);
+      const lastEntry = this.recordEntries[this.recordEntries.length - 1];
+      let workLength = lastEntry.begin?.sub(workStart).add(lastEntry.grossDuration);
       workLength = Duration.fromHours(Math.ceil(workLength?.hours ?? 0));
       this.workDayLength =
         workLength.hours > this.defaultDayLength.hours ? workLength : this.defaultDayLength;

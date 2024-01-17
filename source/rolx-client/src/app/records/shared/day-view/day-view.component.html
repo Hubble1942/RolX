@@ -12,8 +12,8 @@
 
   <div class="entries">
     <rolx-day-view-entry
-      *ngFor="let activity of recordEntries"
-      [activity]="activity"
+      *ngFor="let recordEntry of recordEntries"
+      [recordEntry]="recordEntry"
       [workDayStart]="workDayStart"
       [workDayLength]="workDayLength">
     </rolx-day-view-entry>

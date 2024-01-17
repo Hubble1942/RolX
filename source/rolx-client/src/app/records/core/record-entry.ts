@@ -23,13 +23,16 @@ export class RecordEntry {
     assertDefined(this, 'fullActivityNumber');
   }
 
+  get grossDuration(): Duration {
+    return this.pause ? this.duration.add(this.pause) : this.duration;
+  }
+
   get end(): TimeOfDay | null {
     if (!this.begin) {
       return null;
     }
 
-    const grossDuration = this.pause ? this.duration.add(this.pause) : this.duration;
-    return this.begin.add(grossDuration);
+    return this.begin.add(this.grossDuration);
   }
 
   get isDurationOnly(): boolean {

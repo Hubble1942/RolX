@@ -24,9 +24,9 @@ public static class RecordEntryExtensions
     /// <returns>The groups.</returns>
     public static IEnumerable<WorkItemGroup> ToWorkItemGroups(this IEnumerable<RecordEntry> recordEntries)
         => recordEntries
-        .GroupBy(entry => entry.Activity!.Subproject!)
+        .GroupBy(entry => entry.Activity!.Subproject!.FullName)
         .Select(group => new WorkItemGroup(
-            group.Key.FullName,
+            group.Key,
             group.ToWorkItems().ToImmutableList()))
         .OrderBy(workItemGroup => workItemGroup.Name);
 
@@ -37,9 +37,9 @@ public static class RecordEntryExtensions
     /// <returns>The items.</returns>
     public static IEnumerable<WorkItem> ToWorkItems(this IEnumerable<RecordEntry> recordEntries)
         => recordEntries
-        .GroupBy(entry => entry.Activity!)
+        .GroupBy(entry => entry.Activity!.NumberedName)
         .Select(group => new WorkItem(
-            group.Key.NumberedName,
+            group.Key,
             group.Sum(entry => entry.Duration)))
         .OrderBy(workItem => workItem.Name);
 }

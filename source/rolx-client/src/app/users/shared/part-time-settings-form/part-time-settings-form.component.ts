@@ -19,10 +19,11 @@ export class PartTimeSettingsFormComponent implements OnInit {
   initialPartTimeSettings!: PartTimeSetting[];
 
   @Input()
-  entryDate: Moment | null = null;
-
-  @Input()
   leaveDate: Moment | null = null;
+
+  get entryDate(): Moment {
+    return this.formArray.value[0].startDate;
+  }
 
   get formArrayAsArray(): FormGroup[] {
     // This conversion is necessary for material table to render the form array

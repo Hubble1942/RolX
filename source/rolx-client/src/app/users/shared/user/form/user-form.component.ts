@@ -72,9 +72,10 @@ export class UserFormComponent implements OnInit {
       vacationDaysSettings.unshift(defaultVacation);
     }
 
-    this.form.controls['entryDate'].valueChanges.subscribe((v) =>
-      (this.partTimeSettings.controls[0] as FormGroup)?.controls['startDate'].setValue(v),
-    );
+    this.form.controls['entryDate'].valueChanges.subscribe((v) => {
+      (this.partTimeSettings.controls[0] as FormGroup)?.controls['startDate'].setValue(v);
+      (this.vacationDaysSettings.controls[0] as FormGroup)?.controls['startDate'].setValue(v);
+    });
 
     this.form.patchValue(this.user);
   }

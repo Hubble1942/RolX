@@ -16,13 +16,14 @@ export class VacationDaysSettingsFormComponent implements OnInit {
   formArray!: FormArray;
 
   @Input()
-  initialVacationDaysSettings!: VacationDaysSetting[];
-
-  @Input()
-  entryDate: Moment | null = null;
+  initialVacationDaysSettings: VacationDaysSetting[] = [];
 
   @Input()
   leaveDate: Moment | null = null;
+
+  get entryDate(): Moment {
+    return this.formArray.value[0].startDate;
+  }
 
   get formArrayAsArray(): FormGroup[] {
     // This conversion is necessary for material table to render the form array

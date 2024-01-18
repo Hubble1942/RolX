@@ -6,8 +6,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Collections.Immutable;
-
 using RolXServer.Users.WebApi.Resource;
 
 namespace RolXServer.Users.WebApi.Validation;
@@ -336,7 +334,7 @@ public sealed class UpdatableUserValidatorTests
 
         this.sut.TestValidate(model)
             .ShouldHaveValidationErrorFor(u => u.BalanceCorrections)
-            .WithErrorMessage("All vacation days start dates must be unique");
+            .WithErrorMessage("All balance correction dates must be unique");
     }
 
     [Test]

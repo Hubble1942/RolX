@@ -88,7 +88,10 @@ jobs:
       - script: npm run ng -- lint
         displayName: ng lint
         workingDirectory: $(rolXClient)
-        failOnStderr: true
+
+      - script: npx prettier --check .
+        displayName: prettier --check
+        workingDirectory: $(rolXClient)
 
       - script: npm run ng -- test --watch=false
         displayName: ng test

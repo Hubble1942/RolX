@@ -8,6 +8,9 @@
 
 namespace RolXServer.Reports.Domain.Model;
 
+/// <summary>
+/// A named group of <see cref="WorkItem"/> instances.
+/// </summary>
 public sealed record WorkItemGroup(
     string Name,
     IImmutableList<WorkItem> Items);

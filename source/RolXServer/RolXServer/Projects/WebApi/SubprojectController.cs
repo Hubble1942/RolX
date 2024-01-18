@@ -9,8 +9,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using NLog;
-
 using RolXServer.Projects.Domain;
 using RolXServer.Projects.WebApi.Mapping;
 using RolXServer.Projects.WebApi.Resource;
@@ -25,20 +23,15 @@ namespace RolXServer.Projects.WebApi;
 [Authorize(Policy = "ActiveUser")]
 public sealed class SubprojectController : ControllerBase
 {
-    private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
     private readonly ISubprojectService subprojectService;
-    private readonly IActivityService activityService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SubprojectController" /> class.
     /// </summary>
     /// <param name="subprojectService">The subproject service.</param>
-    /// <param name="activityService">The activity service.</param>
-    public SubprojectController(ISubprojectService subprojectService, IActivityService activityService)
+    public SubprojectController(ISubprojectService subprojectService)
     {
         this.subprojectService = subprojectService;
-        this.activityService = activityService;
     }
 
     /// <summary>

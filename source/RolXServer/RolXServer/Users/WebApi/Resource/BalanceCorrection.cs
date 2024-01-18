@@ -8,4 +8,7 @@
 
 namespace RolXServer.Users.WebApi.Resource;
 
+/// <summary>
+/// A correction entry of a users balance.
+/// </summary>
 public sealed record BalanceCorrection(string Date, TimeSpan Overtime, TimeSpan Vacation);

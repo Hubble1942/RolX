@@ -8,4 +8,7 @@
 
 namespace RolXServer.Reports.WebApi.Resource;
 
+/// <summary>
+/// The type of a reports range.
+/// </summary>
 public record ReportRangeType(string Id, string Label, bool HasCustomStart, bool HasCustomEnd, bool HasCustomEndMonth);

@@ -38,24 +38,27 @@ public sealed class UpdatableUserValidator : AbstractValidator<UpdatableUser>
             .SetValidator(u => new PartTimeSettingValidator())
             .Must((u, s) => s.StartDate.CompareTo(u.EntryDate) >= 0 && s.StartDate.CompareTo(u.LeavingDate ?? "2999-12-31") <= 0);
 
-        this.Transform(from: l => l.PartTimeSettings, to: l => l!.Select(s => s.StartDate))
-            .Must(s => s.Distinct().Count() == s.Count())
+        this.RuleFor(u => u.PartTimeSettings)
+            .NotNull()
+            .Must(s => s.Select(s => s.StartDate).Distinct().Count() == s.Count)
             .WithMessage("All part time start dates must be unique");
 
         this.RuleForEach(u => u.VacationDaysSettings)
             .SetValidator(u => new VacationDaysSettingValidator())
             .Must((u, s) => s.StartDate.CompareTo(u.EntryDate) >= 0 && s.StartDate.CompareTo(u.LeavingDate ?? "2999-12-31") <= 0);
 
-        this.Transform(from: l => l.VacationDaysSettings, to: l => l!.Select(s => s.StartDate))
-            .Must(s => s.Distinct().Count() == s.Count())
+        this.RuleFor(u => u.VacationDaysSettings)
+            .NotNull()
+            .Must(s => s.Select(s => s.StartDate).Distinct().Count() == s.Count)
             .WithMessage("All vacation days start dates must be unique");
 
         this.RuleForEach(u => u.BalanceCorrections)
             .SetValidator(u => new BalanceCorrectionValidator())
             .Must((u, c) => c.Date.CompareTo(u.EntryDate) >= 0 && c.Date.CompareTo(u.LeavingDate ?? "2999-12-31") <= 0);
 
-        this.Transform(from: u => u.BalanceCorrections, to: u => u.Select(c => c.Date))
-            .Must(c => c.Distinct().Count() == c.Count())
-            .WithMessage("All vacation days start dates must be unique");
+        this.RuleFor(u => u.BalanceCorrections)
+            .NotNull()
+            .Must(s => s.Select(s => s.Date).Distinct().Count() == s.Count)
+            .WithMessage("All balance correction dates must be unique");
     }
 }

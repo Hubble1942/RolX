@@ -68,54 +68,54 @@ public sealed class RecordEntryValidatorTests
     [TestCase(-12312312423432)]
     [TestCase(-42)]
     [TestCase(-1)]
-    public void Duration_FailsWhenNegative(long value)
+    public async Task Duration_FailsWhenNegative(long value)
     {
         var model = new RecordEntry
         {
             Duration = value,
         };
 
-        this.sut.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Duration);
+        (await this.sut.TestValidateAsync(model)).ShouldHaveValidationErrorFor(x => x.Duration);
     }
 
     [Test]
-    public void Duration_SucceedsWhenZero()
+    public async Task Duration_SucceedsWhenZero()
     {
         var model = new RecordEntry
         {
             Duration = 0,
         };
 
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Duration);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(x => x.Duration);
     }
 
     [Test]
     [TestCase(12312312423432)]
     [TestCase(42)]
     [TestCase(1)]
-    public void Duration_SucceedsWhenPositive(long value)
+    public async Task Duration_SucceedsWhenPositive(long value)
     {
         var model = new RecordEntry
         {
             Duration = value,
         };
 
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Duration);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(x => x.Duration);
     }
 
     [Test]
-    public void ActivityId_FailsWhenZero()
+    public async Task ActivityId_FailsWhenZero()
     {
         var model = new RecordEntry
         {
             ActivityId = 0,
         };
 
-        this.sut.TestValidate(model).ShouldHaveValidationErrorFor(x => x.ActivityId);
+        (await this.sut.TestValidateAsync(model)).ShouldHaveValidationErrorFor(x => x.ActivityId);
     }
 
     [Test]
-    public void ActivityId_FailsWhenActivityUnkownAndDurationNonZero()
+    public async Task ActivityId_FailsWhenActivityUnkownAndDurationNonZero()
     {
         var model = new RecordEntry
         {
@@ -123,11 +123,11 @@ public sealed class RecordEntryValidatorTests
             Duration = 42,
         };
 
-        this.sut.TestValidate(model).ShouldHaveValidationErrorFor(x => x.ActivityId);
+        (await this.sut.TestValidateAsync(model)).ShouldHaveValidationErrorFor(x => x.ActivityId);
     }
 
     [Test]
-    public void ActivityId_SucceedsWhenActivityUnkownButDurationIsZero()
+    public async Task ActivityId_SucceedsWhenActivityUnkownButDurationIsZero()
     {
         var model = new RecordEntry
         {
@@ -135,11 +135,11 @@ public sealed class RecordEntryValidatorTests
             Duration = 0,
         };
 
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.ActivityId);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(x => x.ActivityId);
     }
 
     [Test]
-    public void ActivityId_SucceedsWhenActivityIsKnownAndOpen()
+    public async Task ActivityId_SucceedsWhenActivityIsKnownAndOpen()
     {
         var model = new RecordEntry
         {
@@ -147,11 +147,11 @@ public sealed class RecordEntryValidatorTests
             Duration = 42,
         };
 
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.ActivityId);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(x => x.ActivityId);
     }
 
     [Test]
-    public void ActivityId_SucceedsWhenActivityOpensToday()
+    public async Task ActivityId_SucceedsWhenActivityOpensToday()
     {
         this.record.Date = "2019-12-17";
 
@@ -161,11 +161,11 @@ public sealed class RecordEntryValidatorTests
             Duration = 42,
         };
 
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.ActivityId);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(x => x.ActivityId);
     }
 
     [Test]
-    public void ActivityId_FailsWhenActivityEndedToday()
+    public async Task ActivityId_FailsWhenActivityEndedToday()
     {
         this.record.Date = "2019-12-19";
 
@@ -175,11 +175,11 @@ public sealed class RecordEntryValidatorTests
             Duration = 42,
         };
 
-        this.sut.TestValidate(model).ShouldHaveValidationErrorFor(x => x.ActivityId);
+        (await this.sut.TestValidateAsync(model)).ShouldHaveValidationErrorFor(x => x.ActivityId);
     }
 
     [Test]
-    public void ActivityId_FailsWhenActivityClosedYesterday()
+    public async Task ActivityId_FailsWhenActivityClosedYesterday()
     {
         this.record.Date = "2019-12-20";
 
@@ -189,11 +189,11 @@ public sealed class RecordEntryValidatorTests
             Duration = 42,
         };
 
-        this.sut.TestValidate(model).ShouldHaveValidationErrorFor(x => x.ActivityId);
+        (await this.sut.TestValidateAsync(model)).ShouldHaveValidationErrorFor(x => x.ActivityId);
     }
 
     [Test]
-    public void ActivityId_FailsWhenActivityOpensTomorrow()
+    public async Task ActivityId_FailsWhenActivityOpensTomorrow()
     {
         this.record.Date = "2019-12-16";
 
@@ -203,11 +203,11 @@ public sealed class RecordEntryValidatorTests
             Duration = 42,
         };
 
-        this.sut.TestValidate(model).ShouldHaveValidationErrorFor(x => x.ActivityId);
+        (await this.sut.TestValidateAsync(model)).ShouldHaveValidationErrorFor(x => x.ActivityId);
     }
 
     [Test]
-    public void ActivityId_SucceedsWhenActivityIsClosedButDurationIsZero()
+    public async Task ActivityId_SucceedsWhenActivityIsClosedButDurationIsZero()
     {
         this.record.Date = "2019-12-16";
 
@@ -217,83 +217,83 @@ public sealed class RecordEntryValidatorTests
             Duration = 0,
         };
 
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.ActivityId);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(x => x.ActivityId);
     }
 
     [Test]
-    public void Begin_SucceedsWhenNull()
+    public async Task Begin_SucceedsWhenNull()
     {
         var model = new RecordEntry
         {
             Begin = null,
         };
 
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Begin);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(x => x.Begin);
     }
 
     [Test]
-    public void Begin_SucceedsWhenZero()
+    public async Task Begin_SucceedsWhenZero()
     {
         var model = new RecordEntry
         {
             Begin = 0,
         };
 
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Begin);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(x => x.Begin);
     }
 
     [Test]
-    public void Begin_SucceedsWhenWithin24h()
+    public async Task Begin_SucceedsWhenWithin24h()
     {
         var model = new RecordEntry
         {
             Begin = 12 * 3600,
         };
 
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Begin);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(x => x.Begin);
 
         model.Begin = 24 * 3600;
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Begin);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(x => x.Begin);
     }
 
     [Test]
-    public void Begin_FailsWhenAbove24h()
+    public async Task Begin_FailsWhenAbove24h()
     {
         var model = new RecordEntry
         {
             Begin = (24 * 3600) + 1,
         };
 
-        this.sut.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Begin);
+        (await this.sut.TestValidateAsync(model)).ShouldHaveValidationErrorFor(x => x.Begin);
     }
 
     [Test]
     [TestCase(-1)]
     [TestCase(-11)]
     [TestCase(-111)]
-    public void Begin_FailsWhenNegative(int value)
+    public async Task Begin_FailsWhenNegative(int value)
     {
         var model = new RecordEntry
         {
             Begin = value,
         };
 
-        this.sut.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Begin);
+        (await this.sut.TestValidateAsync(model)).ShouldHaveValidationErrorFor(x => x.Begin);
     }
 
     [Test]
-    public void Pause_SucceedsWhenNull()
+    public async Task Pause_SucceedsWhenNull()
     {
         var model = new RecordEntry
         {
             Pause = null,
         };
 
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Pause);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(x => x.Pause);
     }
 
     [Test]
-    public void Pause_FailsWhenNotNullButBeginIsNull()
+    public async Task Pause_FailsWhenNotNullButBeginIsNull()
     {
         var model = new RecordEntry
         {
@@ -301,11 +301,11 @@ public sealed class RecordEntryValidatorTests
             Pause = 3600,
         };
 
-        this.sut.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Pause);
+        (await this.sut.TestValidateAsync(model)).ShouldHaveValidationErrorFor(x => x.Pause);
     }
 
     [Test]
-    public void Pause_SucceedsWhenZero()
+    public async Task Pause_SucceedsWhenZero()
     {
         var model = new RecordEntry
         {
@@ -313,11 +313,11 @@ public sealed class RecordEntryValidatorTests
             Pause = 0,
         };
 
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Pause);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(x => x.Pause);
     }
 
     [Test]
-    public void Pause_SucceedsWhenWithin24h()
+    public async Task Pause_SucceedsWhenWithin24h()
     {
         var model = new RecordEntry
         {
@@ -325,14 +325,14 @@ public sealed class RecordEntryValidatorTests
             Pause = 12 * 3600,
         };
 
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Pause);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(x => x.Pause);
 
         model.Pause = 24 * 3600;
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Pause);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(x => x.Pause);
     }
 
     [Test]
-    public void Pause_FailsWhenNegative()
+    public async Task Pause_FailsWhenNegative()
     {
         var model = new RecordEntry
         {
@@ -340,11 +340,11 @@ public sealed class RecordEntryValidatorTests
             Pause = -111,
         };
 
-        this.sut.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Pause);
+        (await this.sut.TestValidateAsync(model)).ShouldHaveValidationErrorFor(x => x.Pause);
     }
 
     [Test]
-    public void BeginPlusPausePlusDuration_SucceedsWhenWithin24h()
+    public async Task BeginPlusPausePlusDuration_SucceedsWhenWithin24h()
     {
         var model = new RecordEntry
         {
@@ -353,14 +353,14 @@ public sealed class RecordEntryValidatorTests
             Pause = 1800,
         };
 
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Duration);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(x => x.Duration);
 
         model.Pause = 3600;
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(x => x.Duration);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(x => x.Duration);
     }
 
     [Test]
-    public void BeginPlusPausePlusDuration_FailsWhenAbove24h()
+    public async Task BeginPlusPausePlusDuration_FailsWhenAbove24h()
     {
         var model = new RecordEntry
         {
@@ -369,6 +369,6 @@ public sealed class RecordEntryValidatorTests
             Pause = 3601,
         };
 
-        this.sut.TestValidate(model).ShouldHaveValidationErrorFor(x => x.Duration);
+        (await this.sut.TestValidateAsync(model)).ShouldHaveValidationErrorFor(x => x.Duration);
     }
 }

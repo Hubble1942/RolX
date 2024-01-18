@@ -11,8 +11,6 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-using NLog;
-
 namespace RolXServer.Common.WebApi;
 
 /// <summary>
@@ -20,7 +18,7 @@ namespace RolXServer.Common.WebApi;
 /// </summary>
 public class NotFoundExceptionFilter : IActionFilter, IOrderedFilter
 {
-    private static Logger logger = LogManager.GetCurrentClassLogger();
+    private static readonly ILogger Logger = Log.ForContext<NotFoundExceptionFilter>();
 
     /// <inheritdoc/>
     public int Order { get; } = int.MaxValue - 10;
@@ -35,7 +33,7 @@ public class NotFoundExceptionFilter : IActionFilter, IOrderedFilter
     {
         if (context.Exception != null && context.Exception is NotFoundException)
         {
-            logger.Warn(context.Exception, "Error in HTTP Request to {}", context.HttpContext.Request);
+            Logger.Warning(context.Exception, "Error in HTTP Request to {request}", context.HttpContext.Request);
 
             var statusCode = (int)HttpStatusCode.NotFound;
             context.Result = new ObjectResult(new Dictionary<string, object>

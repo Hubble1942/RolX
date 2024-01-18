@@ -10,6 +10,9 @@ using RolXServer.Common.Util;
 
 namespace RolXServer.Reports.Domain.Model;
 
+/// <summary>
+/// Holds the data being exported.
+/// </summary>
 public sealed record Export(
     string Subproject,
     DateRange Range,

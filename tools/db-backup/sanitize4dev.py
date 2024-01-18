@@ -3,6 +3,7 @@ import sys
 
 table_names = [
     'Activities',
+    'AuditLogs',
     'Billabilities',
     'EditLocks',
     'FavouriteActivities',
@@ -11,6 +12,7 @@ table_names = [
     'Subprojects',
     'UserBalanceCorrections',
     'UserPartTimeSettings',
+    'UserVacationDaysSettings',
     'Users',
     '__EFMigrationsHistory',
 ]

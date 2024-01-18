@@ -8,4 +8,7 @@
 
 namespace RolXServer.Users.WebApi.Resource;
 
+/// <summary>
+/// A part-time setting of a user.
+/// </summary>
 public sealed record PartTimeSetting(string StartDate, double Factor);

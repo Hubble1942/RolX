@@ -13,18 +13,17 @@ namespace RolXServer.Common.Errors;
 /// </summary>
 internal class ExceptionHandlerMiddleware
 {
+    private static readonly ILogger Logger = Log.ForContext<ExceptionHandlerMiddleware>();
+
     private readonly RequestDelegate next;
-    private readonly ILogger<ExceptionHandlerMiddleware> logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ExceptionHandlerMiddleware"/> class.
     /// </summary>
     /// <param name="next">The next.</param>
-    /// <param name="logger">The logger.</param>
-    public ExceptionHandlerMiddleware(RequestDelegate next, ILogger<ExceptionHandlerMiddleware> logger)
+    public ExceptionHandlerMiddleware(RequestDelegate next)
     {
         this.next = next;
-        this.logger = logger;
     }
 
     /// <summary>
@@ -40,7 +39,7 @@ internal class ExceptionHandlerMiddleware
         }
         catch (ItemNotFoundException e)
         {
-            this.logger.LogWarning(e, e.Message);
+            Logger.Warning(e, e.Message);
 
             httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
             await httpContext.Response.WriteAsync(e.Message);

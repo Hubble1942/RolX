@@ -28,6 +28,5 @@ INNER JOIN
 
 WHERE activities.EndedDate IS NULL
  AND lastRecords.LastRecordDate < lastRecords.LimitDate
- AND subprojects.CustomerName <> 'M&F'
 
 ORDER BY subprojects.ProjectNumber, subprojects.Number, activities.Number

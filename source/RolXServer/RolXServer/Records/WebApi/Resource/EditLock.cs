@@ -8,4 +8,7 @@
 
 namespace RolXServer.Records.WebApi.Resource;
 
+/// <summary>
+/// Represents the locking date. Changing records before this date is prohibited.
+/// </summary>
 public sealed record EditLock(string Date);

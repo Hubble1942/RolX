@@ -8,6 +8,9 @@
 
 namespace RolXServer.Reports.WebApi.Resource;
 
+/// <summary>
+/// The content of a report.
+/// </summary>
 public sealed record Report(
     string Subproject,
     string StartDate,

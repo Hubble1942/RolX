@@ -6,6 +6,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using RolXServer.Common.Util;
+
 namespace RolXServer.Projects.Domain.Mapping;
 
 /// <summary>

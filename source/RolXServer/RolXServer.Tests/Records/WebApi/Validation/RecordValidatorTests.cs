@@ -6,8 +6,6 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Moq;
-
 using RolXServer.Projects;
 using RolXServer.Records.Domain;
 using RolXServer.Records.WebApi.Resource;
@@ -26,7 +24,7 @@ public sealed class RecordValidatorTests
     public void SetUp()
     {
         this.context = InMemory.ContextFactory()();
-        this.sut = new RecordValidator(this.context, Mock.Of<IEditLockService>());
+        this.sut = new RecordValidator(this.context, Substitute.For<IEditLockService>());
     }
 
     [TearDown]
@@ -36,7 +34,7 @@ public sealed class RecordValidatorTests
     }
 
     [Test]
-    public void PaidLeaveReason_MustBeNonNullWhenTypeIsOther()
+    public async Task PaidLeaveReason_MustBeNonNullWhenTypeIsOther()
     {
         var model = new Record
         {
@@ -44,11 +42,11 @@ public sealed class RecordValidatorTests
             PaidLeaveReason = null,
         };
 
-        this.sut.TestValidate(model).ShouldHaveValidationErrorFor(record => record.PaidLeaveReason);
+        (await this.sut.TestValidateAsync(model)).ShouldHaveValidationErrorFor(record => record.PaidLeaveReason);
     }
 
     [Test]
-    public void PaidLeaveReason_MustBeNonEmptyWhenTypeIsOther()
+    public async Task PaidLeaveReason_MustBeNonEmptyWhenTypeIsOther()
     {
         var model = new Record
         {
@@ -56,11 +54,11 @@ public sealed class RecordValidatorTests
             PaidLeaveReason = string.Empty,
         };
 
-        this.sut.TestValidate(model).ShouldHaveValidationErrorFor(record => record.PaidLeaveReason);
+        (await this.sut.TestValidateAsync(model)).ShouldHaveValidationErrorFor(record => record.PaidLeaveReason);
     }
 
     [Test]
-    public void PaidLeaveReason_FineWhenNonEmpty()
+    public async Task PaidLeaveReason_FineWhenNonEmpty()
     {
         var model = new Record
         {
@@ -68,14 +66,14 @@ public sealed class RecordValidatorTests
             PaidLeaveReason = "The rain in Spain.",
         };
 
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(record => record.PaidLeaveReason);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(record => record.PaidLeaveReason);
     }
 
     [TestCase(null)]
     [TestCase(PaidLeaveType.Vacation)]
     [TestCase(PaidLeaveType.Sickness)]
     [TestCase(PaidLeaveType.MilitaryService)]
-    public void PaidLeaveReason_FineWhenNullForType(PaidLeaveType? type)
+    public async Task PaidLeaveReason_FineWhenNullForType(PaidLeaveType? type)
     {
         var model = new Record
         {
@@ -83,14 +81,14 @@ public sealed class RecordValidatorTests
             PaidLeaveReason = null,
         };
 
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(record => record.PaidLeaveReason);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(record => record.PaidLeaveReason);
     }
 
     [TestCase(PaidLeaveType.Vacation)]
     [TestCase(PaidLeaveType.Sickness)]
     [TestCase(PaidLeaveType.MilitaryService)]
     [TestCase(PaidLeaveType.Other)]
-    public void PaidLeaveType_IsNotAllowedIfDoingOvertime(PaidLeaveType type)
+    public async Task PaidLeaveType_IsNotAllowedIfDoingOvertime(PaidLeaveType type)
     {
         var model = new Record
         {
@@ -102,14 +100,14 @@ public sealed class RecordValidatorTests
                 },
         };
 
-        this.sut.TestValidate(model).ShouldHaveValidationErrorFor(record => record.PaidLeaveType);
+        (await this.sut.TestValidateAsync(model)).ShouldHaveValidationErrorFor(record => record.PaidLeaveType);
     }
 
     [TestCase(PaidLeaveType.Vacation)]
     [TestCase(PaidLeaveType.Sickness)]
     [TestCase(PaidLeaveType.MilitaryService)]
     [TestCase(PaidLeaveType.Other)]
-    public void PaidLeaveType_IsFineWhenNotDoingOvertime(PaidLeaveType type)
+    public async Task PaidLeaveType_IsFineWhenNotDoingOvertime(PaidLeaveType type)
     {
         var model = new Record
         {
@@ -121,11 +119,11 @@ public sealed class RecordValidatorTests
                 },
         };
 
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(record => record.PaidLeaveType);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(record => record.PaidLeaveType);
     }
 
     [Test]
-    public void PaidLeaveType_IsFineWhenNull()
+    public async Task PaidLeaveType_IsFineWhenNull()
     {
         var model = new Record
         {
@@ -137,6 +135,6 @@ public sealed class RecordValidatorTests
                 },
         };
 
-        this.sut.TestValidate(model).ShouldNotHaveValidationErrorFor(record => record.PaidLeaveType);
+        (await this.sut.TestValidateAsync(model)).ShouldNotHaveValidationErrorFor(record => record.PaidLeaveType);
     }
 }

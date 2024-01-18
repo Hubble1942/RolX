@@ -8,6 +8,9 @@
 
 namespace RolXServer.Reports.Domain.Model;
 
+/// <summary>
+/// Holds the data of a single exported entry.
+/// </summary>
 public sealed record ExportEntry(
     DateOnly Date,
     int ProjectNumber,

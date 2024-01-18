@@ -76,17 +76,20 @@ public static class ExportToExcel
         return ++row;
     }
 
-    private static void AddHeader(this IXLWorksheet worksheet, string name, object value, int row)
+    private static void AddHeader(this IXLWorksheet worksheet, string name, XLCellValue value, int row)
     {
         var column = 1;
         worksheet.Cell(row, column++).Value = name;
         worksheet.Cell(row, column++).Value = value;
     }
 
+    private static void AddHeader(this IXLWorksheet worksheet, string name, DateOnly date, int row)
+        => worksheet.AddHeader(name, date.ToDateTime(default), row);
+
     private static void Add(this IXLWorksheet worksheet, ExportEntry entry, int row)
     {
         var column = 1;
-        worksheet.Cell(row, column++).Value = entry.Date;
+        worksheet.Cell(row, column++).Value = entry.Date.ToDateTime(default);
         worksheet.Cell(row, column++).Value = entry.ProjectNumber;
         worksheet.Cell(row, column++).Value = entry.CustomerName;
         worksheet.Cell(row, column++).Value = entry.ProjectName;

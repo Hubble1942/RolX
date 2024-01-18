@@ -8,4 +8,7 @@
 
 namespace RolXServer.Reports.Domain.Model;
 
+/// <summary>
+/// A single work item.
+/// </summary>
 public sealed record WorkItem(string Name, TimeSpan Duration);

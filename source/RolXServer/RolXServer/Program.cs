@@ -6,55 +6,94 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using NLog;
-using NLog.Web;
+using System.Reflection;
 
-namespace RolXServer;
+using FluentValidation;
 
-/// <summary>
-/// The RolX server program.
-/// </summary>
-public static class Program
+using Microsoft.EntityFrameworkCore;
+
+using RolXServer;
+using RolXServer.AuditLogs;
+using RolXServer.Auth;
+using RolXServer.Common.Errors;
+using RolXServer.Common.Logging;
+using RolXServer.Common.Startup;
+using RolXServer.Common.Util;
+using RolXServer.Common.WebApi;
+using RolXServer.Projects;
+using RolXServer.Records;
+using RolXServer.Reports;
+using RolXServer.Users;
+
+Log.Logger = new LoggerConfiguration()
+            .ConfigureForRolX()
+            .CreateBootstrapLogger()
+            .ApplicationStart(Assembly.GetExecutingAssembly());
+
+try
 {
-    /// <summary>
-    /// Defines the entry point of the application.
-    /// </summary>
-    /// <param name="args">The arguments.</param>
-    public static void Main(string[] args)
-    {
-        var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+    var builder = WebApplication.CreateBuilder(args);
 
-        try
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
-        catch (Exception exception)
-        {
-            logger.Error(exception, "Stopped program because of exception");
-            throw;
-        }
-        finally
-        {
-            // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
-            LogManager.Shutdown();
-        }
-    }
+    builder.Host.UseSerilog((context, configuration) => configuration.ConfigureForRolX(context.Configuration));
 
-    /// <summary>
-    /// Creates the web host builder.
-    /// </summary>
-    /// <param name="args">The arguments.</param>
-    /// <returns>The created builder.</returns>
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<Startup>();
-            })
-            .ConfigureLogging(logging =>
-            {
-                logging.ClearProviders();
-                logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
-            })
-            .UseNLog();
+    builder.Services
+        .AddControllers(o =>
+        {
+            o.Filters.Add<NotFoundExceptionFilter>();
+            o.Filters.Add<TransactionPerRequestFilter>();
+            o.Filters.Add<InjectCurrentUserFilter>();
+        })
+        .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new TimeSpanJsonSecondsConverter()));
+
+    builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+    var connectionString = builder.Configuration.GetConnectionString("RolXContext");
+    builder.Services.AddDbContextPool<RolXContext>(provider =>
+        provider.UseMySql(
+            connectionString,
+            ServerVersion.AutoDetect(connectionString),
+            options => options.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery)));
+
+    builder.Services.AddProjects();
+    builder.Services.AddAuth(builder.Configuration);
+    builder.Services.AddWorkRecord(builder.Configuration);
+    builder.Services.AddReports();
+    builder.Services.AddUserManagement();
+    builder.Services.AddAuditLogs();
+
+    var app = builder.Build();
+
+    app.MigrateDatabase();
+
+    app.UseStaticFiles();
+    app.UseSerilogRequestLogging();
+    app.UseExceptionHandlerMiddleware();
+    app.UseRouting();
+
+    // Add CORS policy for development
+    app.UseCors(builder => builder
+        .WithOrigins("http://localhost:4200")
+        .WithExposedHeaders("content-disposition")
+        .AllowAnyHeader()
+        .AllowAnyMethod());
+
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.MapControllers();
+    app.MapFallbackFileForNonApiRequests("index.html");
+
+    app.Run();
+
+    Log.Logger.ApplicationEnd();
+}
+catch (Exception exception)
+{
+    Log.Logger.UngracefulShutdown(exception);
+    throw;
+}
+finally
+{
+    // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
+    Log.CloseAndFlush();
 }

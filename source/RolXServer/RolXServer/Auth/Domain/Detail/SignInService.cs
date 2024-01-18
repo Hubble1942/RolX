@@ -22,10 +22,11 @@ namespace RolXServer.Auth.Domain.Detail;
 /// </summary>
 internal sealed class SignInService : ISignInService
 {
+    private static readonly ILogger Logger = Log.ForContext<SignInService>();
+
     private readonly RolXContext dbContext;
     private readonly BearerTokenFactory bearerTokenFactory;
     private readonly Settings settings;
-    private readonly ILogger logger;
     private readonly IAuditLogService auditLogService;
 
     /// <summary>
@@ -34,19 +35,16 @@ internal sealed class SignInService : ISignInService
     /// <param name="dbContext">The database context.</param>
     /// <param name="bearerTokenFactory">The bearer token factory.</param>
     /// <param name="settingsAccessor">The settings accessor.</param>
-    /// <param name="logger">The logger.</param>
     /// <param name="auditLogService">The audit log service.</param>
     public SignInService(
         RolXContext dbContext,
         BearerTokenFactory bearerTokenFactory,
         IOptions<Settings> settingsAccessor,
-        ILogger<SignInService> logger,
         IAuditLogService auditLogService)
     {
         this.dbContext = dbContext;
         this.bearerTokenFactory = bearerTokenFactory;
         this.settings = settingsAccessor.Value;
-        this.logger = logger;
         this.auditLogService = auditLogService;
     }
 
@@ -86,7 +84,7 @@ internal sealed class SignInService : ISignInService
 
             if (!this.IsAllowedDomain(payload.HostedDomain))
             {
-                this.logger.LogWarning("Sign-in from foreign domain refused: {0}", payload.HostedDomain);
+                Logger.Warning("Sign-in from foreign domain refused: {0}", payload.HostedDomain);
                 return null;
             }
 
@@ -100,7 +98,7 @@ internal sealed class SignInService : ISignInService
         }
         catch (InvalidJwtException e)
         {
-            this.logger.LogWarning(e, "While validating googleIdToken");
+            Logger.Warning(e, "While validating googleIdToken");
             return null;
         }
     }
@@ -117,7 +115,7 @@ internal sealed class SignInService : ISignInService
         var user = await this.dbContext.Users.FindAsync(userId);
         if (user is null)
         {
-            this.logger.LogWarning("Unknown user tries to extend authentication: {0}", userId);
+            Logger.Warning("Unknown user tries to extend authentication: {0}", userId);
             return null;
         }
 
@@ -140,7 +138,7 @@ internal sealed class SignInService : ISignInService
         var user = await this.dbContext.Users.SingleOrDefaultAsync(u => u.GoogleId == payload.Subject || u.GoogleId == payload.Email);
         if (user is null)
         {
-            this.logger.LogInformation("Adding yet unknown user {0}", payload.Name);
+            Logger.Information("Adding yet unknown user {0}", payload.Name);
 
             var isFirstUser = !(await this.dbContext.Users.AnyAsync());
 

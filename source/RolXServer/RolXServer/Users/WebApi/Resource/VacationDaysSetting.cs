@@ -8,4 +8,7 @@
 
 namespace RolXServer.Users.WebApi.Resource;
 
+/// <summary>
+/// A vacation days setting of a user.
+/// </summary>
 public sealed record VacationDaysSetting(string StartDate, int VacationDays);

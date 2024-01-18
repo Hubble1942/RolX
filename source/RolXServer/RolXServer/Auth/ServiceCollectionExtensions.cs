@@ -32,11 +32,13 @@ public static class ServiceCollectionExtensions
         services.AddScoped<Domain.ISignInService, Domain.Detail.SignInService>();
         services.AddSingleton<Domain.Detail.BearerTokenFactory>();
 
+        var authSettings = settingsSection.Get<Settings>() ?? throw new InvalidOperationException("Auth settings missing");
+
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(options => new Domain.Detail.BearerTokenFactory(settingsSection.Get<Settings>()).Configure(options));
+        }).AddJwtBearer(options => new Domain.Detail.BearerTokenFactory(authSettings).Configure(options));
 
         services.AddAuthorization(options =>
         {

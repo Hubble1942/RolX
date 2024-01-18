@@ -8,6 +8,9 @@
 
 namespace RolXServer.Reports.WebApi.Resource;
 
+/// <summary>
+/// A single entry of a report.
+/// </summary>
 public sealed record ReportEntry(
     string Date,
     int ProjectNumber,

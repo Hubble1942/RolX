@@ -8,6 +8,9 @@
 
 namespace RolXServer.Projects.WebApi.Resource;
 
+/// <summary>
+/// The shallow representation of a subproject.
+/// </summary>
 public record SubprojectShallow(
     int Id,
     string FullNumber,

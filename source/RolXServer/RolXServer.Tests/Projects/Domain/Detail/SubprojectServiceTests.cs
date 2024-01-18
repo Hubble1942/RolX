@@ -7,7 +7,6 @@
 // -----------------------------------------------------------------------
 
 using Microsoft.EntityFrameworkCore;
-using Moq;
 using RolXServer.AuditLogs.Domain;
 using RolXServer.Projects.DataAccess;
 using RolXServer.Projects.Domain.Mapping;
@@ -45,9 +44,11 @@ public sealed class SubprojectServiceTests
 
         using (var context = contextFactory())
         {
-            IActivityService activityService = new ActivityService(context);
-            var auditLogService = Mock.Of<IAuditLogService>();
-            var sut = new SubprojectService(context, activityService, auditLogService);
+            var sut = new SubprojectService(
+                context,
+                new ActivityService(context),
+                Substitute.For<IAuditLogService>());
+
             var subproject = SeedSubproject.ToDomain();
             subproject.Activities[0].Name = "Changed";
             await sut.Update(subproject);
@@ -70,9 +71,11 @@ public sealed class SubprojectServiceTests
 
         using (var context = contextFactory())
         {
-            IActivityService activityService = new ActivityService(context);
-            var auditLogService = Mock.Of<IAuditLogService>();
-            var sut = new SubprojectService(context, activityService, auditLogService);
+            var sut = new SubprojectService(
+                context,
+                new ActivityService(context),
+                Substitute.For<IAuditLogService>());
+
             var subproject = SeedSubproject.ToDomain();
             subproject.Activities.RemoveAt(0);
             await sut.Update(subproject);
@@ -94,9 +97,11 @@ public sealed class SubprojectServiceTests
 
         using (var context = contextFactory())
         {
-            IActivityService activityService = new ActivityService(context);
-            var auditLogService = Mock.Of<IAuditLogService>();
-            var sut = new SubprojectService(context, activityService, auditLogService);
+            var sut = new SubprojectService(
+                context,
+                new ActivityService(context),
+                Substitute.For<IAuditLogService>());
+
             var subproject = SeedSubproject.ToDomain();
             subproject.Activities.Add(new Model.Activity
             {

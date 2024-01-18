@@ -14,7 +14,7 @@ namespace RolXServer.Common.Util;
 public record struct DateRange
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="DateRange"/> class.
+    /// Initializes a new instance of the <see cref="DateRange"/> struct.
     /// </summary>
     /// <param name="begin">The begin.</param>
     /// <param name="end">The end.</param>
